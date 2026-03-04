@@ -1,13 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🚀 TEC Expo Voting</title>
+
+<title>TechnoVenture Voting</title>
 
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 body{
 font-family:'IBM Plex Sans Arabic',sans-serif;
 background:#0e0520;
@@ -16,172 +20,320 @@ margin:0;
 }
 
 header{
-background:#14092c;
-padding:1rem 2rem;
 display:flex;
 justify-content:space-between;
 align-items:center;
-flex-wrap:wrap;
+padding:20px 40px;
+background:#14092c;
+border-bottom:1px solid #2d1b55;
 }
 
-header h2{
-margin:0;
-}
-
-header div{
+.logo{
 display:flex;
-gap:.5rem;
-flex-wrap:wrap;
+align-items:center;
+gap:10px;
+}
+
+.logo img{
+height:42px;
+}
+
+.logo h2{
+margin:0;
+font-weight:700;
+}
+
+.nav-buttons button{
+margin-left:8px;
 }
 
 button{
-padding:.5rem 1rem;
-border:none;
-border-radius:6px;
-cursor:pointer;
-font-weight:600;
-}
-
-.vote-btn{
 background:#7c3aed;
 color:white;
+border:none;
+padding:10px 16px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+transition:.2s;
 }
 
-.vote-btn.voted{
-background:#1f2937;
-color:#34d399;
+button:hover{
+opacity:.85;
+}
+
+.page{
+padding:40px;
+max-width:1200px;
+margin:auto;
+}
+
+.projects{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;
 }
 
 .card{
 background:#1a0d38;
-padding:1rem;
-margin:1rem;
-border-radius:10px;
+border-radius:12px;
+padding:20px;
+transition:.2s;
+border:1px solid #2d1b55;
 }
 
-.progress{
-height:6px;
-background:#2d1b55;
-border-radius:999px;
-overflow:hidden;
-margin-top:.5rem;
+.card:hover{
+transform:translateY(-4px);
+border-color:#7c3aed;
 }
 
-.progress div{
-height:100%;
-background:#a78bfa;
+.card h3{
+margin:0 0 5px;
+}
+
+.team{
+color:#a78bfa;
+font-size:14px;
+margin-bottom:10px;
+}
+
+.desc{
+font-size:14px;
+color:#c4b5fd;
+margin-bottom:20px;
+}
+
+.vote-count{
+font-size:32px;
+font-weight:700;
+color:#a78bfa;
+margin-bottom:10px;
+}
+
+.vote-btn{
+width:100%;
+padding:10px;
+border-radius:8px;
+background:linear-gradient(45deg,#7c3aed,#a78bfa);
 }
 
 .admin{
 display:none;
-padding:1rem;
+max-width:600px;
+margin:auto;
 }
 
 input,select{
 width:100%;
-padding:.5rem;
-margin-bottom:.5rem;
-background:#2d1b55;
-border:1px solid #ffffff22;
-color:white;
+padding:10px;
+margin-bottom:10px;
 border-radius:6px;
+border:1px solid #2d1b55;
+background:#221442;
+color:white;
 }
+
 </style>
+
 </head>
 <body>
 
-<header>
-<h2>🚀 TEC Voting</h2>
 
-<div>
+<header>
+
+<div class="logo">
+<img src="tecClub.jpg">
+<h2>TechnoVenture</h2>
+</div>
+
+<div class="nav-buttons">
+
 <button onclick="showMain()">المشاريع</button>
 <button onclick="showAdmin()">الإدارة</button>
 
 <button onclick="openLeaderboard()" style="background:#fbbf24;color:black">
-🏆 الترتيب
+🏆 LeaderBoard
 </button>
 
-<button onclick="openTrending()" style="background:#ef4444;color:white">
+<button onclick="openTrending()" style="background:#ef4444">
 🔥 Trending
 </button>
+
 </div>
+
 </header>
 
-<div id="main">
-<div id="projects"></div>
+
+
+<div id="main" class="page">
+
+<div class="projects" id="projects"></div>
+
 </div>
 
-<div id="admin" class="admin">
+
+
+<div id="admin" class="admin page">
 
 <div id="loginBox">
-<h3>🔐 دخول الإدارة</h3>
+
+<h3> دخول الإدارة</h3>
+
 <input type="password" id="adminPass" placeholder="رمز الدخول">
+
 <button onclick="login()">دخول</button>
-<p id="loginError" style="color:red;display:none;">رمز غير صحيح</p>
+
+<p id="loginError" style="color:red;display:none">
+رمز غير صحيح
+</p>
+
 </div>
 
-<div id="adminPanel" style="display:none;">
+
+<div id="adminPanel" style="display:none">
+
 <h3>إضافة مشروع</h3>
+
 <input id="title" placeholder="اسم المشروع">
 <input id="team" placeholder="اسم الفريق">
+
 <select id="category">
 <option>AI</option>
-<option>Web</option>
-<option>IoT</option>
-<option>Mobile</option>
+<option>Health</option>
+<option>FinTech</option>
+<option>Eng</option>
 <option>Data</option>
 </select>
-<input id="desc" placeholder="وصف">
-<button onclick="addProject()">إضافة</button>
+
+<input id="desc" placeholder="وصف المشروع">
+
+<button onclick="addProject()">إضافة مشروع</button>
 
 <h3>إدارة المشاريع</h3>
+
 <div id="adminList"></div>
+
 </div>
 
 </div>
+
+
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, doc, increment, onSnapshot } 
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+updateDoc,
+doc,
+increment,
+onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
+
 apiKey: "AIzaSyBPeJPWUdM0gb5502Ty8_Cfq4CwcufJOHQ",
+
 authDomain: "tec-expo-voting.firebaseapp.com",
+
 projectId: "tec-expo-voting",
+
 storageBucket: "tec-expo-voting.firebasestorage.app",
+
 messagingSenderId: "481340074318",
+
 appId: "1:481340074318:web:5248e7eb360c4f5eed161f"
+
 };
 
+
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
+
 const projectsRef = collection(db,"projects");
+
 
 let projects=[];
 let voted={};
 let adminUnlocked=false;
 
+
 onSnapshot(projectsRef,(snapshot)=>{
-projects=snapshot.docs.map(doc=>({id:doc.id,...doc.data()}))
-.filter(p=>!p.deleted);
+
+projects=snapshot.docs.map(doc=>({
+id:doc.id,
+...doc.data()
+})).filter(p=>!p.deleted);
+
 render();
+
 });
 
-window.vote=async function(id){
-if(voted[id]) return alert("صوتك مسجل مسبقًا");
-await updateDoc(doc(db,"projects",id),{votes:increment(1)});
-voted[id]=true;
-};
 
-window.addProject=async function(){
-if(!adminUnlocked) return;
 
-if(!title.value || !team.value){
-alert("الاسم والفريق مطلوبان");
+window.vote = async function(id){
+
+if(voted[id]){
+alert("صوتك مسجل مسبقاً");
 return;
 }
+
+await updateDoc(doc(db,"projects",id),{
+votes:increment(1)
+});
+
+voted[id]=true;
+
+};
+
+
+
+function render(){
+
+const container=document.getElementById("projects");
+
+container.innerHTML="";
+
+projects.forEach(p=>{
+
+container.innerHTML+=`
+
+<div class="card">
+
+<h3>${p.title}</h3>
+
+<div class="team">${p.team}</div>
+
+<div class="desc">${p.desc}</div>
+
+<div class="vote-count">
+🔥 ${p.votes||0}
+</div>
+
+<button class="vote-btn" onclick="vote('${p.id}')">
+صوت الآن
+</button>
+
+</div>
+
+`;
+
+});
+
+renderAdmin();
+
+}
+
+
+
+window.addProject = async function(){
+
+if(!adminUnlocked) return;
 
 await addDoc(projectsRef,{
 title:title.value,
@@ -194,71 +346,82 @@ votes:0
 title.value="";
 team.value="";
 desc.value="";
+
 };
 
-window.deleteProject=async function(id){
-if(!adminUnlocked) return;
-if(!confirm("حذف المشروع؟")) return;
-await updateDoc(doc(db,"projects",id),{deleted:true});
-};
 
-function render(){
-const container=document.getElementById("projects");
-container.innerHTML="";
-
-projects.forEach(p=>{
-container.innerHTML+=`
-<div class="card">
-<h3>${p.title}</h3>
-<p>${p.team} - ${p.category}</p>
-<p>${p.desc}</p>
-<div class="progress">
-<div style="width:${(p.votes||0)*10}%"></div>
-</div>
-<p>${p.votes||0} صوت</p>
-<button class="vote-btn ${voted[p.id]?'voted':''}" onclick="vote('${p.id}')">
-${voted[p.id]?'✓ صوّت':'صوّت الآن'}
-</button>
-</div>
-`;
-});
-
-renderAdmin();
-}
 
 function renderAdmin(){
+
 if(!adminUnlocked) return;
+
 const list=document.getElementById("adminList");
+
 list.innerHTML="";
+
 projects.forEach(p=>{
+
 list.innerHTML+=`
-<div style="margin-bottom:.5rem">
+
+<div style="margin-bottom:6px">
 ${p.title} (${p.votes||0})
 <button onclick="deleteProject('${p.id}')">حذف</button>
 </div>
+
 `;
+
 });
+
 }
+
+
+
+window.deleteProject = async function(id){
+
+if(!confirm("حذف المشروع؟")) return;
+
+await updateDoc(doc(db,"projects",id),{
+deleted:true
+});
+
+};
+
+
 
 window.showAdmin=function(){
+
 document.getElementById("main").style.display="none";
 document.getElementById("admin").style.display="block";
+
 };
+
 
 window.showMain=function(){
+
 document.getElementById("main").style.display="block";
 document.getElementById("admin").style.display="none";
+
 };
 
+
 window.login=function(){
-if(adminPass.value==="1234"){
+
+if(adminPass.value==="1415"){
+
 adminUnlocked=true;
+
 loginBox.style.display="none";
+
 adminPanel.style.display="block";
+
 }else{
+
 loginError.style.display="block";
+
 }
+
 };
+
 
 window.openLeaderboard=function(){
 window.open("leaderboard.html","_blank");
@@ -270,5 +433,7 @@ window.open("trending.html","_blank");
 
 </script>
 
+
 </body>
 </html>
+
