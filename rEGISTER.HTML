@@ -426,7 +426,7 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 <!-- HERO -->
 <div class="hero">
   <div class="hero-orb"></div>
-  <div class="section-label">معرض المشاريع التقنية 2026</div>
+  <div class="section-label">معرض المشاريع التقنية ٢٠٢٥</div>
   <h1 class="hero-title">سجّل <span>فريقك ومشروعك</span></h1>
   <p class="hero-sub">أكمل النموذج التالي لتسجيل مشاركتك الرسمية في المعرض. يستغرق التسجيل أقل من ٣ دقائق.</p>
 
@@ -471,6 +471,12 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
       <label>اسم المشروع <span class="required">*</span></label>
       <input type="text" id="projectName" placeholder="مثال: منصة ذكاء اصطناعي للتعليم">
       <div class="field-error" id="err-projectName">هذا الحقل مطلوب</div>
+    </div>
+
+    <div class="field">
+      <label>كيف ستحقق الربح من المشروع؟ <span class="required">*</span></label>
+      <textarea id="revenueModel" placeholder="اشرح نموذج الربح: كيف سيولّد مشروعك الإيرادات؟ (مثال: اشتراكات، عمولات، إعلانات، مبيعات مباشرة...)"></textarea>
+      <div class="field-error" id="err-revenueModel">الرجاء شرح نموذج الربح</div>
     </div>
 
     <div class="field">
@@ -806,6 +812,7 @@ function validateStep(step) {
     check('projectName',     v('projectName').length > 1);
     check('projectCategory', v('projectCategory') !== '');
     check('projectDesc',     v('projectDesc').length > 20);
+    check('revenueModel',    v('revenueModel').length > 10);
   }
 
   if (step === 2) {
@@ -841,10 +848,10 @@ function renderSummary() {
   }));
 
   document.getElementById('summaryContent').innerHTML = `
-    <div>📌 <strong>المشروع:</strong> ${v('projectName')} — ${v('projectCategory')}</div>
+    <div> <strong>المشروع:</strong> ${v('projectName')} — ${v('projectCategory')}</div>
     <div>👥 <strong>الفريق:</strong> ${v('teamName')} | ${v('college')}</div>
-    <div>🎓 <strong>التخصص:</strong> ${v('major')} — ${v('studyYear')}</div>
-    <div>🧑‍💻 <strong>الأعضاء (${members.length}):</strong> ${members.map(m => m.name || '—').join(' / ')}</div>
+    <div> <strong>التخصص:</strong> ${v('major')} — ${v('studyYear')}</div>
+    <div> <strong>الأعضاء (${members.length}):</strong> ${members.map(m => m.name || '—').join(' / ')}</div>
   `;
 }
 
@@ -879,7 +886,8 @@ window.submitForm = async function() {
     project: {
       name:     v('projectName'),
       category: v('projectCategory'),
-      description: v('projectDesc')
+      description: v('projectDesc'),
+      revenueModel: v('revenueModel')
     },
     team: {
       name:       v('teamName'),

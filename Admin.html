@@ -518,7 +518,7 @@ tr:hover td{background:rgba(124,58,237,.04)}
 
     <!-- CHARTS VIEW -->
     <div id="chartsView" style="display:none">
-      <div class="section-hdr"><h2>📊 الإحصائيات التفصيلية</h2></div>
+      <div class="section-hdr"><h2> الإحصائيات التفصيلية</h2></div>
       <div class="charts-grid">
         <div class="chart-card">
           <h4>التوزيع حسب التصنيف</h4>
@@ -740,6 +740,7 @@ window.openDrawer = function(id) {
       <div class="d-row"><span class="d-key">اسم المشروع</span><span class="d-val">${r.project?.name||'—'}</span></div>
       <div class="d-row"><span class="d-key">التصنيف</span><span class="d-val">${r.project?.category||'—'}</span></div>
       <div class="d-row"><span class="d-key">الملخص</span><span class="d-val" style="font-size:12px;line-height:1.7">${r.project?.description||'—'}</span></div>
+      <div class="d-row"><span class="d-key">نموذج الربح</span><span class="d-val" style="font-size:12px;line-height:1.7;color:#34d399">${r.project?.revenueModel||'—'}</span></div>
     </div>
     <div class="d-section">
       <div class="d-section-title">👥 الفريق</div>
@@ -782,7 +783,7 @@ window.closeDrawer = function() {
 /* ── STATUS ── */
 window.setStatus = async function(id, status) {
   await updateDoc(doc(db,'registrations',id),{status});
-  showToast(status==='accepted'?'✅ تم قبول الفريق':status==='rejected'?'❌ تم رفض الفريق':'⏳ تم الإعادة للانتظار',
+  showToast(status==='accepted'?' تم قبول الفريق':status==='rejected'?' تم رفض الفريق':' تم الإعادة للانتظار',
     status==='accepted'?'success':status==='rejected'?'error':'');
   closeDrawer();
 };
@@ -829,7 +830,7 @@ window.exportExcel = function() {
   if(!allRegs.length){showToast('لا توجد بيانات للتصدير','error');return;}
 
   const rows = [
-    ['#','اسم المشروع','التصنيف','اسم الفريق','الكلية','التخصص','السنة','عدد الأعضاء',
+    ['#','اسم المشروع','التصنيف','نموذج الربح','اسم الفريق','الكلية','التخصص','السنة','عدد الأعضاء',
      'أسماء الأعضاء','البريد الإلكتروني','رقم الجوال','الحالة','تاريخ التسجيل']
   ];
 
@@ -838,7 +839,7 @@ window.exportExcel = function() {
     const date    = r.submittedAt?.seconds ? new Date(r.submittedAt.seconds*1000).toLocaleDateString('ar-SA') : '—';
     const statusAr = {pending:'انتظار',accepted:'مقبول',rejected:'مرفوض'}[r.status]||'—';
     rows.push([
-      i+1, r.project?.name, r.project?.category,
+      i+1, r.project?.name, r.project?.category, r.project?.revenueModel,
       r.team?.name, r.team?.college, r.team?.major, r.team?.studyYear, r.team?.memberCount,
       members, r.contact?.email, r.contact?.leaderPhone, statusAr, date
     ]);

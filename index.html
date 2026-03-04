@@ -23,9 +23,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
-
 body {
   font-family: 'IBM Plex Sans Arabic', sans-serif;
   background: var(--bg);
@@ -34,864 +32,589 @@ body {
   overflow-x: hidden;
 }
 
-/* ── CANVAS STARS BG ── */
 #stars-canvas {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: .5;
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .5;
 }
 
 /* ── HEADER ── */
 header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 48px;
+  position: sticky; top: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0 48px; height: 64px;
   background: rgba(4, 1, 15, 0.85);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.logo-icon {
-  width: 42px;
-  height: 42px;
-  background: linear-gradient(135deg, var(--accent), var(--accent3));
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-  font-size: 16px;
-  color: white;
-  box-shadow: 0 0 20px var(--glow);
-}
-
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo img { height: 42px; width: 42px; object-fit: contain; border-radius: 10px; }
 .logo-text {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
   background: linear-gradient(90deg, #fff, var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-
 .logo-sub {
-  font-size: 10px;
-  color: var(--muted);
-  font-family: 'Space Mono', monospace;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-top: 2px;
+  font-size: 10px; color: var(--muted);
+  font-family: 'Space Mono', monospace; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px;
 }
 
+/* desktop nav */
 .nav-btns {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
+  display: flex; gap: 8px; align-items: center;
 }
 
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 9px 18px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-family: 'IBM Plex Sans Arabic', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  transition: all .2s ease;
-  position: relative;
-  overflow: hidden;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px; border-radius: 8px; border: none;
+  cursor: pointer; font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-weight: 600; font-size: 13px; transition: all .2s ease;
+  position: relative; overflow: hidden;
 }
-
-.btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: white;
-  opacity: 0;
-  transition: opacity .15s;
-}
-
+.btn::after { content: ''; position: absolute; inset: 0; background: white; opacity: 0; transition: opacity .15s; }
 .btn:hover::after { opacity: .07; }
 .btn:active { transform: scale(.97); }
 
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), #6d28d9);
-  color: white;
-  box-shadow: 0 4px 15px rgba(124, 58, 237, .4);
-}
+.btn-primary { background: linear-gradient(135deg, var(--accent), #6d28d9); color: white; box-shadow: 0 4px 15px rgba(124,58,237,.4); }
+.btn-gold    { background: linear-gradient(135deg, var(--gold), #d97706); color: #1a0d00; font-weight: 700; }
+.btn-danger  { background: linear-gradient(135deg, var(--red), #b91c1c); color: white; }
+.btn-ghost   { background: rgba(124,58,237,.12); color: var(--accent2); border: 1px solid var(--border); }
 
-.btn-gold {
-  background: linear-gradient(135deg, var(--gold), #d97706);
-  color: #1a0d00;
-  font-weight: 700;
+/* hamburger */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 6px; border-radius: 8px;
+  background: none; border: none; transition: background .2s;
 }
+.hamburger:hover { background: rgba(255,255,255,.06); }
+.ham-line { width: 22px; height: 2px; background: var(--muted); border-radius: 2px; transition: all .3s; }
 
-.btn-danger {
-  background: linear-gradient(135deg, var(--red), #b91c1c);
-  color: white;
+/* mobile menu */
+.mobile-menu {
+  position: fixed; top: 64px; left: 0; right: 0;
+  background: rgba(6,2,20,.97); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 99; padding: 12px 16px 18px;
+  transform: translateY(-110%); transition: transform .3s ease;
 }
+.mobile-menu.open { transform: translateY(0); }
 
-.btn-ghost {
-  background: rgba(124, 58, 237, .12);
-  color: var(--accent2);
-  border: 1px solid var(--border);
+.mob-nav-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; border-radius: 9px;
+  font-size: 14px; color: var(--muted); cursor: pointer;
+  transition: all .2s; border: none; background: none;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  width: 100%; text-align: right; margin-bottom: 4px;
 }
+.mob-nav-btn:hover { color: white; background: rgba(124,58,237,.12); }
+.mob-nav-btn.gold  { color: #fbbf24; }
+.mob-nav-btn.red   { color: #f87171; }
 
 /* ── HERO ── */
 #hero {
-  position: relative;
-  z-index: 1;
-  padding: 100px 48px 80px;
-  text-align: center;
-  overflow: hidden;
+  position: relative; z-index: 1;
+  padding: 100px 48px 80px; text-align: center; overflow: hidden;
 }
-
+.hero-orb {
+  position: absolute; width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,.15), transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%, -60%); pointer-events: none;
+}
 .hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(124, 58, 237, .15);
-  border: 1px solid rgba(124, 58, 237, .35);
-  color: var(--accent2);
-  padding: 6px 16px;
-  border-radius: 100px;
-  font-size: 12px;
-  font-family: 'Space Mono', monospace;
-  letter-spacing: 1px;
-  margin-bottom: 28px;
-  animation: fadeUp .6s ease both;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(124,58,237,.15); border: 1px solid rgba(124,58,237,.35);
+  color: var(--accent2); padding: 6px 16px; border-radius: 100px;
+  font-size: 12px; font-family: 'Space Mono', monospace; letter-spacing: 1px;
+  margin-bottom: 28px; animation: fadeUp .6s ease both;
 }
-
 .badge-dot {
-  width: 7px;
-  height: 7px;
-  background: var(--accent2);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent2);
-  animation: pulse 2s ease infinite;
+  width: 7px; height: 7px; background: var(--accent2); border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent2); animation: pulse 2s ease infinite;
 }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: .5; transform: scale(1.4); }
-}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
 
 .hero-title {
-  font-size: clamp(38px, 6vw, 72px);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -2px;
-  margin-bottom: 20px;
+  font-size: clamp(38px, 6vw, 72px); font-weight: 700;
+  line-height: 1.1; letter-spacing: -2px; margin-bottom: 20px;
   animation: fadeUp .7s .1s ease both;
 }
-
 .hero-title span {
   background: linear-gradient(135deg, var(--accent2), var(--accent3));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-
 .hero-desc {
-  font-size: clamp(15px, 2vw, 18px);
-  color: var(--muted);
-  max-width: 680px;
-  margin: 0 auto 40px;
-  line-height: 1.8;
-  font-weight: 400;
+  font-size: clamp(15px, 2vw, 18px); color: var(--muted);
+  max-width: 680px; margin: 0 auto 40px; line-height: 1.8;
   animation: fadeUp .7s .2s ease both;
 }
-
 .hero-stats {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
+  display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
   animation: fadeUp .7s .3s ease both;
 }
-
-.stat {
-  text-align: center;
-}
-
+.stat { text-align: center; }
 .stat-num {
-  font-family: 'Space Mono', monospace;
-  font-size: 28px;
-  font-weight: 700;
-  color: white;
+  font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700;
   background: linear-gradient(135deg, var(--accent2), var(--accent3));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-
-.stat-label {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
-  letter-spacing: .5px;
-}
-
+.stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: .5px; }
 .hero-divider {
-  width: 100%;
-  height: 1px;
+  width: 100%; height: 1px;
   background: linear-gradient(90deg, transparent, var(--border), var(--accent), var(--border), transparent);
-  margin: 60px 0 0;
-  animation: fadeUp .7s .4s ease both;
-}
-
-/* glow orb */
-.hero-orb {
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(124,58,237,.15), transparent 70%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -60%);
-  pointer-events: none;
+  margin: 60px 0 0; animation: fadeUp .7s .4s ease both;
 }
 
 /* ── HOW IT WORKS ── */
-#how {
-  position: relative;
-  z-index: 1;
-  padding: 60px 48px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
+#how { position: relative; z-index: 1; padding: 60px 48px; max-width: 1100px; margin: 0 auto; }
 .section-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: var(--accent2);
-  text-transform: uppercase;
-  margin-bottom: 12px;
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  letter-spacing: 3px; color: var(--accent2); text-transform: uppercase; margin-bottom: 12px;
 }
-
-.section-title {
-  font-size: clamp(24px, 3vw, 34px);
-  font-weight: 700;
-  letter-spacing: -1px;
-  margin-bottom: 40px;
-}
-
-.how-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
+.section-title { font-size: clamp(24px,3vw,34px); font-weight: 700; letter-spacing: -1px; margin-bottom: 40px; }
+.how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 20px; }
 .how-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px 24px;
-  position: relative;
-  overflow: hidden;
-  transition: transform .25s, border-color .25s;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px 24px;
+  position: relative; overflow: hidden; transition: transform .25s, border-color .25s;
 }
-
-.how-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(124, 58, 237, .45);
-}
-
+.how-card:hover { transform: translateY(-4px); border-color: rgba(124,58,237,.45); }
 .how-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent3));
-  opacity: 0;
-  transition: opacity .25s;
+  content: ''; position: absolute; top:0;left:0;right:0; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent3)); opacity: 0; transition: opacity .25s;
 }
-
 .how-card:hover::before { opacity: 1; }
-
-.how-num {
-  font-family: 'Space Mono', monospace;
-  font-size: 42px;
-  font-weight: 700;
-  color: rgba(124, 58, 237, .18);
-  line-height: 1;
-  margin-bottom: 14px;
-}
-
-.how-card h4 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: white;
-}
-
-.how-card p {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.7;
-}
+.how-num { font-family: 'Space Mono', monospace; font-size: 42px; font-weight: 700; color: rgba(124,58,237,.18); line-height:1; margin-bottom:14px; }
+.how-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: white; }
+.how-card p  { font-size: 13px; color: var(--muted); line-height: 1.7; }
 
 /* ── MAIN PAGE ── */
-.page {
-  position: relative;
-  z-index: 1;
-  padding: 40px 48px;
-  max-width: 1280px;
-  margin: auto;
-}
+.page { position: relative; z-index: 1; padding: 40px 48px; max-width: 1280px; margin: auto; }
 
 /* ── LOGIN ── */
 #loginSection {
-  max-width: 460px;
-  margin: 0 auto 50px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 36px 32px;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  max-width: 460px; margin: 0 auto 50px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px 32px;
+  text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.4);
 }
-
 .login-icon {
-  width: 56px;
-  height: 56px;
+  width: 56px; height: 56px;
   background: linear-gradient(135deg, var(--accent), var(--accent3));
-  border-radius: 14px;
-  margin: 0 auto 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  box-shadow: 0 8px 25px var(--glow);
+  border-radius: 14px; margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; box-shadow: 0 8px 25px var(--glow);
 }
-
-#loginSection h3 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.login-sub {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 24px;
-}
-
-.input-wrapper {
-  position: relative;
-  margin-bottom: 14px;
-}
-
-.input-label {
-  display: block;
-  font-size: 12px;
-  color: var(--muted);
-  text-align: right;
-  margin-bottom: 6px;
-  letter-spacing: .5px;
-}
+#loginSection h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.login-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.input-label { display: block; font-size: 12px; color: var(--muted); text-align: right; margin-bottom: 6px; letter-spacing: .5px; }
 
 input, select {
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.04);
-  color: white;
-  font-family: 'IBM Plex Sans Arabic', sans-serif;
-  font-size: 14px;
-  transition: border-color .2s, box-shadow .2s;
-  outline: none;
-  direction: ltr;
-  text-align: right;
+  width: 100%; padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: rgba(255,255,255,.04);
+  color: white; font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 14px;
+  transition: border-color .2s, box-shadow .2s; outline: none; direction: ltr; text-align: right;
 }
-
-input:focus, select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, .18);
-}
-
+input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,.18); }
 input::placeholder { color: var(--muted); }
-
-.btn-full {
-  width: 100%;
-  padding: 13px;
-  font-size: 15px;
-  border-radius: 10px;
-  justify-content: center;
-}
+.btn-full { width: 100%; padding: 13px; font-size: 15px; border-radius: 10px; justify-content: center; }
 
 /* ── BALANCE BOX ── */
 #balanceBox {
-  display: none;
-  text-align: center;
-  margin-bottom: 36px;
-  animation: fadeUp .5s ease both;
+  display: none; text-align: center; margin-bottom: 36px; animation: fadeUp .5s ease both;
 }
-
 .balance-inner {
-  display: inline-flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px 28px;
-  box-shadow: 0 8px 30px rgba(0,0,0,.3);
+  display: inline-flex; align-items: center; gap: 16px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 28px; box-shadow: 0 8px 30px rgba(0,0,0,.3);
 }
+.balance-label { font-size: 13px; color: var(--muted); }
+.balance-amount { font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700; color: white; }
+.balance-currency { font-size: 14px; color: var(--accent2); font-weight: 600; }
+.balance-bar { width: 180px; height: 6px; background: rgba(255,255,255,.08); border-radius: 3px; overflow: hidden; }
+.balance-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent3)); border-radius: 3px; transition: width .6s ease; }
 
-.balance-label {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.balance-amount {
-  font-family: 'Space Mono', monospace;
-  font-size: 28px;
-  font-weight: 700;
-  color: white;
-}
-
-.balance-currency {
-  font-size: 14px;
-  color: var(--accent2);
-  font-weight: 600;
-}
-
-.balance-bar {
-  width: 180px;
-  height: 6px;
-  background: rgba(255,255,255,.08);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.balance-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent3));
-  border-radius: 3px;
-  transition: width .6s ease;
-}
-
-/* ── PROJECTS GRID ── */
+/* ── PROJECTS ── */
 .projects-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
 }
+.projects-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+.projects-count { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); }
+#projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 20px; }
 
-.projects-title {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.projects-count {
-  font-family: 'Space Mono', monospace;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-#projects {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-/* ── PROJECT CARD ── */
+/* ── CARD ── */
 .card {
-  background: var(--card);
-  border-radius: 18px;
-  padding: 24px;
+  background: var(--card); border-radius: 18px; padding: 24px;
   border: 1px solid var(--border);
   transition: transform .25s, border-color .25s, box-shadow .25s;
-  position: relative;
-  overflow: hidden;
-  animation: fadeUp .5s ease both;
+  position: relative; overflow: hidden; animation: fadeUp .5s ease both;
 }
-
-.card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(124, 58, 237, .4);
-  box-shadow: 0 20px 50px rgba(0,0,0,.4), 0 0 0 1px rgba(124, 58, 237, .15);
-}
-
-.card-top-line {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent3));
-  opacity: 0;
-  transition: opacity .25s;
-}
-
+.card:hover { transform: translateY(-5px); border-color: rgba(124,58,237,.4); box-shadow: 0 20px 50px rgba(0,0,0,.4), 0 0 0 1px rgba(124,58,237,.15); }
+.card-top-line { position: absolute; top:0;left:0;right:0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent3)); opacity:0; transition: opacity .25s; }
 .card:hover .card-top-line { opacity: 1; }
-
 .card-category {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(124, 58, 237, .12);
-  border: 1px solid rgba(124, 58, 237, .25);
-  color: var(--accent2);
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-family: 'Space Mono', monospace;
-  letter-spacing: 1px;
-  margin-bottom: 14px;
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(124,58,237,.12); border: 1px solid rgba(124,58,237,.25);
+  color: var(--accent2); padding: 4px 10px; border-radius: 6px;
+  font-size: 11px; font-family: 'Space Mono', monospace; letter-spacing: 1px; margin-bottom: 14px;
 }
+.card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: white; letter-spacing: -0.3px; }
+.team  { color: var(--accent2); font-size: 13px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.desc  { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.7; }
+.funds-section { background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+.funds-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; letter-spacing: .5px; }
+.funds { font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; color: white; display: flex; align-items: baseline; gap: 6px; }
+.funds-sar { font-size: 13px; color: var(--accent2); font-family: 'IBM Plex Sans Arabic', sans-serif; }
 
-.card h3 {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: white;
-  letter-spacing: -0.3px;
-}
-
-.team {
-  color: var(--accent2);
-  font-size: 13px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.desc {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 20px;
-  line-height: 1.7;
-}
-
-.funds-section {
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin-bottom: 16px;
-}
-
-.funds-label {
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 4px;
-  letter-spacing: .5px;
-}
-
-.funds {
-  font-family: 'Space Mono', monospace;
-  font-size: 24px;
-  font-weight: 700;
-  color: white;
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-.funds-sar {
-  font-size: 13px;
-  color: var(--accent2);
-  font-family: 'IBM Plex Sans Arabic', sans-serif;
-}
-
-.quick {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
+.quick { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 10px; }
 .quick-btn {
-  background: rgba(124, 58, 237, .1);
-  color: var(--accent2);
-  border: 1px solid rgba(124, 58, 237, .2);
-  padding: 8px 4px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Space Mono', monospace;
-  font-size: 13px;
-  font-weight: 700;
-  transition: all .15s;
+  background: rgba(124,58,237,.1); color: var(--accent2);
+  border: 1px solid rgba(124,58,237,.2); padding: 8px 4px; border-radius: 8px;
+  cursor: pointer; font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; transition: all .15s;
 }
-
-.quick-btn:hover {
-  background: rgba(124, 58, 237, .25);
-  border-color: var(--accent);
-  transform: scale(1.05);
-}
+.quick-btn:hover { background: rgba(124,58,237,.25); border-color: var(--accent); transform: scale(1.05); }
 
 .amountInput {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.04);
-  color: white;
-  font-family: 'IBM Plex Sans Arabic', sans-serif;
-  font-size: 14px;
-  margin-bottom: 10px;
-  outline: none;
-  direction: ltr;
-  text-align: right;
-  transition: border-color .2s;
+  width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);
+  background: rgba(255,255,255,.04); color: white; font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 14px; margin-bottom: 10px; outline: none; direction: ltr; text-align: right; transition: border-color .2s;
 }
-
-.amountInput:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, .15);
-}
+.amountInput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,.15); }
 
 .vote-btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-family: 'IBM Plex Sans Arabic', sans-serif;
-  transition: all .2s;
-  box-shadow: 0 4px 15px rgba(124, 58, 237, .3);
-  position: relative;
-  overflow: hidden;
+  width: 100%; padding: 12px; font-size: 14px; font-weight: 700; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none;
+  cursor: pointer; font-family: 'IBM Plex Sans Arabic', sans-serif;
+  transition: all .2s; box-shadow: 0 4px 15px rgba(124,58,237,.3);
 }
-
-.vote-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(124, 58, 237, .45);
-}
-
+.vote-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,58,237,.45); }
 .vote-btn:active { transform: scale(.97); }
 
+/* locked for guests */
+.vote-locked {
+  background: rgba(255,255,255,.025); border: 1px dashed rgba(124,58,237,.25);
+  border-radius: 10px; padding: 14px; text-align: center; cursor: pointer; transition: background .2s;
+}
+.vote-locked:hover { background: rgba(124,58,237,.08); }
+.vote-locked-text { font-size: 13px; color: var(--muted); }
+.vote-locked-text span { color: var(--accent2); font-weight: 600; }
+
+/* sign-in modal */
+#signInModal {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(0,0,0,.55); backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+#signInModal.open { display: flex; }
+.modal-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px 30px; width: 100%; max-width: 380px;
+  text-align: center; box-shadow: 0 24px 70px rgba(0,0,0,.6); position: relative;
+}
+.modal-close {
+  position: absolute; top: 13px; left: 15px;
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  color: var(--muted); width: 30px; height: 30px; border-radius: 7px;
+  cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all .2s;
+}
+.modal-close:hover { color: white; background: rgba(255,255,255,.12); }
+.modal-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.modal-card p  { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.7; }
+.modal-input {
+  width: 100%; padding: 12px 15px; border-radius: 9px; border: 1px solid var(--border);
+  background: rgba(255,255,255,.04); color: white; font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 15px; outline: none; direction: ltr; text-align: center; letter-spacing: 1px;
+  margin-bottom: 11px; transition: border-color .2s;
+}
+.modal-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,.14); }
+.modal-input::placeholder { color: rgba(139,122,184,.4); letter-spacing: 0; }
+
 /* ── ADMIN ── */
-.admin-page {
-  display: none;
-  max-width: 640px;
-  margin: auto;
-  padding: 40px 48px;
-  position: relative;
-  z-index: 1;
-}
-
-.admin-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 32px;
-}
-
-.admin-card h3 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  letter-spacing: -0.5px;
-}
-
+.admin-page { display: none; max-width: 640px; margin: auto; padding: 40px 48px; position: relative; z-index: 1; }
+.admin-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px; }
+.admin-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 24px; letter-spacing: -0.5px; }
 select option { background: var(--card); }
-
 .admin-project-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin-bottom: 8px;
-  font-size: 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 8px; font-size: 14px;
 }
 
-/* ── ANIMATIONS ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* ── EMPTY ── */
+.empty-state { grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--muted); }
+.empty-icon  { font-size: 48px; margin-bottom: 16px; opacity: .4; }
 
-/* ── RESPONSIVE ── */
+/* ── REGISTRATIONS PANEL ── */
+.reg-tabs {
+  display: flex; gap: 6px; margin-bottom: 22px; flex-wrap: wrap;
+}
+.reg-tab {
+  padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border);
+  background: rgba(255,255,255,.04); color: var(--muted);
+  font-family: 'IBM Plex Sans Arabic', sans-serif; transition: all .2s;
+}
+.reg-tab:hover { color: white; background: rgba(124,58,237,.1); }
+.reg-tab.active { background: rgba(124,58,237,.18); border-color: rgba(124,58,237,.4); color: white; }
+
+.reg-tab .tab-badge {
+  display: inline-block; font-size: 10px; font-family: 'Space Mono', monospace;
+  background: rgba(124,58,237,.3); color: var(--accent2);
+  padding: 1px 6px; border-radius: 8px; margin-right: 5px;
+}
+.reg-tab.active .tab-badge { background: var(--accent); color: white; }
+
+.reg-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 22px; }
+.reg-stat {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; text-align: center;
+}
+.reg-stat-num { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: white; }
+.reg-stat-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.reg-search {
+  width: 100%; padding: 10px 14px; border-radius: 9px;
+  border: 1px solid var(--border); background: rgba(255,255,255,.04);
+  color: white; font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 13px; outline: none; margin-bottom: 14px; transition: border-color .2s;
+}
+.reg-search:focus { border-color: var(--accent); }
+.reg-search::placeholder { color: rgba(139,122,184,.5); }
+
+.reg-table-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; margin-bottom: 16px;
+}
+.reg-table-wrap table { width: 100%; border-collapse: collapse; }
+.reg-table-wrap thead tr { background: rgba(124,58,237,.08); border-bottom: 1px solid var(--border); }
+.reg-table-wrap th {
+  padding: 11px 14px; text-align: right;
+  font-size: 10px; font-family: 'Space Mono', monospace;
+  color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 400; white-space: nowrap;
+}
+.reg-table-wrap td {
+  padding: 12px 14px; border-bottom: 1px solid rgba(120,60,240,.07);
+  font-size: 13px; vertical-align: middle;
+}
+.reg-table-wrap tr:last-child td { border-bottom: none; }
+.reg-table-wrap tr:hover td { background: rgba(124,58,237,.04); }
+
+.reg-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;
+}
+.reg-status.pending  { background: rgba(245,158,11,.1);  border: 1px solid rgba(245,158,11,.25); color: #fbbf24; }
+.reg-status.accepted { background: rgba(16,185,129,.1);  border: 1px solid rgba(16,185,129,.25); color: #34d399; }
+.reg-status.rejected { background: rgba(239,68,68,.08);  border: 1px solid rgba(239,68,68,.2);   color: #f87171; }
+
+/* drawer */
+#regDrawer {
+  position: fixed; top: 0; left: 0; width: 420px; height: 100vh;
+  background: #0c0620; border-right: 1px solid var(--border);
+  z-index: 500; transform: translateX(-100%);
+  transition: transform .3s ease; overflow-y: auto;
+  box-shadow: 8px 0 40px rgba(0,0,0,.5);
+}
+#regDrawer.open { transform: translateX(0); }
+#regOverlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  z-index: 499; display: none; backdrop-filter: blur(3px);
+}
+.rdrawer-hdr {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: #0c0620; z-index: 1;
+}
+.rdrawer-hdr h4 { font-size: 15px; font-weight: 700; }
+.rdrawer-close {
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  color: var(--muted); width: 30px; height: 30px; border-radius: 7px;
+  cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: all .2s;
+}
+.rdrawer-close:hover { color: white; background: rgba(255,255,255,.12); }
+.rdrawer-body { padding: 20px 22px; }
+.rd-section { margin-bottom: 20px; }
+.rd-section-title {
+  font-family: 'Space Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: var(--accent2); text-transform: uppercase; margin-bottom: 10px;
+}
+.rd-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px solid rgba(120,60,240,.07); gap: 10px;
+}
+.rd-row:last-child { border-bottom: none; }
+.rd-key { font-size: 12px; color: var(--muted); flex-shrink: 0; width: 110px; }
+.rd-val { font-size: 13px; color: white; text-align: left; direction: rtl; word-break: break-word; }
+.member-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.2);
+  border-radius: 7px; padding: 5px 9px; margin: 3px; font-size: 12px;
+}
+.member-tag.leader { background: rgba(245,158,11,.1); border-color: rgba(245,158,11,.25); color: #fbbf24; }
+.rdrawer-actions {
+  display: flex; gap: 8px; padding: 16px 22px;
+  border-top: 1px solid var(--border);
+  position: sticky; bottom: 0; background: #0c0620;
+}
+.rdrawer-actions .btn { flex: 1; justify-content: center; }
+
+.reg-export-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  background: rgba(124,58,237,.1); border: 1px solid var(--border);
+  color: var(--accent2); cursor: pointer; transition: all .2s;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+.reg-export-btn:hover { background: rgba(124,58,237,.2); }
+
 @media (max-width: 768px) {
-  header { padding: 14px 20px; }
-  .logo-sub { display: none; }
-  #hero { padding: 60px 20px 50px; }
-  #how { padding: 40px 20px; }
-  .page { padding: 30px 20px; }
-  .admin-page { padding: 30px 20px; }
-  .how-grid { grid-template-columns: 1fr 1fr; }
-  .hero-stats { gap: 24px; }
-  .btn { padding: 8px 12px; font-size: 12px; }
-  .nav-btns { gap: 6px; }
+  .reg-stats { grid-template-columns: repeat(2,1fr); }
+  #regDrawer { width: 100%; }
 }
-
 @media (max-width: 480px) {
-  .how-grid { grid-template-columns: 1fr; }
-  #projects { grid-template-columns: 1fr; }
-  .quick { grid-template-columns: repeat(2, 1fr); }
-  .hero-stats { gap: 16px; }
-  .stat-num { font-size: 22px; }
-}
-
-/* ── EMPTY STATE ── */
-.empty-state {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 80px 20px;
-  color: var(--muted);
-}
-
-.empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  opacity: .4;
+  .reg-stats { grid-template-columns: repeat(2,1fr); }
 }
 
 /* ── TOAST ── */
 .toast {
-  position: fixed;
-  bottom: 32px;
-  left: 50%;
+  position: fixed; bottom: 32px; left: 50%;
   transform: translateX(-50%) translateY(80px);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px 24px;
-  font-size: 14px;
-  color: white;
-  z-index: 999;
-  transition: transform .3s ease;
-  box-shadow: 0 10px 40px rgba(0,0,0,.5);
-  white-space: nowrap;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 24px; font-size: 14px; color: white;
+  z-index: 9999; transition: transform .3s ease;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5); white-space: nowrap;
 }
-
 .toast.show { transform: translateX(-50%) translateY(0); }
 .toast.success { border-color: #10b981; }
 .toast.error   { border-color: var(--red); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .nav-btns  { display: none; }
+  .hamburger { display: flex; }
+  header     { padding: 0 20px; }
+}
+@media (max-width: 768px) {
+  #hero      { padding: 60px 20px 50px; }
+  #how       { padding: 40px 20px; }
+  .page      { padding: 30px 20px; }
+  .admin-page{ padding: 30px 20px; }
+  .how-grid  { grid-template-columns: 1fr 1fr; }
+  .hero-stats{ gap: 24px; }
+}
+@media (max-width: 480px) {
+  .how-grid  { grid-template-columns: 1fr; }
+  #projects  { grid-template-columns: 1fr; }
+  .quick     { grid-template-columns: repeat(2,1fr); }
+  .hero-stats{ gap: 16px; }
+  .stat-num  { font-size: 22px; }
+}
 </style>
 </head>
-
 <body>
 
 <canvas id="stars-canvas"></canvas>
 
+<!-- SIGN-IN MODAL -->
+<div id="signInModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div style="font-size:38px;margin-bottom:12px">🔐</div>
+    <h3>سجّل للاستثمار</h3>
+    <p>أدخل رقم جوالك للحصول على ٥٠٠ ريال استثماري والبدء في دعم المشاريع.</p>
+    <input class="modal-input" type="tel" id="modalPhone" placeholder="05XXXXXXXX" maxlength="10"
+      onkeydown="if(event.key==='Enter') modalSignIn()">
+    <button class="btn btn-primary btn-full" onclick="modalSignIn()"> ابدأ الاستثمار</button>
+  </div>
+</div>
+
 <!-- HEADER -->
 <header>
   <div class="logo">
-    <img src="tecClub.jpg" style="height:42px;width:42px;object-fit:contain;border-radius:10px;">
+    <img src="tecClub.jpg">
     <div>
       <div class="logo-text">TechnoVenture</div>
-      <div class="logo-sub">TechnoVenture 2026 </div>
+      <div class="logo-sub">TechnoVenture 2026</div>
     </div>
   </div>
+
+  <!-- desktop -->
   <div class="nav-btns">
-    <button class="btn btn-ghost" onclick="showMain()"> المشاريع</button>
-    <button class="btn btn-ghost" onclick="showAdmin()"> الإدارة</button>
-    <button class="btn btn-gold" onclick="openLeaderboard()"> Leaderboard</button>
+    <button class="btn btn-ghost"  onclick="showMain()"> المشاريع</button>
+    <button class="btn btn-ghost"  onclick="showAdmin()"> الإدارة</button>
+    <button class="btn btn-gold"   onclick="openLeaderboard()"> Leaderboard</button>
     <button class="btn btn-danger" onclick="openTrending()"> Trending</button>
   </div>
+
+  <!-- hamburger -->
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span class="ham-line"></span>
+    <span class="ham-line"></span>
+    <span class="ham-line"></span>
+  </button>
 </header>
 
-<!-- السكشن الاول -->
+<!-- mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mob-nav-btn" onclick="showMain();closeMenu()"> المشاريع</button>
+  <button class="mob-nav-btn" onclick="showAdmin();closeMenu()"> الإدارة</button>
+  <button class="mob-nav-btn gold" onclick="openLeaderboard();closeMenu()"> Leaderboard</button>
+  <button class="mob-nav-btn red"  onclick="openTrending();closeMenu()"> Trending</button>
+</div>
+
+<!-- HERO -->
 <section id="hero">
   <div class="hero-orb"></div>
   <div class="hero-badge">
     <span class="badge-dot"></span>
     LIVE — معرض المشاريع التقنية 2026
   </div>
-  <h1 class="hero-title">
-    استثمر في أفكار<br><span>المستقبل التقني</span>
-  </h1>
+  <h1 class="hero-title">استثمر في أفكار<br><span>المستقبل التقني</span></h1>
   <p class="hero-desc">
     منصة تفاعلية تتيح لك دعم المشاريع التقنية الواعدة التي يقدّمها طلاب وشباب المبتكرين.
     لكل مشارك رصيد افتراضي بقيمة ٥٠٠ ريال لتوزيعه على المشاريع التي يؤمن بها.
     المشروع الأعلى تمويلاً يفوز بجائزة المعرض.
   </p>
   <div class="hero-stats">
-    <div class="stat">
-      <div class="stat-num" id="stat-projects">—</div>
-      <div class="stat-label">مشروع مشارك</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="stat-total">—</div>
-      <div class="stat-label">ريال إجمالي الاستثمارات</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">500</div>
-      <div class="stat-label">ريال رصيد كل مستثمر</div>
-    </div>
+    <div class="stat"><div class="stat-num" id="stat-projects">—</div><div class="stat-label">مشروع مشارك</div></div>
+    <div class="stat"><div class="stat-num" id="stat-total">—</div><div class="stat-label">ريال إجمالي الاستثمارات</div></div>
+    <div class="stat"><div class="stat-num">500</div><div class="stat-label">ريال رصيد كل مستثمر</div></div>
   </div>
   <div class="hero-divider"></div>
 </section>
 
-<!-- فقرة كيف يشتغل الموقع -->
+<!-- HOW IT WORKS -->
 <section id="how">
   <div class="section-label">كيف يعمل المعرض</div>
   <h2 class="section-title">ثلاث خطوات بسيطة</h2>
   <div class="how-grid">
-    <div class="how-card">
-      <div class="how-num">01</div>
-      <h4>سجّل رقمك</h4>
-      <p>أدخل رقم جوالك لتحصل على رصيد افتراضي بقيمة ٥٠٠ ريال خاص بك.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-num">02</div>
-      <h4>اكتشف المشاريع</h4>
-      <p>تصفّح المشاريع التقنية المبتكرة المعروضة واقرأ تفاصيل كل فريق.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-num">03</div>
-      <h4>وزّع استثمارك</h4>
-      <p>ادعم المشاريع التي تؤمن بها بمبالغ مختلفة وتابع التصنيف مباشرةً.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-num">04</div>
-      <h4>حدّد الفائز</h4>
-      <p>المشروع الذي يجمع أعلى استثمارات من الحضور يفوز بجائزة المعرض.</p>
-    </div>
+    <div class="how-card"><div class="how-num">01</div><h4>سجّل رقمك</h4><p>أدخل رقم جوالك لتحصل على رصيد افتراضي بقيمة ٥٠٠ ريال خاص بك.</p></div>
+    <div class="how-card"><div class="how-num">02</div><h4>اكتشف المشاريع</h4><p>تصفّح المشاريع التقنية المبتكرة المعروضة واقرأ تفاصيل كل فريق.</p></div>
+    <div class="how-card"><div class="how-num">03</div><h4>وزّع استثمارك</h4><p>ادعم المشاريع التي تؤمن بها بمبالغ مختلفة وتابع التصنيف مباشرةً.</p></div>
+    <div class="how-card"><div class="how-num">04</div><h4>حدّد الفائز</h4><p>المشروع الذي يجمع أعلى استثمارات من الحضور يفوز بجائزة المعرض.</p></div>
   </div>
 </section>
 
 <!-- MAIN PAGE -->
 <div id="main" class="page">
 
-  <!-- LOGIN -->
+  <!-- LOGIN BOX — يختفي بعد التسجيل -->
   <div id="loginSection">
     <div class="login-icon">📱</div>
     <h3>ابدأ رحلتك الاستثمارية</h3>
     <p class="login-sub">أدخل رقم جوالك للحصول على ٥٠٠ ريال استثماري</p>
     <label class="input-label">رقم الجوال</label>
-    <input id="phoneInput" placeholder="05XXXXXXXX" maxlength="10">
+    <input id="phoneInput" placeholder="05XXXXXXXX" maxlength="10"
+      onkeydown="if(event.key==='Enter') startVoting()">
     <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="startVoting()">
        ابدأ الاستثمار
     </button>
   </div>
 
-  <!-- البدجت -->
+  <!-- BALANCE -->
   <div id="balanceBox">
     <div class="balance-inner">
       <div>
@@ -899,67 +622,124 @@ select option { background: var(--card); }
         <div class="balance-amount"><span id="balance">500</span> <span class="balance-currency">ريال</span></div>
       </div>
       <div>
-        <div class="balance-bar">
-          <div class="balance-fill" id="balanceFill" style="width:100%"></div>
-        </div>
+        <div class="balance-bar"><div class="balance-fill" id="balanceFill" style="width:100%"></div></div>
       </div>
     </div>
   </div>
 
-  <!-- PROJECTS -->
-  <div class="projects-header">
-    <div>
+  <div id="projectsSection" style="display:none">
+    <div class="projects-header">
       <div class="projects-title">المشاريع المشاركة</div>
+      <div class="projects-count" id="projectsCount"></div>
     </div>
-    <div class="projects-count" id="projectsCount"></div>
+    <div id="projects"></div>
   </div>
-
-  <div id="projects"></div>
-
 </div>
 
 <!-- ADMIN PAGE -->
-<div id="admin" class="admin-page">
+<div id="admin" class="admin-page" style="max-width:1100px">
   <div id="loginBox" class="admin-card">
-    <h3> دخول الإدارة</h3>
+    <h3>🔐 دخول الإدارة</h3>
     <label class="input-label">كلمة المرور</label>
     <input type="password" id="adminPass" placeholder="••••">
     <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="login()">دخول</button>
   </div>
-
   <div id="adminPanel" style="display:none">
-    <div class="admin-card" style="margin-bottom:20px">
-      <h3> إضافة مشروع</h3>
-      <label class="input-label">اسم المشروع</label>
-      <input id="title" placeholder="مثال:منصة ذكاء اصطناعي ">
-      <label class="input-label">اسم الفريق</label>
-      <input id="team" placeholder="مثال: فريق  ">
-      <label class="input-label">التصنيف</label>
-      <select id="category">
-        <option>AI</option>
-        <option>Health</option>
-        <option>Fintech</option>
-        <option>Mobile</option>
-        <option>Education</option>
-        <option>Sustainability</option>
-      </select>
-      <label class="input-label">وصف المشروع</label>
-      <input id="desc" placeholder="وصف مختصر للمشروع وفكرته">
-      <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="addProject()">إضافة المشروع</button>
+
+    <!-- TABS -->
+    <div class="reg-tabs">
+      <button class="reg-tab active" id="tab-projects" onclick="switchAdminTab('projects')">
+         إدارة المشاريع
+      </button>
+      <button class="reg-tab" id="tab-registrations" onclick="switchAdminTab('registrations')">
+         تسجيلات الفرق
+        <span class="tab-badge" id="regTabBadge">0</span>
+      </button>
     </div>
 
-    <div class="admin-card">
-      <h3>📋 المشاريع الحالية</h3>
-      <div id="adminList"></div>
+    <!-- TAB: PROJECTS -->
+    <div id="tabProjects">
+      <div class="admin-card" style="margin-bottom:20px">
+        <h3> إضافة مشروع</h3>
+        <label class="input-label">اسم المشروع</label>
+        <input id="title" placeholder="مثال: منصة ذكاء اصطناعي للتعليم">
+        <label class="input-label">اسم الفريق</label>
+        <input id="team" placeholder="مثال: فريق نبراس">
+        <label class="input-label">التصنيف</label>
+        <select id="category">
+          <option>AI</option><option>Health</option><option>Fintech</option>
+          <option>Mobile</option><option>Education</option><option>Sustainability</option>
+        </select>
+        <label class="input-label">وصف المشروع</label>
+        <input id="desc" placeholder="وصف مختصر للمشروع وفكرته">
+        <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="addProject()">إضافة المشروع</button>
+      </div>
+      <div class="admin-card">
+        <h3> المشاريع الحالية</h3>
+        <div id="adminList"></div>
+      </div>
     </div>
+
+    <!-- TAB: REGISTRATIONS -->
+    <div id="tabRegistrations" style="display:none">
+
+      <!-- stats -->
+      <div class="reg-stats">
+        <div class="reg-stat"><div class="reg-stat-num" id="rs-total">0</div><div class="reg-stat-label">إجمالي التسجيلات</div></div>
+        <div class="reg-stat"><div class="reg-stat-num" id="rs-pending" style="color:#fbbf24">0</div><div class="reg-stat-label">بانتظار المراجعة</div></div>
+        <div class="reg-stat"><div class="reg-stat-num" id="rs-accepted" style="color:#34d399">0</div><div class="reg-stat-label">مقبولة</div></div>
+        <div class="reg-stat"><div class="reg-stat-num" id="rs-members">0</div><div class="reg-stat-label">إجمالي المشاركين</div></div>
+      </div>
+
+      <!-- filters row -->
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+        <input class="reg-search" id="regSearch" placeholder="🔍 ابحث باسم المشروع أو الفريق..." style="flex:1;min-width:200px;margin-bottom:0" oninput="applyRegFilters()">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="reg-tab active" id="rf-all"      onclick="setRegStatus('')">الكل</button>
+          <button class="reg-tab"        id="rf-pending"  onclick="setRegStatus('pending')">⏳ انتظار</button>
+          <button class="reg-tab"        id="rf-accepted" onclick="setRegStatus('accepted')">✅ مقبول</button>
+          <button class="reg-tab"        id="rf-rejected" onclick="setRegStatus('rejected')">❌ مرفوض</button>
+        </div>
+        <button class="reg-export-btn" onclick="exportRegsExcel()"> Excel</button>
+      </div>
+
+      <!-- table -->
+      <div class="reg-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>المشروع</th>
+              <th>الفريق</th>
+              <th>التصنيف</th>
+              <th>الأعضاء</th>
+              <th>الحالة</th>
+              <th>التاريخ</th>
+              <th>عرض</th>
+            </tr>
+          </thead>
+          <tbody id="regTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- REGISTRATIONS DRAWER -->
+<div id="regOverlay" onclick="closeRegDrawer()"></div>
+<div id="regDrawer">
+  <div class="rdrawer-hdr">
+    <h4 id="rdTitle">تفاصيل التسجيل</h4>
+    <button class="rdrawer-close" onclick="closeRegDrawer()">✕</button>
+  </div>
+  <div class="rdrawer-body" id="rdBody"></div>
+  <div class="rdrawer-actions" id="rdActions"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 import { getFirestore, collection, addDoc, updateDoc, doc, increment, onSnapshot, getDoc, setDoc }
   from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
@@ -983,145 +763,107 @@ let balance       = 500;
 let adminUnlocked = false;
 const MAX_BALANCE = 500;
 
-/*STARS CANVAS*/
-(function initStars() {
-  const canvas = document.getElementById('stars-canvas');
-  const ctx    = canvas.getContext('2d');
-  let stars    = [];
-
-  function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-    stars = Array.from({ length: 160 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.2 + .2,
-      a: Math.random(),
-      speed: Math.random() * .008 + .002,
-    }));
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    stars.forEach(s => {
-      s.a += s.speed;
-      const alpha = (Math.sin(s.a) + 1) / 2 * .7 + .1;
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,180,255,${alpha})`;
-      ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  }
-
-  resize();
-  draw();
-  window.addEventListener('resize', resize);
+/* ── STARS ── */
+(function(){
+  const c=document.getElementById('stars-canvas'),ctx=c.getContext('2d');let s=[];
+  function r(){c.width=innerWidth;c.height=innerHeight;s=Array.from({length:160},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.2+.2,a:Math.random(),sp:Math.random()*.008+.002}))}
+  function d(){ctx.clearRect(0,0,c.width,c.height);s.forEach(p=>{p.a+=p.sp;const al=(Math.sin(p.a)+1)/2*.7+.1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(200,180,255,${al})`;ctx.fill()});requestAnimationFrame(d)}
+  r();d();window.addEventListener('resize',r);
 })();
 
-/* TOAST*/
-function showToast(msg, type = 'success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `toast ${type} show`;
-  setTimeout(() => t.classList.remove('show'), 2800);
+/* ── TOAST ── */
+function showToast(msg, type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-/* ── REALTIME*/
-onSnapshot(projectsRef, snapshot => {
-  projects = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => !p.deleted);
+/* ── REALTIME ── */
+onSnapshot(projectsRef, snapshot=>{
+  projects=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(p=>!p.deleted);
   render();
-  updateStats();
+  const total=projects.reduce((s,p)=>s+(p.funds||0),0);
+  document.getElementById('stat-projects').textContent=projects.length;
+  document.getElementById('stat-total').textContent=total.toLocaleString('ar-SA');
 });
 
-function updateStats() {
-  document.getElementById('stat-projects').textContent = projects.length;
-  const total = projects.reduce((s, p) => s + (p.funds || 0), 0);
-  document.getElementById('stat-total').textContent = total.toLocaleString('ar-SA');
-}
+/* ── SIGN IN (main box) ── */
+window.startVoting = async function(){
+  const phone=document.getElementById('phoneInput').value.trim();
+  if(!phone){ showToast('أدخل رقم الجوال','error'); return; }
+  await signIn(phone);
+  document.getElementById('loginSection').style.display='none';
+  document.getElementById('balanceBox').style.display='block';
+};
 
-/* ── START VOTING : المستخدم عنده ميزانية 500 ريال*/
-window.startVoting = async function () {
-  const phone = document.getElementById('phoneInput').value.trim();
-  if (!phone) { showToast('أدخل رقم الجوال', 'error'); return; }
+/* ── SIGN IN (modal) ── */
+window.modalSignIn = async function(){
+  const phone=document.getElementById('modalPhone').value.trim();
+  if(!phone||phone.length<10){ showToast('أدخل رقم جوال صحيح','error'); return; }
+  closeModal();
+  await signIn(phone);
+  document.getElementById('loginSection').style.display='none';
+  document.getElementById('balanceBox').style.display='block';
+};
 
-  currentUser = phone;
-  const userRef  = doc(db, "users", phone);
-  const userSnap = await getDoc(userRef);
-
-  if (!userSnap.exists()) {
-    await setDoc(userRef, { phone, budget: 500, investments: {} });
-    balance = 500;
-  } else {
-    balance = userSnap.data().budget;
-  }
-
+async function signIn(phone){
+  currentUser=phone;
+  const ref=doc(db,"users",phone);
+  const snap=await getDoc(ref);
+  if(!snap.exists()){ await setDoc(ref,{phone,budget:500,investments:{}}); balance=500; }
+  else { balance=snap.data().budget; }
   updateBalance();
-  document.getElementById('loginSection').style.display = 'none';
-  document.getElementById('balanceBox').style.display   = 'block';
+  document.getElementById('projectsSection').style.display = 'block';
+  render();
   showToast(`مرحباً! رصيدك ${balance} ريال `);
-};
-
-function updateBalance() {
-  document.getElementById('balance').textContent   = balance;
-  document.getElementById('balanceFill').style.width = (balance / MAX_BALANCE * 100) + '%';
 }
 
-function vibrate() {
-  if (navigator.vibrate) navigator.vibrate(40);
+function updateBalance(){
+  document.getElementById('balance').textContent=balance;
+  document.getElementById('balanceFill').style.width=(balance/MAX_BALANCE*100)+'%';
 }
 
-/*INVEST */
-window.investQuick = async function (id, amount) {
-  if (!currentUser) { showToast('أدخل رقم الجوال أولاً', 'error'); return; }
-  if (amount > balance) { showToast('رصيدك غير كافي', 'error'); return; }
-  await updateDoc(doc(db, "projects", id), { funds: increment(amount) });
-  balance -= amount;
-  updateBalance();
-  vibrate();
+function vibrate(){ if(navigator.vibrate) navigator.vibrate(40); }
+
+/* ── INVEST ── */
+window.investQuick = async function(id, amount){
+  if(!currentUser){ openModal(); return; }
+  if(amount>balance){ showToast('رصيدك غير كافي','error'); return; }
+  await updateDoc(doc(db,"projects",id),{funds:increment(amount)});
+  balance-=amount; updateBalance(); vibrate();
   showToast(`تم استثمار ${amount} ريال `);
 };
 
-window.investCustom = async function (id) {
-  const input  = document.getElementById("amount-" + id);
-  const amount = parseInt(input.value);
-  if (!amount || amount <= 0) { showToast('أدخل مبلغ صحيح', 'error'); return; }
-  if (amount > balance)       { showToast('رصيدك غير كافي', 'error');  return; }
-  await updateDoc(doc(db, "projects", id), { funds: increment(amount) });
-  balance -= amount;
-  updateBalance();
-  input.value = '';
-  vibrate();
+window.investCustom = async function(id){
+  if(!currentUser){ openModal(); return; }
+  const input=document.getElementById("amount-"+id);
+  const amount=parseInt(input.value);
+  if(!amount||amount<=0){ showToast('أدخل مبلغ صحيح','error'); return; }
+  if(amount>balance){ showToast('رصيدك غير كافي','error'); return; }
+  await updateDoc(doc(db,"projects",id),{funds:increment(amount)});
+  balance-=amount; updateBalance(); input.value=''; vibrate();
   showToast(`تم استثمار ${amount} ريال `);
 };
 
-/*RENDER PROJECTS */
-function render() {
-  const container = document.getElementById("projects");
-  document.getElementById("projectsCount").textContent = `${projects.length} مشروع`;
+/* ── MODAL ── */
+window.openModal  = function(){ document.getElementById('signInModal').classList.add('open'); setTimeout(()=>document.getElementById('modalPhone').focus(),80); };
+window.closeModal = function(){ document.getElementById('signInModal').classList.remove('open'); };
 
-  if (!projects.length) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon"></div>
-        <p>لا توجد مشاريع حتى الآن</p>
-      </div>`;
+/* ── RENDER ── */
+function render(){
+  const container=document.getElementById("projects");
+  document.getElementById("projectsCount").textContent=`${projects.length} مشروع`;
+
+  if(!projects.length){
+    container.innerHTML=`<div class="empty-state"><div class="empty-icon">🚀</div><p>لا توجد مشاريع حتى الآن</p></div>`;
     return;
   }
 
-  const sorted = [...projects].sort((a, b) => (b.funds || 0) - (a.funds || 0));
+  const sorted=[...projects].sort((a,b)=>(b.funds||0)-(a.funds||0));
 
-  container.innerHTML = sorted.map((p, i) => `
-    <div class="card" style="animation-delay:${i * 0.07}s">
-      <div class="card-top-line"></div>
-      <div class="card-category">${p.category || 'Tech'}</div>
-      <h3>${p.title}</h3>
-      <div class="team">👥 ${p.team}</div>
-      <div class="desc">${p.desc}</div>
-      <div class="funds-section">
-        <div class="funds-label">إجمالي الاستثمارات</div>
-        <div class="funds">${(p.funds || 0).toLocaleString('ar-SA')} <span class="funds-sar">ريال</span></div>
-      </div>
+  container.innerHTML=sorted.map((p,i)=>{
+    // If user signed in → show invest controls; otherwise → show locked placeholder
+    const voteSection = currentUser ? `
       <div class="quick">
         <button class="quick-btn" onclick="investQuick('${p.id}',10)">10</button>
         <button class="quick-btn" onclick="investQuick('${p.id}',50)">50</button>
@@ -1130,74 +872,253 @@ function render() {
       </div>
       <input class="amountInput" id="amount-${p.id}" placeholder="أدخل مبلغاً مخصصاً" type="number" min="1">
       <button class="vote-btn" onclick="investCustom('${p.id}')">استثمر الآن</button>
-    </div>
-  `).join('');
+    ` : `
+      <div class="vote-locked" onclick="openModal()">
+        <div class="vote-locked-text">🔐 <span>أدخل رقم جوالك</span> للاستثمار في هذا المشروع</div>
+      </div>
+    `;
+
+    return `
+    <div class="card" style="animation-delay:${i*.07}s">
+      <div class="card-top-line"></div>
+      <div class="card-category">${p.category||'Tech'}</div>
+      <h3>${p.title}</h3>
+      <div class="team">👥 ${p.team}</div>
+      <div class="desc">${p.desc}</div>
+      <div class="funds-section">
+        <div class="funds-label">إجمالي الاستثمارات</div>
+        <div class="funds">${(p.funds||0).toLocaleString('ar-SA')} <span class="funds-sar">ريال</span></div>
+      </div>
+      ${voteSection}
+    </div>`;
+  }).join('');
 
   renderAdmin();
 }
 
 /* ── ADMIN ── */
-window.addProject = async function () {
-  if (!adminUnlocked) return;
-  const t = document.getElementById('title').value.trim();
-  const tm = document.getElementById('team').value.trim();
-  const d = document.getElementById('desc').value.trim();
-  if (!t || !tm) { showToast('أدخل اسم المشروع والفريق', 'error'); return; }
-  await addDoc(projectsRef, {
-    title: t, team: tm,
-    category: document.getElementById('category').value,
-    desc: d, funds: 0, deleted: false
-  });
-  document.getElementById('title').value = '';
-  document.getElementById('team').value  = '';
-  document.getElementById('desc').value  = '';
-  showToast('تم إضافة المشروع ✅');
+window.addProject = async function(){
+  if(!adminUnlocked) return;
+  const t=document.getElementById('title').value.trim();
+  const tm=document.getElementById('team').value.trim();
+  const d=document.getElementById('desc').value.trim();
+  if(!t||!tm){ showToast('أدخل اسم المشروع والفريق','error'); return; }
+  await addDoc(projectsRef,{title:t,team:tm,category:document.getElementById('category').value,desc:d,funds:0,deleted:false});
+  document.getElementById('title').value='';
+  document.getElementById('team').value='';
+  document.getElementById('desc').value='';
+  showToast('تم إضافة المشروع ');
 };
 
-function renderAdmin() {
-  if (!adminUnlocked) return;
-  const list = document.getElementById("adminList");
-  if (!projects.length) { list.innerHTML = '<p style="color:var(--muted);font-size:13px">لا توجد مشاريع</p>'; return; }
-  list.innerHTML = projects.map(p => `
+function renderAdmin(){
+  if(!adminUnlocked) return;
+  const list=document.getElementById("adminList");
+  if(!projects.length){ list.innerHTML='<p style="color:var(--muted);font-size:13px">لا توجد مشاريع</p>'; return; }
+  list.innerHTML=projects.map(p=>`
     <div class="admin-project-item">
-      <span>${p.title} <span style="color:var(--muted);font-size:12px">(${p.funds || 0} ريال)</span></span>
+      <span>${p.title} <span style="color:var(--muted);font-size:12px">(${p.funds||0} ريال)</span></span>
       <button class="btn btn-danger" style="padding:6px 12px;font-size:12px" onclick="deleteProject('${p.id}')">حذف</button>
     </div>`).join('');
 }
 
-window.deleteProject = async function (id) {
-  await updateDoc(doc(db, "projects", id), { deleted: true });
+window.deleteProject = async function(id){
+  await updateDoc(doc(db,"projects",id),{deleted:true});
   showToast('تم حذف المشروع');
 };
 
-window.showAdmin = function () {
-  document.getElementById('main').style.display  = 'none';
-  document.getElementById('hero').style.display  = 'none';
-  document.getElementById('how').style.display   = 'none';
-  document.getElementById('admin').style.display = 'block';
+window.showAdmin = function(){
+  document.getElementById('main').style.display='none';
+  document.getElementById('hero').style.display='none';
+  document.getElementById('how').style.display='none';
+  document.getElementById('admin').style.display='block';
 };
 
-window.showMain = function () {
-  document.getElementById('main').style.display  = 'block';
-  document.getElementById('hero').style.display  = 'block';
-  document.getElementById('how').style.display   = 'block';
-  document.getElementById('admin').style.display = 'none';
+window.showMain = function(){
+  document.getElementById('main').style.display='block';
+  document.getElementById('hero').style.display='block';
+  document.getElementById('how').style.display='block';
+  document.getElementById('admin').style.display='none';
 };
 
-window.login = function () {
-  if (document.getElementById('adminPass').value === "1415") {
-    adminUnlocked = true;
-    document.getElementById('loginBox').style.display    = 'none';
-    document.getElementById('adminPanel').style.display  = 'block';
+window.login = function(){
+  if(document.getElementById('adminPass').value==="1415"){
+    adminUnlocked=true;
+    document.getElementById('loginBox').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
     renderAdmin();
-  } else {
-    showToast('كلمة المرور غير صحيحة', 'error');
-  }
+  } else { showToast('كلمة المرور غير صحيحة','error'); }
 };
 
-window.openLeaderboard = function () { window.open("leaderboard.html", "_blank"); };
-window.openTrending    = function () { window.open("trending.html",    "_blank"); };
+/* ── MOBILE MENU ── */
+window.toggleMenu = function(){ document.getElementById('mobileMenu').classList.toggle('open'); };
+window.closeMenu  = function(){ document.getElementById('mobileMenu').classList.remove('open'); };
+document.addEventListener('click',e=>{
+  const m=document.getElementById('mobileMenu'),h=document.getElementById('hamburger');
+  if(m.classList.contains('open')&&!m.contains(e.target)&&!h.contains(e.target)) m.classList.remove('open');
+});
 
+window.openLeaderboard = function(){ window.open("leaderboard.html","_blank"); };
+window.openTrending    = function(){ window.open("trending.html","_blank"); };
+
+/* ══════════════════════════════
+   REGISTRATIONS
+══════════════════════════════ */
+let allRegs = [], filteredRegs = [], regStatusFilter = '';
+
+// listen to registrations collection
+const regsRef = collection(db, 'registrations');
+onSnapshot(regsRef, snap => {
+  allRegs = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+    .sort((a,b) => (b.submittedAt?.seconds||0) - (a.submittedAt?.seconds||0));
+  updateRegStats();
+  applyRegFilters();
+});
+
+function updateRegStats() {
+  const pending  = allRegs.filter(r => r.status === 'pending').length;
+  const accepted = allRegs.filter(r => r.status === 'accepted').length;
+  const members  = allRegs.reduce((s,r) => s + (r.team?.memberCount||0), 0);
+  document.getElementById('rs-total').textContent    = allRegs.length;
+  document.getElementById('rs-pending').textContent  = pending;
+  document.getElementById('rs-accepted').textContent = accepted;
+  document.getElementById('rs-members').textContent  = members;
+  document.getElementById('regTabBadge').textContent = allRegs.length;
+}
+
+window.setRegStatus = function(status) {
+  regStatusFilter = status;
+  ['all','pending','accepted','rejected'].forEach(k => {
+    document.getElementById('rf-'+k)?.classList.remove('active');
+  });
+  document.getElementById('rf-'+(status||'all'))?.classList.add('active');
+  applyRegFilters();
+};
+
+window.applyRegFilters = function() {
+  const q = (document.getElementById('regSearch')?.value||'').toLowerCase();
+  filteredRegs = allRegs.filter(r => {
+    const matchStatus = !regStatusFilter || r.status === regStatusFilter;
+    const matchQ = !q || r.project?.name?.toLowerCase().includes(q) || r.team?.name?.toLowerCase().includes(q);
+    return matchStatus && matchQ;
+  });
+  renderRegTable();
+};
+
+function renderRegTable() {
+  const tbody = document.getElementById('regTableBody');
+  if (!tbody) return;
+  if (!filteredRegs.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:50px;color:var(--muted)"> لا توجد نتائج</td></tr>`;
+    return;
+  }
+  const statusMap = {
+    pending:  ['pending',  '⏳ انتظار'],
+    accepted: ['accepted', '✅ مقبول'],
+    rejected: ['rejected', '❌ مرفوض']
+  };
+  tbody.innerHTML = filteredRegs.map((r,i) => {
+    const date = r.submittedAt?.seconds
+      ? new Date(r.submittedAt.seconds*1000).toLocaleDateString('ar-SA') : '—';
+    const [cls, label] = statusMap[r.status] || statusMap.pending;
+    return `<tr>
+      <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">${i+1}</td>
+      <td style="font-weight:600;color:white;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.project?.name||'—'}</td>
+      <td style="color:var(--accent2);font-size:12px">${r.team?.name||'—'}</td>
+      <td><span style="font-size:10px;font-family:'Space Mono',monospace;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:var(--accent2);padding:2px 7px;border-radius:4px">${r.project?.category||'—'}</span></td>
+      <td style="font-family:'Space Mono',monospace;text-align:center">${r.team?.memberCount||'—'}</td>
+      <td><span class="reg-status ${cls}">${label}</span></td>
+      <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">${date}</td>
+      <td><button class="btn btn-ghost" style="padding:5px 10px;font-size:12px" onclick="openRegDrawer('${r.id}')">عرض</button></td>
+    </tr>`;
+  }).join('');
+}
+
+window.openRegDrawer = function(id) {
+  const r = allRegs.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById('rdTitle').textContent = r.project?.name || 'تفاصيل';
+  const date = r.submittedAt?.seconds
+    ? new Date(r.submittedAt.seconds*1000).toLocaleString('ar-SA') : '—';
+  const membersHTML = (r.members||[]).map(m =>
+    `<span class="member-tag ${m.role==='leader'?'leader':''}">${m.role==='leader'?' ':''}<b>${m.name}</b> · ${m.studentId}</span>`
+  ).join('');
+  document.getElementById('rdBody').innerHTML = `
+    <div class="rd-section">
+      <div class="rd-section-title"> المشروع</div>
+      <div class="rd-row"><span class="rd-key">اسم المشروع</span><span class="rd-val">${r.project?.name||'—'}</span></div>
+      <div class="rd-row"><span class="rd-key">التصنيف</span><span class="rd-val">${r.project?.category||'—'}</span></div>
+      <div class="rd-row"><span class="rd-key">الملخص</span><span class="rd-val" style="font-size:12px;line-height:1.7">${r.project?.description||'—'}</span></div>
+      <div class="rd-row"><span class="rd-key">نموذج الربح</span><span class="rd-val" style="font-size:12px;line-height:1.7;color:#34d399">${r.project?.revenueModel||'—'}</span></div>
+    </div>
+    <div class="rd-section">
+      <div class="rd-section-title">👥 الفريق</div>
+      <div class="rd-row"><span class="rd-key">اسم الفريق</span><span class="rd-val">${r.team?.name||'—'}</span></div>
+      <div class="rd-row"><span class="rd-key">الكلية</span><span class="rd-val">${r.team?.college||'—'}</span></div>
+      <div class="rd-row"><span class="rd-key">التخصص</span><span class="rd-val">${r.team?.major||'—'}</span></div>
+      <div class="rd-row"><span class="rd-key">السنة</span><span class="rd-val">${r.team?.studyYear||'—'}</span></div>
+      <div class="rd-row"><span class="rd-key">عدد الأعضاء</span><span class="rd-val">${r.team?.memberCount||'—'}</span></div>
+    </div>
+    <div class="rd-section">
+      <div class="rd-section-title"> الأعضاء</div>
+      <div style="margin-top:4px">${membersHTML||'—'}</div>
+    </div>
+    <div class="rd-section">
+      <div class="rd-section-title">📞 التواصل</div>
+      <div class="rd-row"><span class="rd-key">البريد</span><span class="rd-val" style="direction:ltr">${r.contact?.email||'—'}</span></div>
+      <div class="rd-row"><span class="rd-key">الجوال</span><span class="rd-val" style="direction:ltr">${r.contact?.leaderPhone||'—'}</span></div>
+    </div>
+    <div class="rd-section">
+      <div class="rd-section-title">⏱ معلومات التسجيل</div>
+      <div class="rd-row"><span class="rd-key">رقم التسجيل</span><span class="rd-val" style="font-family:'Space Mono',monospace;font-size:11px">TV-${r.id.slice(0,8).toUpperCase()}</span></div>
+      <div class="rd-row"><span class="rd-key">التاريخ</span><span class="rd-val">${date}</span></div>
+    </div>`;
+
+  const s = r.status || 'pending';
+  document.getElementById('rdActions').innerHTML = `
+    ${s!=='accepted'?`<button class="btn btn-ghost" style="flex:1;justify-content:center;color:#34d399;border-color:rgba(16,185,129,.3)" onclick="setRegStatus2('${r.id}','accepted')">✅ قبول</button>`:''}
+    ${s!=='rejected'?`<button class="btn btn-ghost" style="flex:1;justify-content:center;color:#f87171;border-color:rgba(239,68,68,.3)" onclick="setRegStatus2('${r.id}','rejected')">❌ رفض</button>`:''}
+    ${s!=='pending' ?`<button class="btn btn-ghost" style="flex:1;justify-content:center;color:#fbbf24;border-color:rgba(245,158,11,.3)" onclick="setRegStatus2('${r.id}','pending')">⏳ إعادة</button>`:''}`;
+
+  document.getElementById('regDrawer').classList.add('open');
+  document.getElementById('regOverlay').style.display = 'block';
+};
+
+window.closeRegDrawer = function() {
+  document.getElementById('regDrawer').classList.remove('open');
+  document.getElementById('regOverlay').style.display = 'none';
+};
+
+window.setRegStatus2 = async function(id, status) {
+  await updateDoc(doc(db,'registrations',id), {status});
+  const msgs = {accepted:'✅ تم قبول الفريق', rejected:'❌ تم رفض الفريق', pending:'⏳ تمت الإعادة للانتظار'};
+  showToast(msgs[status]);
+  closeRegDrawer();
+};
+
+window.exportRegsExcel = function() {
+  if(!allRegs.length){ showToast('لا توجد بيانات','error'); return; }
+  const rows = [['#','اسم المشروع','التصنيف','نموذج الربح','اسم الفريق','الكلية','التخصص','السنة','عدد الأعضاء','الأعضاء','البريد','الجوال','الحالة','التاريخ']];
+  allRegs.forEach((r,i) => {
+    const members = (r.members||[]).map(m=>`${m.name}(${m.studentId})`).join(' | ');
+    const date = r.submittedAt?.seconds ? new Date(r.submittedAt.seconds*1000).toLocaleDateString('ar-SA') : '—';
+    const statusAr = {pending:'انتظار',accepted:'مقبول',rejected:'مرفوض'}[r.status]||'—';
+    rows.push([i+1, r.project?.name, r.project?.category, r.project?.revenueModel,
+      r.team?.name, r.team?.college, r.team?.major, r.team?.studyYear, r.team?.memberCount,
+      members, r.contact?.email, r.contact?.leaderPhone, statusAr, date]);
+  });
+  const csv = '\uFEFF' + rows.map(r=>r.map(c=>`"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = Object.assign(document.createElement('a'), {href:URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})), download:`TechnoVenture_Regs.csv`});
+  a.click(); URL.revokeObjectURL(a.href);
+  showToast(' تم التصدير بنجاح');
+};
+
+/* ── TAB SWITCH ── */
+window.switchAdminTab = function(tab) {
+  document.getElementById('tabProjects').style.display       = tab==='projects'      ? 'block' : 'none';
+  document.getElementById('tabRegistrations').style.display  = tab==='registrations' ? 'block' : 'none';
+  document.getElementById('tab-projects').classList.toggle('active',      tab==='projects');
+  document.getElementById('tab-registrations').classList.toggle('active', tab==='registrations');
+};
 </script>
 </body>
 </html>
