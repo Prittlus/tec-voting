@@ -132,6 +132,41 @@ max-width:600px;
 margin:auto;
 }
 
+
+/* MOBILE OPTIMIZATION */
+
+@media (max-width:600px){
+
+header{
+padding:15px;
+flex-direction:column;
+gap:10px;
+}
+
+.projects{
+grid-template-columns:1fr;
+}
+
+.quick{
+grid-template-columns:repeat(2,1fr);
+}
+
+.card{
+padding:16px;
+}
+
+button{
+padding:12px;
+font-size:14px;
+}
+
+.vote-btn{
+height:44px;
+font-size:15px;
+}
+
+}
+
 </style>
 
 </head>
@@ -144,9 +179,9 @@ margin:auto;
 
 <div class="logo">
 
-<img src="tecClub.jpg">
+<img src="logo.png">
 
-<h2>TechnoVenture</h2>
+<h2>TEC Expo</h2>
 
 </div>
 
@@ -156,8 +191,8 @@ margin:auto;
 
 <button onclick="showAdmin()">الإدارة</button>
 
-<button onclick="openLeaderboard()" style="background:#d8a219;color:black">
- Leaderboard
+<button onclick="openLeaderboard()" style="background:#fbbf24;color:black">
+Leaderboard
 </button>
 
 <button onclick="openTrending()" style="background:#ef4444">
@@ -190,7 +225,7 @@ margin:auto;
 
 <span id="balance">500</span>
 
-⃁
+ريال
 
 </div>
 
@@ -344,6 +379,16 @@ balanceBox.style.display="block";
 
 
 
+function vibrate(){
+
+if(navigator.vibrate){
+navigator.vibrate(40);
+}
+
+}
+
+
+
 window.investQuick = async function(id,amount){
 
 if(!currentUser){
@@ -363,6 +408,8 @@ funds:increment(amount)
 balance -= amount;
 
 document.getElementById("balance").innerText=balance;
+
+vibrate();
 
 };
 
@@ -394,6 +441,8 @@ document.getElementById("balance").innerText=balance;
 
 input.value="";
 
+vibrate();
+
 };
 
 
@@ -417,7 +466,7 @@ container.innerHTML+=`
 <div class="desc">${p.desc}</div>
 
 <div class="funds">
- ${p.funds||0} ⃁
+ ${p.funds||0} ريال
 </div>
 
 <div class="quick">
