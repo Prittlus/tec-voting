@@ -1,12 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TechnoVenture Voting</title>
+<title>TechnoVenture</title>
 
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -35,16 +35,7 @@ gap:10px;
 }
 
 .logo img{
-height:42px;
-}
-
-.logo h2{
-margin:0;
-font-weight:700;
-}
-
-.nav-buttons button{
-margin-left:8px;
+height:40px;
 }
 
 button{
@@ -55,11 +46,10 @@ padding:10px 16px;
 border-radius:8px;
 cursor:pointer;
 font-weight:600;
-transition:.2s;
 }
 
 button:hover{
-opacity:.85;
+opacity:.9;
 }
 
 .page{
@@ -78,17 +68,7 @@ gap:20px;
 background:#1a0d38;
 border-radius:12px;
 padding:20px;
-transition:.2s;
 border:1px solid #2d1b55;
-}
-
-.card:hover{
-transform:translateY(-4px);
-border-color:#7c3aed;
-}
-
-.card h3{
-margin:0 0 5px;
 }
 
 .team{
@@ -103,24 +83,37 @@ color:#c4b5fd;
 margin-bottom:20px;
 }
 
-.vote-count{
-font-size:32px;
+.funds{
+font-size:26px;
 font-weight:700;
 color:#a78bfa;
 margin-bottom:10px;
 }
 
-.vote-btn{
-width:100%;
-padding:10px;
-border-radius:8px;
-background:linear-gradient(45deg,#7c3aed,#a78bfa);
+.quick{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:6px;
+margin-bottom:10px;
 }
 
-.admin{
-display:none;
-max-width:600px;
-margin:auto;
+.quick button{
+background:#2d1b55;
+}
+
+.amountInput{
+width:100%;
+padding:10px;
+border-radius:6px;
+border:1px solid #2d1b55;
+background:#221442;
+color:white;
+margin-bottom:10px;
+}
+
+.vote-btn{
+width:100%;
+background:linear-gradient(45deg,#7c3aed,#a78bfa);
 }
 
 input,select{
@@ -133,30 +126,42 @@ background:#221442;
 color:white;
 }
 
+.admin{
+display:none;
+max-width:600px;
+margin:auto;
+}
+
 </style>
 
 </head>
+
+
 <body>
 
 
 <header>
 
 <div class="logo">
+
 <img src="tecClub.jpg">
+
 <h2>TechnoVenture</h2>
+
 </div>
 
-<div class="nav-buttons">
+<div>
 
 <button onclick="showMain()">المشاريع</button>
+
 <button onclick="showAdmin()">الإدارة</button>
 
-<button onclick="openLeaderboard()" style="background:#fbbf24;color:black">
-🏆 LeaderBoard
+<button onclick="openLeaderboard()" style="background:#d8a219;color:black">
+ Leaderboard
 </button>
 
 <button onclick="openTrending()" style="background:#ef4444">
-🔥 Trending
+ Trending
 </button>
 
 </div>
@@ -167,7 +172,31 @@ color:white;
 
 <div id="main" class="page">
 
+
+<div id="loginSection" style="max-width:400px;margin:auto;margin-bottom:40px;text-align:center">
+
+<h3> أدخل رقم الجوال</h3>
+
+<input id="phoneInput" placeholder="05XXXXXXXX">
+
+<button onclick="startVoting()">ابدأ الاستثمار</button>
+
+</div>
+
+
+<div id="balanceBox" style="display:none;text-align:center;margin-bottom:30px;font-size:20px">
+
+ رصيدك المتبقي:
+
+<span id="balance">500</span>
+
+⃁
+
+</div>
+
+
 <div class="projects" id="projects"></div>
+
 
 </div>
 
@@ -179,13 +208,9 @@ color:white;
 
 <h3> دخول الإدارة</h3>
 
-<input type="password" id="adminPass" placeholder="رمز الدخول">
+<input type="password" id="adminPass">
 
 <button onclick="login()">دخول</button>
-
-<p id="loginError" style="color:red;display:none">
-رمز غير صحيح
-</p>
 
 </div>
 
@@ -195,21 +220,19 @@ color:white;
 <h3>إضافة مشروع</h3>
 
 <input id="title" placeholder="اسم المشروع">
+
 <input id="team" placeholder="اسم الفريق">
 
 <select id="category">
 <option>AI</option>
 <option>Health</option>
-<option>FinTech</option>
-<option>Eng</option>
-<option>Data</option>
+<option>Fintech</option>
+<option>Mobile</option>
 </select>
 
 <input id="desc" placeholder="وصف المشروع">
 
 <button onclick="addProject()">إضافة مشروع</button>
-
-<h3>إدارة المشاريع</h3>
 
 <div id="adminList"></div>
 
@@ -230,8 +253,11 @@ addDoc,
 updateDoc,
 doc,
 increment,
-onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+onSnapshot,
+getDoc,
+setDoc
+}
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 
 const firebaseConfig = {
@@ -259,8 +285,10 @@ const projectsRef = collection(db,"projects");
 
 
 let projects=[];
-let voted={};
+let currentUser=null;
+let balance=500;
 let adminUnlocked=false;
+
 
 
 onSnapshot(projectsRef,(snapshot)=>{
@@ -276,18 +304,95 @@ render();
 
 
 
-window.vote = async function(id){
+window.startVoting = async function(){
 
-if(voted[id]){
-alert("صوتك مسجل مسبقاً");
+const phone = phoneInput.value;
+
+if(!phone){
+alert("أدخل رقم الجوال");
+return;
+}
+
+currentUser=phone;
+
+const userRef=doc(db,"users",phone);
+
+const userSnap=await getDoc(userRef);
+
+if(!userSnap.exists()){
+
+await setDoc(userRef,{
+phone:phone,
+budget:500,
+investments:{}
+});
+
+balance=500;
+
+}else{
+
+balance=userSnap.data().budget;
+
+}
+
+document.getElementById("balance").innerText=balance;
+
+loginSection.style.display="none";
+balanceBox.style.display="block";
+
+};
+
+
+
+window.investQuick = async function(id,amount){
+
+if(!currentUser){
+alert("أدخل رقم الجوال أولاً");
+return;
+}
+
+if(amount>balance){
+alert("رصيدك غير كافي");
 return;
 }
 
 await updateDoc(doc(db,"projects",id),{
-votes:increment(1)
+funds:increment(amount)
 });
 
-voted[id]=true;
+balance -= amount;
+
+document.getElementById("balance").innerText=balance;
+
+};
+
+
+
+window.investCustom = async function(id){
+
+const input=document.getElementById("amount-"+id);
+
+const amount=parseInt(input.value);
+
+if(!amount || amount<=0){
+alert("أدخل مبلغ صحيح");
+return;
+}
+
+if(amount>balance){
+alert("رصيدك غير كافي");
+return;
+}
+
+await updateDoc(doc(db,"projects",id),{
+funds:increment(amount)
+});
+
+balance -= amount;
+
+document.getElementById("balance").innerText=balance;
+
+input.value="";
 
 };
 
@@ -311,12 +416,28 @@ container.innerHTML+=`
 
 <div class="desc">${p.desc}</div>
 
-<div class="vote-count">
-🔥 ${p.votes||0}
+<div class="funds">
+ ${p.funds||0} ⃁
 </div>
 
-<button class="vote-btn" onclick="vote('${p.id}')">
-صوت الآن
+<div class="quick">
+
+<button onclick="investQuick('${p.id}',10)">10</button>
+
+<button onclick="investQuick('${p.id}',50)">50</button>
+
+<button onclick="investQuick('${p.id}',100)">100</button>
+
+<button onclick="investQuick('${p.id}',200)">200</button>
+
+</div>
+
+<input class="amountInput" id="amount-${p.id}" placeholder="أدخل مبلغ">
+
+<button class="vote-btn" onclick="investCustom('${p.id}')">
+
+استثمر
+
 </button>
 
 </div>
@@ -340,12 +461,9 @@ title:title.value,
 team:team.value,
 category:category.value,
 desc:desc.value,
-votes:0
+funds:0,
+deleted:false
 });
-
-title.value="";
-team.value="";
-desc.value="";
 
 };
 
@@ -363,8 +481,8 @@ projects.forEach(p=>{
 
 list.innerHTML+=`
 
-<div style="margin-bottom:6px">
-${p.title} (${p.votes||0})
+<div>
+${p.title}
 <button onclick="deleteProject('${p.id}')">حذف</button>
 </div>
 
@@ -378,8 +496,6 @@ ${p.title} (${p.votes||0})
 
 window.deleteProject = async function(id){
 
-if(!confirm("حذف المشروع؟")) return;
-
 await updateDoc(doc(db,"projects",id),{
 deleted:true
 });
@@ -389,38 +505,27 @@ deleted:true
 
 
 window.showAdmin=function(){
-
-document.getElementById("main").style.display="none";
-document.getElementById("admin").style.display="block";
-
+main.style.display="none";
+admin.style.display="block";
 };
-
 
 window.showMain=function(){
-
-document.getElementById("main").style.display="block";
-document.getElementById("admin").style.display="none";
-
+main.style.display="block";
+admin.style.display="none";
 };
+
 
 
 window.login=function(){
 
 if(adminPass.value==="1415"){
-
 adminUnlocked=true;
-
 loginBox.style.display="none";
-
 adminPanel.style.display="block";
-
-}else{
-
-loginError.style.display="block";
-
 }
 
 };
+
 
 
 window.openLeaderboard=function(){
@@ -433,7 +538,5 @@ window.open("trending.html","_blank");
 
 </script>
 
-
 </body>
 </html>
-
