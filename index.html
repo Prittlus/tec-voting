@@ -1,591 +1,1203 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>TechnoVenture</title>
-
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<title>TechnoVenture — معرض المشاريع التقنية</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-
-body{
-font-family:'IBM Plex Sans Arabic',sans-serif;
-background:#0e0520;
-color:white;
-margin:0;
+:root {
+  --bg: #04010f;
+  --surface: #0a0520;
+  --card: #0f0728;
+  --border: rgba(120, 60, 240, 0.18);
+  --accent: #7c3aed;
+  --accent2: #a855f7;
+  --accent3: #06b6d4;
+  --gold: #f59e0b;
+  --red: #ef4444;
+  --text: #e2d9ff;
+  --muted: #8b7ab8;
+  --glow: rgba(124, 58, 237, 0.35);
 }
 
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 40px;
-background:#14092c;
-border-bottom:1px solid #2d1b55;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-.logo{
-display:flex;
-align-items:center;
-gap:10px;
+/* ── CANVAS STARS BG ── */
+#stars-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .5;
 }
 
-.logo img{
-height:40px;
+/* ── HEADER ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  background: rgba(4, 1, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
 }
 
-button{
-background:#7c3aed;
-color:white;
-border:none;
-padding:10px 16px;
-border-radius:8px;
-cursor:pointer;
-font-weight:600;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-button:hover{
-opacity:.9;
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+  box-shadow: 0 0 20px var(--glow);
 }
 
-.page{
-padding:40px;
-max-width:1200px;
-margin:auto;
+.logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, #fff, var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.projects{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:20px;
+.logo-sub {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 2px;
 }
 
-.card{
-background:#1a0d38;
-border-radius:12px;
-padding:20px;
-border:1px solid #2d1b55;
+.nav-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.team{
-color:#a78bfa;
-font-size:14px;
-margin-bottom:10px;
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all .2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.desc{
-font-size:14px;
-color:#c4b5fd;
-margin-bottom:20px;
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  transition: opacity .15s;
 }
 
-.funds{
-font-size:26px;
-font-weight:700;
-color:#a78bfa;
-margin-bottom:10px;
+.btn:hover::after { opacity: .07; }
+.btn:active { transform: scale(.97); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #6d28d9);
+  color: white;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, .4);
 }
 
-.quick{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:6px;
-margin-bottom:10px;
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), #d97706);
+  color: #1a0d00;
+  font-weight: 700;
 }
 
-.quick button{
-background:#2d1b55;
+.btn-danger {
+  background: linear-gradient(135deg, var(--red), #b91c1c);
+  color: white;
 }
 
-.amountInput{
-width:100%;
-padding:10px;
-border-radius:6px;
-border:1px solid #2d1b55;
-background:#221442;
-color:white;
-margin-bottom:10px;
+.btn-ghost {
+  background: rgba(124, 58, 237, .12);
+  color: var(--accent2);
+  border: 1px solid var(--border);
 }
 
-.vote-btn{
-width:100%;
-background:linear-gradient(45deg,#7c3aed,#a78bfa);
+/* ── HERO ── */
+#hero {
+  position: relative;
+  z-index: 1;
+  padding: 100px 48px 80px;
+  text-align: center;
+  overflow: hidden;
 }
 
-input,select{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-border-radius:6px;
-border:1px solid #2d1b55;
-background:#221442;
-color:white;
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(124, 58, 237, .15);
+  border: 1px solid rgba(124, 58, 237, .35);
+  color: var(--accent2);
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 1px;
+  margin-bottom: 28px;
+  animation: fadeUp .6s ease both;
 }
 
-.admin{
-display:none;
-max-width:600px;
-margin:auto;
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--accent2);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent2);
+  animation: pulse 2s ease infinite;
 }
 
-
-/* MOBILE OPTIMIZATION */
-
-@media (max-width:600px){
-
-header{
-padding:15px;
-flex-direction:column;
-gap:10px;
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(1.4); }
 }
 
-.projects{
-grid-template-columns:1fr;
+.hero-title {
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+  animation: fadeUp .7s .1s ease both;
 }
 
-.quick{
-grid-template-columns:repeat(2,1fr);
+.hero-title span {
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.card{
-padding:16px;
+.hero-desc {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--muted);
+  max-width: 680px;
+  margin: 0 auto 40px;
+  line-height: 1.8;
+  font-weight: 400;
+  animation: fadeUp .7s .2s ease both;
 }
 
-button{
-padding:12px;
-font-size:14px;
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  animation: fadeUp .7s .3s ease both;
 }
 
-.vote-btn{
-height:44px;
-font-size:15px;
+.stat {
+  text-align: center;
 }
 
+.stat-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: .5px;
+}
+
+.hero-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), var(--accent), var(--border), transparent);
+  margin: 60px 0 0;
+  animation: fadeUp .7s .4s ease both;
+}
+
+/* glow orb */
+.hero-orb {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,.15), transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  pointer-events: none;
+}
+
+/* ── HOW IT WORKS ── */
+#how {
+  position: relative;
+  z-index: 1;
+  padding: 60px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--accent2);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 40px;
+}
+
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.how-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s, border-color .25s;
+}
+
+.how-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(124, 58, 237, .45);
+}
+
+.how-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent3));
+  opacity: 0;
+  transition: opacity .25s;
+}
+
+.how-card:hover::before { opacity: 1; }
+
+.how-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 42px;
+  font-weight: 700;
+  color: rgba(124, 58, 237, .18);
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.how-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.how-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ── MAIN PAGE ── */
+.page {
+  position: relative;
+  z-index: 1;
+  padding: 40px 48px;
+  max-width: 1280px;
+  margin: auto;
+}
+
+/* ── LOGIN ── */
+#loginSection {
+  max-width: 460px;
+  margin: 0 auto 50px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 32px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+
+.login-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  border-radius: 14px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 8px 25px var(--glow);
+}
+
+#loginSection h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.input-wrapper {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.input-label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  margin-bottom: 6px;
+  letter-spacing: .5px;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.04);
+  color: white;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 14px;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+  direction: ltr;
+  text-align: right;
+}
+
+input:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, .18);
+}
+
+input::placeholder { color: var(--muted); }
+
+.btn-full {
+  width: 100%;
+  padding: 13px;
+  font-size: 15px;
+  border-radius: 10px;
+  justify-content: center;
+}
+
+/* ── BALANCE BOX ── */
+#balanceBox {
+  display: none;
+  text-align: center;
+  margin-bottom: 36px;
+  animation: fadeUp .5s ease both;
+}
+
+.balance-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 28px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.3);
+}
+
+.balance-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.balance-amount {
+  font-family: 'Space Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+}
+
+.balance-currency {
+  font-size: 14px;
+  color: var(--accent2);
+  font-weight: 600;
+}
+
+.balance-bar {
+  width: 180px;
+  height: 6px;
+  background: rgba(255,255,255,.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.balance-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent3));
+  border-radius: 3px;
+  transition: width .6s ease;
+}
+
+/* ── PROJECTS GRID ── */
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.projects-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.projects-count {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+#projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* ── PROJECT CARD ── */
+.card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  transition: transform .25s, border-color .25s, box-shadow .25s;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp .5s ease both;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(124, 58, 237, .4);
+  box-shadow: 0 20px 50px rgba(0,0,0,.4), 0 0 0 1px rgba(124, 58, 237, .15);
+}
+
+.card-top-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent3));
+  opacity: 0;
+  transition: opacity .25s;
+}
+
+.card:hover .card-top-line { opacity: 1; }
+
+.card-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(124, 58, 237, .12);
+  border: 1px solid rgba(124, 58, 237, .25);
+  color: var(--accent2);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+
+.card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: white;
+  letter-spacing: -0.3px;
+}
+
+.team {
+  color: var(--accent2);
+  font-size: 13px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.funds-section {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.funds-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  letter-spacing: .5px;
+}
+
+.funds {
+  font-family: 'Space Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.funds-sar {
+  font-size: 13px;
+  color: var(--accent2);
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+
+.quick {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.quick-btn {
+  background: rgba(124, 58, 237, .1);
+  color: var(--accent2);
+  border: 1px solid rgba(124, 58, 237, .2);
+  padding: 8px 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all .15s;
+}
+
+.quick-btn:hover {
+  background: rgba(124, 58, 237, .25);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+.amountInput {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.04);
+  color: white;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 14px;
+  margin-bottom: 10px;
+  outline: none;
+  direction: ltr;
+  text-align: right;
+  transition: border-color .2s;
+}
+
+.amountInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, .15);
+}
+
+.vote-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  transition: all .2s;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, .3);
+  position: relative;
+  overflow: hidden;
+}
+
+.vote-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, .45);
+}
+
+.vote-btn:active { transform: scale(.97); }
+
+/* ── ADMIN ── */
+.admin-page {
+  display: none;
+  max-width: 640px;
+  margin: auto;
+  padding: 40px 48px;
+  position: relative;
+  z-index: 1;
+}
+
+.admin-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+}
+
+.admin-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
+}
+
+select option { background: var(--card); }
+
+.admin-project-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  header { padding: 14px 20px; }
+  .logo-sub { display: none; }
+  #hero { padding: 60px 20px 50px; }
+  #how { padding: 40px 20px; }
+  .page { padding: 30px 20px; }
+  .admin-page { padding: 30px 20px; }
+  .how-grid { grid-template-columns: 1fr 1fr; }
+  .hero-stats { gap: 24px; }
+  .btn { padding: 8px 12px; font-size: 12px; }
+  .nav-btns { gap: 6px; }
+}
+
+@media (max-width: 480px) {
+  .how-grid { grid-template-columns: 1fr; }
+  #projects { grid-template-columns: 1fr; }
+  .quick { grid-template-columns: repeat(2, 1fr); }
+  .hero-stats { gap: 16px; }
+  .stat-num { font-size: 22px; }
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--muted);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: .4;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 14px;
+  color: white;
+  z-index: 999;
+  transition: transform .3s ease;
+  box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  white-space: nowrap;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: #10b981; }
+.toast.error   { border-color: var(--red); }
 </style>
-
 </head>
-
 
 <body>
 
+<canvas id="stars-canvas"></canvas>
 
+<!-- HEADER -->
 <header>
-
-<div class="logo">
-
-<img src="tecClub.jpg">
-
-<h2>TechnoVenture</h2>
-
-</div>
-
-<div>
-
-<button onclick="showMain()">المشاريع</button>
-
-<button onclick="showAdmin()">الإدارة</button>
-
-<button onclick="openLeaderboard()" style="background:#fbbf24;color:black">
-Leaderboard
-</button>
-
-<button onclick="openTrending()" style="background:#ef4444">
- Trending
-</button>
-
-</div>
-
+  <div class="logo">
+    <img src="tecClub.jpg" style="height:42px;width:42px;object-fit:contain;border-radius:10px;">
+    <div>
+      <div class="logo-text">TechnoVenture</div>
+      <div class="logo-sub">TechnoVenture 2026 </div>
+    </div>
+  </div>
+  <div class="nav-btns">
+    <button class="btn btn-ghost" onclick="showMain()"> المشاريع</button>
+    <button class="btn btn-ghost" onclick="showAdmin()"> الإدارة</button>
+    <button class="btn btn-gold" onclick="openLeaderboard()"> Leaderboard</button>
+    <button class="btn btn-danger" onclick="openTrending()"> Trending</button>
+  </div>
 </header>
 
+<!-- السكشن الاول -->
+<section id="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    LIVE — معرض المشاريع التقنية 2026
+  </div>
+  <h1 class="hero-title">
+    استثمر في أفكار<br><span>المستقبل التقني</span>
+  </h1>
+  <p class="hero-desc">
+    منصة تفاعلية تتيح لك دعم المشاريع التقنية الواعدة التي يقدّمها طلاب وشباب المبتكرين.
+    لكل مشارك رصيد افتراضي بقيمة ٥٠٠ ريال لتوزيعه على المشاريع التي يؤمن بها.
+    المشروع الأعلى تمويلاً يفوز بجائزة المعرض.
+  </p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num" id="stat-projects">—</div>
+      <div class="stat-label">مشروع مشارك</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-total">—</div>
+      <div class="stat-label">ريال إجمالي الاستثمارات</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">500</div>
+      <div class="stat-label">ريال رصيد كل مستثمر</div>
+    </div>
+  </div>
+  <div class="hero-divider"></div>
+</section>
 
+<!-- فقرة كيف يشتغل الموقع -->
+<section id="how">
+  <div class="section-label">كيف يعمل المعرض</div>
+  <h2 class="section-title">ثلاث خطوات بسيطة</h2>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-num">01</div>
+      <h4>سجّل رقمك</h4>
+      <p>أدخل رقم جوالك لتحصل على رصيد افتراضي بقيمة ٥٠٠ ريال خاص بك.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">02</div>
+      <h4>اكتشف المشاريع</h4>
+      <p>تصفّح المشاريع التقنية المبتكرة المعروضة واقرأ تفاصيل كل فريق.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">03</div>
+      <h4>وزّع استثمارك</h4>
+      <p>ادعم المشاريع التي تؤمن بها بمبالغ مختلفة وتابع التصنيف مباشرةً.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-num">04</div>
+      <h4>حدّد الفائز</h4>
+      <p>المشروع الذي يجمع أعلى استثمارات من الحضور يفوز بجائزة المعرض.</p>
+    </div>
+  </div>
+</section>
 
+<!-- MAIN PAGE -->
 <div id="main" class="page">
 
+  <!-- LOGIN -->
+  <div id="loginSection">
+    <div class="login-icon">📱</div>
+    <h3>ابدأ رحلتك الاستثمارية</h3>
+    <p class="login-sub">أدخل رقم جوالك للحصول على ٥٠٠ ريال استثماري</p>
+    <label class="input-label">رقم الجوال</label>
+    <input id="phoneInput" placeholder="05XXXXXXXX" maxlength="10">
+    <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="startVoting()">
+       ابدأ الاستثمار
+    </button>
+  </div>
 
-<div id="loginSection" style="max-width:400px;margin:auto;margin-bottom:40px;text-align:center">
+  <!-- البدجت -->
+  <div id="balanceBox">
+    <div class="balance-inner">
+      <div>
+        <div class="balance-label">رصيدك المتبقي</div>
+        <div class="balance-amount"><span id="balance">500</span> <span class="balance-currency">ريال</span></div>
+      </div>
+      <div>
+        <div class="balance-bar">
+          <div class="balance-fill" id="balanceFill" style="width:100%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<h3> أدخل رقم الجوال</h3>
+  <!-- PROJECTS -->
+  <div class="projects-header">
+    <div>
+      <div class="projects-title">المشاريع المشاركة</div>
+    </div>
+    <div class="projects-count" id="projectsCount"></div>
+  </div>
 
-<input id="phoneInput" placeholder="05XXXXXXXX">
-
-<button onclick="startVoting()">ابدأ الاستثمار</button>
-
-</div>
-
-
-<div id="balanceBox" style="display:none;text-align:center;margin-bottom:30px;font-size:20px">
-
- رصيدك المتبقي:
-
-<span id="balance">500</span>
-
-ريال
-
-</div>
-
-
-<div class="projects" id="projects"></div>
-
-
-</div>
-
-
-
-<div id="admin" class="admin page">
-
-<div id="loginBox">
-
-<h3> دخول الإدارة</h3>
-
-<input type="password" id="adminPass">
-
-<button onclick="login()">دخول</button>
+  <div id="projects"></div>
 
 </div>
 
+<!-- ADMIN PAGE -->
+<div id="admin" class="admin-page">
+  <div id="loginBox" class="admin-card">
+    <h3> دخول الإدارة</h3>
+    <label class="input-label">كلمة المرور</label>
+    <input type="password" id="adminPass" placeholder="••••">
+    <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="login()">دخول</button>
+  </div>
 
-<div id="adminPanel" style="display:none">
+  <div id="adminPanel" style="display:none">
+    <div class="admin-card" style="margin-bottom:20px">
+      <h3> إضافة مشروع</h3>
+      <label class="input-label">اسم المشروع</label>
+      <input id="title" placeholder="مثال:منصة ذكاء اصطناعي ">
+      <label class="input-label">اسم الفريق</label>
+      <input id="team" placeholder="مثال: فريق  ">
+      <label class="input-label">التصنيف</label>
+      <select id="category">
+        <option>AI</option>
+        <option>Health</option>
+        <option>Fintech</option>
+        <option>Mobile</option>
+        <option>Education</option>
+        <option>Sustainability</option>
+      </select>
+      <label class="input-label">وصف المشروع</label>
+      <input id="desc" placeholder="وصف مختصر للمشروع وفكرته">
+      <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="addProject()">إضافة المشروع</button>
+    </div>
 
-<h3>إضافة مشروع</h3>
-
-<input id="title" placeholder="اسم المشروع">
-
-<input id="team" placeholder="اسم الفريق">
-
-<select id="category">
-<option>AI</option>
-<option>Health</option>
-<option>Fintech</option>
-<option>Mobile</option>
-</select>
-
-<input id="desc" placeholder="وصف المشروع">
-
-<button onclick="addProject()">إضافة مشروع</button>
-
-<div id="adminList"></div>
-
+    <div class="admin-card">
+      <h3>📋 المشاريع الحالية</h3>
+      <div id="adminList"></div>
+    </div>
+  </div>
 </div>
 
-</div>
-
-
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-addDoc,
-updateDoc,
-doc,
-increment,
-onSnapshot,
-getDoc,
-setDoc
-}
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
+import { getFirestore, collection, addDoc, updateDoc, doc, increment, onSnapshot, getDoc, setDoc }
+  from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const firebaseConfig = {
-
-apiKey: "AIzaSyBPeJPWUdM0gb5502Ty8_Cfq4CwcufJOHQ",
-
-authDomain: "tec-expo-voting.firebaseapp.com",
-
-projectId: "tec-expo-voting",
-
-storageBucket: "tec-expo-voting.firebasestorage.app",
-
-messagingSenderId: "481340074318",
-
-appId: "1:481340074318:web:5248e7eb360c4f5eed161f"
-
+  apiKey: "AIzaSyBPeJPWUdM0gb5502Ty8_Cfq4CwcufJOHQ",
+  authDomain: "tec-expo-voting.firebaseapp.com",
+  projectId: "tec-expo-voting",
+  storageBucket: "tec-expo-voting.firebasestorage.app",
+  messagingSenderId: "481340074318",
+  appId: "1:481340074318:web:5248e7eb360c4f5eed161f"
 };
-
 
 const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+const projectsRef = collection(db, "projects");
 
-const db = getFirestore(app);
+let projects      = [];
+let currentUser   = null;
+let balance       = 500;
+let adminUnlocked = false;
+const MAX_BALANCE = 500;
 
-const projectsRef = collection(db,"projects");
+/*STARS CANVAS*/
+(function initStars() {
+  const canvas = document.getElementById('stars-canvas');
+  const ctx    = canvas.getContext('2d');
+  let stars    = [];
 
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    stars = Array.from({ length: 160 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.2 + .2,
+      a: Math.random(),
+      speed: Math.random() * .008 + .002,
+    }));
+  }
 
-let projects=[];
-let currentUser=null;
-let balance=500;
-let adminUnlocked=false;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.a += s.speed;
+      const alpha = (Math.sin(s.a) + 1) / 2 * .7 + .1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,180,255,${alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
 
+  resize();
+  draw();
+  window.addEventListener('resize', resize);
+})();
 
+/* TOAST*/
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
 
-onSnapshot(projectsRef,(snapshot)=>{
-
-projects=snapshot.docs.map(doc=>({
-id:doc.id,
-...doc.data()
-})).filter(p=>!p.deleted);
-
-render();
-
+/* ── REALTIME*/
+onSnapshot(projectsRef, snapshot => {
+  projects = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => !p.deleted);
+  render();
+  updateStats();
 });
 
-
-
-window.startVoting = async function(){
-
-const phone = phoneInput.value;
-
-if(!phone){
-alert("أدخل رقم الجوال");
-return;
+function updateStats() {
+  document.getElementById('stat-projects').textContent = projects.length;
+  const total = projects.reduce((s, p) => s + (p.funds || 0), 0);
+  document.getElementById('stat-total').textContent = total.toLocaleString('ar-SA');
 }
 
-currentUser=phone;
+/* ── START VOTING : المستخدم عنده ميزانية 500 ريال*/
+window.startVoting = async function () {
+  const phone = document.getElementById('phoneInput').value.trim();
+  if (!phone) { showToast('أدخل رقم الجوال', 'error'); return; }
 
-const userRef=doc(db,"users",phone);
+  currentUser = phone;
+  const userRef  = doc(db, "users", phone);
+  const userSnap = await getDoc(userRef);
 
-const userSnap=await getDoc(userRef);
+  if (!userSnap.exists()) {
+    await setDoc(userRef, { phone, budget: 500, investments: {} });
+    balance = 500;
+  } else {
+    balance = userSnap.data().budget;
+  }
 
-if(!userSnap.exists()){
-
-await setDoc(userRef,{
-phone:phone,
-budget:500,
-investments:{}
-});
-
-balance=500;
-
-}else{
-
-balance=userSnap.data().budget;
-
-}
-
-document.getElementById("balance").innerText=balance;
-
-loginSection.style.display="none";
-balanceBox.style.display="block";
-
+  updateBalance();
+  document.getElementById('loginSection').style.display = 'none';
+  document.getElementById('balanceBox').style.display   = 'block';
+  showToast(`مرحباً! رصيدك ${balance} ريال `);
 };
 
-
-
-function vibrate(){
-
-if(navigator.vibrate){
-navigator.vibrate(40);
+function updateBalance() {
+  document.getElementById('balance').textContent   = balance;
+  document.getElementById('balanceFill').style.width = (balance / MAX_BALANCE * 100) + '%';
 }
 
+function vibrate() {
+  if (navigator.vibrate) navigator.vibrate(40);
 }
 
+/*INVEST */
+window.investQuick = async function (id, amount) {
+  if (!currentUser) { showToast('أدخل رقم الجوال أولاً', 'error'); return; }
+  if (amount > balance) { showToast('رصيدك غير كافي', 'error'); return; }
+  await updateDoc(doc(db, "projects", id), { funds: increment(amount) });
+  balance -= amount;
+  updateBalance();
+  vibrate();
+  showToast(`تم استثمار ${amount} ريال `);
+};
 
+window.investCustom = async function (id) {
+  const input  = document.getElementById("amount-" + id);
+  const amount = parseInt(input.value);
+  if (!amount || amount <= 0) { showToast('أدخل مبلغ صحيح', 'error'); return; }
+  if (amount > balance)       { showToast('رصيدك غير كافي', 'error');  return; }
+  await updateDoc(doc(db, "projects", id), { funds: increment(amount) });
+  balance -= amount;
+  updateBalance();
+  input.value = '';
+  vibrate();
+  showToast(`تم استثمار ${amount} ريال `);
+};
 
-window.investQuick = async function(id,amount){
+/*RENDER PROJECTS */
+function render() {
+  const container = document.getElementById("projects");
+  document.getElementById("projectsCount").textContent = `${projects.length} مشروع`;
 
-if(!currentUser){
-alert("أدخل رقم الجوال أولاً");
-return;
+  if (!projects.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon"></div>
+        <p>لا توجد مشاريع حتى الآن</p>
+      </div>`;
+    return;
+  }
+
+  const sorted = [...projects].sort((a, b) => (b.funds || 0) - (a.funds || 0));
+
+  container.innerHTML = sorted.map((p, i) => `
+    <div class="card" style="animation-delay:${i * 0.07}s">
+      <div class="card-top-line"></div>
+      <div class="card-category">${p.category || 'Tech'}</div>
+      <h3>${p.title}</h3>
+      <div class="team">👥 ${p.team}</div>
+      <div class="desc">${p.desc}</div>
+      <div class="funds-section">
+        <div class="funds-label">إجمالي الاستثمارات</div>
+        <div class="funds">${(p.funds || 0).toLocaleString('ar-SA')} <span class="funds-sar">ريال</span></div>
+      </div>
+      <div class="quick">
+        <button class="quick-btn" onclick="investQuick('${p.id}',10)">10</button>
+        <button class="quick-btn" onclick="investQuick('${p.id}',50)">50</button>
+        <button class="quick-btn" onclick="investQuick('${p.id}',100)">100</button>
+        <button class="quick-btn" onclick="investQuick('${p.id}',200)">200</button>
+      </div>
+      <input class="amountInput" id="amount-${p.id}" placeholder="أدخل مبلغاً مخصصاً" type="number" min="1">
+      <button class="vote-btn" onclick="investCustom('${p.id}')">استثمر الآن</button>
+    </div>
+  `).join('');
+
+  renderAdmin();
 }
 
-if(amount>balance){
-alert("رصيدك غير كافي");
-return;
+/* ── ADMIN ── */
+window.addProject = async function () {
+  if (!adminUnlocked) return;
+  const t = document.getElementById('title').value.trim();
+  const tm = document.getElementById('team').value.trim();
+  const d = document.getElementById('desc').value.trim();
+  if (!t || !tm) { showToast('أدخل اسم المشروع والفريق', 'error'); return; }
+  await addDoc(projectsRef, {
+    title: t, team: tm,
+    category: document.getElementById('category').value,
+    desc: d, funds: 0, deleted: false
+  });
+  document.getElementById('title').value = '';
+  document.getElementById('team').value  = '';
+  document.getElementById('desc').value  = '';
+  showToast('تم إضافة المشروع ✅');
+};
+
+function renderAdmin() {
+  if (!adminUnlocked) return;
+  const list = document.getElementById("adminList");
+  if (!projects.length) { list.innerHTML = '<p style="color:var(--muted);font-size:13px">لا توجد مشاريع</p>'; return; }
+  list.innerHTML = projects.map(p => `
+    <div class="admin-project-item">
+      <span>${p.title} <span style="color:var(--muted);font-size:12px">(${p.funds || 0} ريال)</span></span>
+      <button class="btn btn-danger" style="padding:6px 12px;font-size:12px" onclick="deleteProject('${p.id}')">حذف</button>
+    </div>`).join('');
 }
 
-await updateDoc(doc(db,"projects",id),{
-funds:increment(amount)
-});
-
-balance -= amount;
-
-document.getElementById("balance").innerText=balance;
-
-vibrate();
-
+window.deleteProject = async function (id) {
+  await updateDoc(doc(db, "projects", id), { deleted: true });
+  showToast('تم حذف المشروع');
 };
 
-
-
-window.investCustom = async function(id){
-
-const input=document.getElementById("amount-"+id);
-
-const amount=parseInt(input.value);
-
-if(!amount || amount<=0){
-alert("أدخل مبلغ صحيح");
-return;
-}
-
-if(amount>balance){
-alert("رصيدك غير كافي");
-return;
-}
-
-await updateDoc(doc(db,"projects",id),{
-funds:increment(amount)
-});
-
-balance -= amount;
-
-document.getElementById("balance").innerText=balance;
-
-input.value="";
-
-vibrate();
-
+window.showAdmin = function () {
+  document.getElementById('main').style.display  = 'none';
+  document.getElementById('hero').style.display  = 'none';
+  document.getElementById('how').style.display   = 'none';
+  document.getElementById('admin').style.display = 'block';
 };
 
-
-
-function render(){
-
-const container=document.getElementById("projects");
-
-container.innerHTML="";
-
-projects.forEach(p=>{
-
-container.innerHTML+=`
-
-<div class="card">
-
-<h3>${p.title}</h3>
-
-<div class="team">${p.team}</div>
-
-<div class="desc">${p.desc}</div>
-
-<div class="funds">
- ${p.funds||0} ريال
-</div>
-
-<div class="quick">
-
-<button onclick="investQuick('${p.id}',10)">10</button>
-
-<button onclick="investQuick('${p.id}',50)">50</button>
-
-<button onclick="investQuick('${p.id}',100)">100</button>
-
-<button onclick="investQuick('${p.id}',200)">200</button>
-
-</div>
-
-<input class="amountInput" id="amount-${p.id}" placeholder="أدخل مبلغ">
-
-<button class="vote-btn" onclick="investCustom('${p.id}')">
-
-استثمر
-
-</button>
-
-</div>
-
-`;
-
-});
-
-renderAdmin();
-
-}
-
-
-
-window.addProject = async function(){
-
-if(!adminUnlocked) return;
-
-await addDoc(projectsRef,{
-title:title.value,
-team:team.value,
-category:category.value,
-desc:desc.value,
-funds:0,
-deleted:false
-});
-
+window.showMain = function () {
+  document.getElementById('main').style.display  = 'block';
+  document.getElementById('hero').style.display  = 'block';
+  document.getElementById('how').style.display   = 'block';
+  document.getElementById('admin').style.display = 'none';
 };
 
-
-
-function renderAdmin(){
-
-if(!adminUnlocked) return;
-
-const list=document.getElementById("adminList");
-
-list.innerHTML="";
-
-projects.forEach(p=>{
-
-list.innerHTML+=`
-
-<div>
-${p.title}
-<button onclick="deleteProject('${p.id}')">حذف</button>
-</div>
-
-`;
-
-});
-
-}
-
-
-
-window.deleteProject = async function(id){
-
-await updateDoc(doc(db,"projects",id),{
-deleted:true
-});
-
+window.login = function () {
+  if (document.getElementById('adminPass').value === "1415") {
+    adminUnlocked = true;
+    document.getElementById('loginBox').style.display    = 'none';
+    document.getElementById('adminPanel').style.display  = 'block';
+    renderAdmin();
+  } else {
+    showToast('كلمة المرور غير صحيحة', 'error');
+  }
 };
 
-
-
-window.showAdmin=function(){
-main.style.display="none";
-admin.style.display="block";
-};
-
-window.showMain=function(){
-main.style.display="block";
-admin.style.display="none";
-};
-
-
-
-window.login=function(){
-
-if(adminPass.value==="1415"){
-adminUnlocked=true;
-loginBox.style.display="none";
-adminPanel.style.display="block";
-}
-
-};
-
-
-
-window.openLeaderboard=function(){
-window.open("leaderboard.html","_blank");
-};
-
-window.openTrending=function(){
-window.open("trending.html","_blank");
-};
+window.openLeaderboard = function () { window.open("leaderboard.html", "_blank"); };
+window.openTrending    = function () { window.open("trending.html",    "_blank"); };
 
 </script>
-
 </body>
 </html>

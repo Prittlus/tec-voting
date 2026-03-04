@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الفرق — TechnoVenture</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #04010f;
+  --card: #0f0728;
+  --card2: #120830;
+  --border: rgba(120, 60, 240, 0.18);
+  --border-focus: rgba(124, 58, 237, 0.6);
+  --accent: #7c3aed;
+  --accent2: #a855f7;
+  --accent3: #06b6d4;
+  --green: #10b981;
+  --red: #ef4444;
+  --text: #e2d9ff;
+  --muted: #8b7ab8;
+  --glow: rgba(124, 58, 237, 0.3);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+#stars-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .45;
+}
+
+/* ── HEADER ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  background: rgba(4, 1, 15, 0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo-icon { width: 38px; height: 38px; object-fit: contain; border-radius: 8px; }
+.logo-text {
+  font-size: 18px; font-weight: 700;
+  background: linear-gradient(90deg, #fff, var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.reg-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(16, 185, 129, .12);
+  border: 1px solid rgba(16, 185, 129, .35);
+  color: #34d399; padding: 5px 14px; border-radius: 100px;
+  font-size: 11px; font-family: 'Space Mono', monospace; letter-spacing: 1px;
+}
+
+.reg-dot {
+  width: 6px; height: 6px; background: #10b981; border-radius: 50%;
+  box-shadow: 0 0 6px #10b981; animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+
+/* ── HERO ── */
+.hero {
+  position: relative; z-index: 1;
+  text-align: center;
+  padding: 64px 32px 48px;
+}
+
+.hero-orb {
+  position: absolute;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,.12), transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%,-55%);
+  pointer-events: none;
+}
+
+.section-label {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  letter-spacing: 3px; color: var(--accent2);
+  text-transform: uppercase; margin-bottom: 12px;
+  animation: fadeUp .5s ease both;
+}
+
+.hero-title {
+  font-size: clamp(28px, 4.5vw, 52px);
+  font-weight: 700; letter-spacing: -2px; line-height: 1.1;
+  margin-bottom: 14px; animation: fadeUp .5s .1s ease both;
+}
+
+.hero-title span {
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.hero-sub {
+  color: var(--muted); font-size: 15px; max-width: 520px;
+  margin: 0 auto 32px; line-height: 1.8;
+  animation: fadeUp .5s .2s ease both;
+}
+
+/* steps indicator */
+.steps-indicator {
+  display: flex; justify-content: center; align-items: center; gap: 0;
+  margin-bottom: 48px; animation: fadeUp .5s .3s ease both;
+  flex-wrap: wrap;
+}
+
+.step-item {
+  display: flex; align-items: center; gap: 0;
+}
+
+.step-dot {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  color: var(--muted); transition: all .3s; flex-shrink: 0;
+}
+
+.step-dot.active {
+  border-color: var(--accent); background: rgba(124,58,237,.2);
+  color: var(--accent2); box-shadow: 0 0 12px rgba(124,58,237,.35);
+}
+
+.step-dot.done {
+  border-color: var(--green); background: rgba(16,185,129,.15);
+  color: var(--green);
+}
+
+.step-label {
+  font-size: 11px; color: var(--muted); margin: 0 8px;
+  white-space: nowrap;
+}
+
+.step-line {
+  width: 40px; height: 1px; background: var(--border);
+  margin: 0 4px; flex-shrink: 0;
+}
+
+/* ── FORM WRAPPER ── */
+.form-wrap {
+  position: relative; z-index: 1;
+  max-width: 720px; margin: 0 auto;
+  padding: 0 32px 80px;
+}
+
+/* ── SECTIONS ── */
+.form-section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 20px;
+  animation: fadeUp .5s ease both;
+  display: none;
+}
+
+.form-section.active { display: block; }
+
+.section-head {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 28px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-num {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700;
+  flex-shrink: 0; box-shadow: 0 4px 14px var(--glow);
+}
+
+.section-head-text h3 { font-size: 18px; font-weight: 700; margin-bottom: 3px; }
+.section-head-text p  { font-size: 13px; color: var(--muted); }
+
+/* ── FIELDS ── */
+.field { margin-bottom: 20px; }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+label {
+  display: block; font-size: 12px; font-weight: 600;
+  color: var(--muted); margin-bottom: 7px;
+  letter-spacing: .5px; text-transform: uppercase;
+}
+
+.required { color: var(--accent2); margin-right: 3px; }
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+  width: 100%; padding: 12px 16px;
+  border-radius: 10px; border: 1px solid var(--border);
+  background: rgba(255,255,255,.04);
+  color: white; font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 14px; transition: border-color .2s, box-shadow .2s;
+  outline: none; direction: rtl;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124,58,237,.15);
+  background: rgba(124,58,237,.05);
+}
+
+input::placeholder, textarea::placeholder { color: rgba(139,122,184,.5); }
+
+textarea { resize: vertical; min-height: 100px; line-height: 1.7; }
+
+select option { background: #1a0d38; }
+
+/* member cards */
+.members-grid { display: flex; flex-direction: column; gap: 14px; }
+
+.member-card {
+  background: rgba(255,255,255,.025);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px;
+  position: relative;
+}
+
+.member-card-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+
+.member-tag {
+  font-size: 11px; font-family: 'Space Mono', monospace;
+  color: var(--accent2); letter-spacing: 1px;
+  background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.2);
+  padding: 3px 9px; border-radius: 5px;
+}
+
+.member-leader { background: rgba(245,158,11,.1); border-color: rgba(245,158,11,.3); color: #fbbf24; }
+
+.btn-remove {
+  background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.2);
+  color: #f87171; padding: 5px 10px; border-radius: 7px;
+  cursor: pointer; font-size: 12px; font-family: 'IBM Plex Sans Arabic', sans-serif;
+  transition: all .2s;
+}
+
+.btn-remove:hover { background: rgba(239,68,68,.2); border-color: var(--red); }
+
+.btn-add-member {
+  width: 100%; padding: 12px; margin-top: 4px;
+  background: rgba(124,58,237,.08);
+  border: 1px dashed rgba(124,58,237,.3);
+  border-radius: 10px; color: var(--accent2);
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all .2s; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+
+.btn-add-member:hover {
+  background: rgba(124,58,237,.15);
+  border-color: var(--accent);
+}
+
+/* count display */
+.count-display {
+  display: flex; align-items: center; gap: 12px;
+}
+
+.count-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(124,58,237,.12); border: 1px solid var(--border);
+  color: var(--accent2); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s; flex-shrink: 0;
+}
+
+.count-btn:hover { background: rgba(124,58,237,.25); border-color: var(--accent); }
+
+.count-val {
+  font-family: 'Space Mono', monospace; font-size: 22px;
+  font-weight: 700; color: white; min-width: 32px; text-align: center;
+}
+
+/* ── NAV BUTTONS ── */
+.form-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 28px; gap: 12px;
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: 10px; border: none;
+  cursor: pointer; font-family: 'IBM Plex Sans Arabic', sans-serif;
+  font-weight: 600; font-size: 14px; transition: all .2s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #6d28d9);
+  color: white; box-shadow: 0 4px 15px rgba(124,58,237,.35);
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,58,237,.45); }
+
+.btn-ghost {
+  background: rgba(255,255,255,.05); border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.btn-ghost:hover { background: rgba(255,255,255,.09); color: white; }
+
+.btn-success {
+  background: linear-gradient(135deg, #059669, var(--green));
+  color: white; box-shadow: 0 4px 15px rgba(16,185,129,.3);
+}
+
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,.4); }
+
+/* ── SUCCESS ── */
+#successPage {
+  display: none; position: relative; z-index: 1;
+  max-width: 540px; margin: 60px auto; padding: 0 32px;
+  text-align: center;
+}
+
+.success-card {
+  background: var(--card); border: 1px solid rgba(16,185,129,.3);
+  border-radius: 24px; padding: 48px 36px;
+  box-shadow: 0 0 40px rgba(16,185,129,.08);
+}
+
+.success-icon {
+  font-size: 64px; margin-bottom: 20px;
+  animation: bounceIn .6s ease both;
+}
+
+@keyframes bounceIn {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.success-card h2 { font-size: 28px; font-weight: 700; margin-bottom: 10px; letter-spacing: -1px; }
+
+.success-card p { color: var(--muted); font-size: 15px; line-height: 1.8; margin-bottom: 28px; }
+
+.success-ref {
+  background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.2);
+  border-radius: 10px; padding: 14px 20px; margin-bottom: 24px;
+}
+
+.success-ref-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; letter-spacing: .5px; }
+.success-ref-val { font-family: 'Space Mono', monospace; font-size: 18px; color: #34d399; font-weight: 700; }
+
+/* ── FIELD ERROR ── */
+.field-error { font-size: 12px; color: #f87171; margin-top: 5px; display: none; }
+input.error, textarea.error, select.error { border-color: var(--red) !important; }
+
+/* ── PROGRESS ── */
+.form-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 200;
+  background: rgba(255,255,255,.04);
+}
+
+.form-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent3));
+  transition: width .4s ease;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  header { padding: 14px 16px; }
+  .hero  { padding: 44px 16px 32px; }
+  .form-wrap { padding: 0 16px 60px; }
+  .form-section { padding: 22px 18px; }
+  .field-row { grid-template-columns: 1fr; }
+  .steps-indicator { gap: 0; }
+  .step-label { display: none; }
+  .step-line { width: 20px; }
+  .form-nav { flex-direction: column-reverse; }
+  .btn { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="form-progress"><div class="form-progress-fill" id="progressFill" style="width:0%"></div></div>
+<canvas id="stars-canvas"></canvas>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="index.html">
+    <img class="logo-icon" src="tecClub.jpg" alt="logo">
+    <div class="logo-text">TechnoVenture</div>
+  </a>
+  <div class="reg-badge"><span class="reg-dot"></span>التسجيل مفتوح</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-orb"></div>
+  <div class="section-label">معرض المشاريع التقنية 2026</div>
+  <h1 class="hero-title">سجّل <span>فريقك ومشروعك</span></h1>
+  <p class="hero-sub">أكمل النموذج التالي لتسجيل مشاركتك الرسمية في المعرض. يستغرق التسجيل أقل من ٣ دقائق.</p>
+
+  <!-- Steps -->
+  <div class="steps-indicator" id="stepsIndicator">
+    <div class="step-item">
+      <div class="step-dot active" id="step-dot-1">1</div>
+      <span class="step-label">المشروع</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item">
+      <div class="step-dot" id="step-dot-2">2</div>
+      <span class="step-label">الفريق</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item">
+      <div class="step-dot" id="step-dot-3">3</div>
+      <span class="step-label">الأعضاء</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item">
+      <div class="step-dot" id="step-dot-4">4</div>
+      <span class="step-label">التواصل</span>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap" id="formWrap">
+
+  <!-- STEP 1: Project Info -->
+  <div class="form-section active" id="section-1">
+    <div class="section-head">
+      <div class="section-num">01</div>
+      <div class="section-head-text">
+        <h3>معلومات المشروع</h3>
+        <p>أخبرنا عن فكرتك التقنية</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>اسم المشروع <span class="required">*</span></label>
+      <input type="text" id="projectName" placeholder="مثال: منصة ذكاء اصطناعي للتعليم">
+      <div class="field-error" id="err-projectName">هذا الحقل مطلوب</div>
+    </div>
+
+    <div class="field">
+      <label>التصنيف <span class="required">*</span></label>
+      <select id="projectCategory">
+        <option value="">— اختر التصنيف —</option>
+        <option>AI & Machine Learning</option>
+        <option>Health Tech</option>
+        <option>Fintech</option>
+        <option>Mobile Apps</option>
+        <option>Education Tech</option>
+        <option>Sustainability</option>
+        <option>IoT & Hardware</option>
+        <option>Cybersecurity</option>
+        <option>Other</option>
+      </select>
+      <div class="field-error" id="err-projectCategory">الرجاء اختيار التصنيف</div>
+    </div>
+
+    <div class="field">
+      <label>ملخص فكرة المشروع <span class="required">*</span></label>
+      <textarea id="projectDesc" placeholder="اشرح فكرة مشروعك باختصار: ما المشكلة التي يحلّها؟ وكيف؟ (١٠٠–٣٠٠ كلمة)"></textarea>
+      <div class="field-error" id="err-projectDesc">الرجاء كتابة ملخص المشروع</div>
+    </div>
+
+    <div class="form-nav">
+      <div></div>
+      <button class="btn btn-primary" onclick="goTo(2)">التالي — معلومات الفريق ←</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Team Info -->
+  <div class="form-section" id="section-2">
+    <div class="section-head">
+      <div class="section-num">02</div>
+      <div class="section-head-text">
+        <h3>معلومات الفريق</h3>
+        <p>بيانات فريقكم الأكاديمية</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>اسم الفريق <span class="required">*</span></label>
+      <input type="text" id="teamName" placeholder="مثال: فريق نبراس">
+      <div class="field-error" id="err-teamName">هذا الحقل مطلوب</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field" style="margin-bottom:0">
+        <label>الكلية <span class="required">*</span></label>
+        <select id="college">
+          <option value="">— اختر الكلية —</option>
+          <option>كلية الحاسب وتقنية المعلومات</option>
+          <option>كلية الهندسة</option>
+          <option>كلية العلوم</option>
+          <option>كلية إدارة الأعمال</option>
+          <option>كلية الطب</option>
+          <option>كلية الصيدلة</option>
+          <option>كلية التصميم</option>
+          <option>أخرى</option>
+        </select>
+        <div class="field-error" id="err-college">الرجاء اختيار الكلية</div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>التخصص <span class="required">*</span></label>
+        <input type="text" id="major" placeholder="مثال: هندسة البرمجيات">
+        <div class="field-error" id="err-major">هذا الحقل مطلوب</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px"></div>
+
+    <div class="field-row">
+      <div class="field" style="margin-bottom:0">
+        <label>السنة الدراسية <span class="required">*</span></label>
+        <select id="studyYear">
+          <option value="">— السنة —</option>
+          <option>السنة الأولى</option>
+          <option>السنة الثانية</option>
+          <option>السنة الثالثة</option>
+          <option>السنة الرابعة</option>
+          <option>السنة الخامسة</option>
+          <option>خريج</option>
+        </select>
+        <div class="field-error" id="err-studyYear">الرجاء تحديد السنة</div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>عدد أعضاء الفريق <span class="required">*</span></label>
+        <div class="count-display">
+          <button class="count-btn" onclick="changeCount(-1)">−</button>
+          <div class="count-val" id="memberCountVal">2</div>
+          <button class="count-btn" onclick="changeCount(1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(1)">← السابق</button>
+      <button class="btn btn-primary" onclick="goTo(3)">التالي — الأعضاء ←</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Members -->
+  <div class="form-section" id="section-3">
+    <div class="section-head">
+      <div class="section-num">03</div>
+      <div class="section-head-text">
+        <h3>أعضاء الفريق</h3>
+        <p>أدخل بيانات كل عضو والرقم الجامعي</p>
+      </div>
+    </div>
+
+    <div class="members-grid" id="membersGrid"></div>
+
+    <button class="btn-add-member" onclick="addMember()" id="addMemberBtn">
+      + إضافة عضو آخر
+    </button>
+
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(2)">← السابق</button>
+      <button class="btn btn-primary" onclick="goTo(4)">التالي — التواصل ←</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Contact -->
+  <div class="form-section" id="section-4">
+    <div class="section-head">
+      <div class="section-num">04</div>
+      <div class="section-head-text">
+        <h3>بيانات التواصل</h3>
+        <p>معلومات التواصل مع قائد الفريق</p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>البريد الإلكتروني <span class="required">*</span></label>
+      <input type="email" id="email" placeholder="example@university.edu.sa" style="direction:ltr;text-align:right">
+      <div class="field-error" id="err-email">الرجاء إدخال بريد إلكتروني صحيح</div>
+    </div>
+
+    <div class="field">
+      <label>رقم التواصل مع قائد الفريق <span class="required">*</span></label>
+      <input type="tel" id="leaderPhone" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr;text-align:right">
+      <div class="field-error" id="err-leaderPhone">الرجاء إدخال رقم جوال صحيح</div>
+    </div>
+
+    <!-- Summary preview -->
+    <div id="summaryBox" style="background:rgba(124,58,237,.06);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:8px">
+      <div style="font-size:12px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px;font-family:'Space Mono',monospace">ملخص التسجيل</div>
+      <div id="summaryContent" style="font-size:14px;line-height:2;color:var(--text)"></div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(3)">← السابق</button>
+      <button class="btn btn-success" onclick="submitForm()">🚀 إرسال التسجيل</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- SUCCESS PAGE -->
+<div id="successPage">
+  <div class="success-card">
+    <div class="success-icon">🎉</div>
+    <h2>تم التسجيل بنجاح!</h2>
+    <p>شكراً لتسجيل مشاركتكم في TechnoVenture.<br>سيتم التواصل معكم قريباً على البريد والجوال المسجّل.</p>
+    <div class="success-ref">
+      <div class="success-ref-label">رقم تسجيلك</div>
+      <div class="success-ref-val" id="refNumber">—</div>
+    </div>
+    <a href="index.html" style="text-decoration:none">
+      <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:15px">
+        🏠 العودة للمعرض
+      </button>
+    </a>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBPeJPWUdM0gb5502Ty8_Cfq4CwcufJOHQ",
+  authDomain: "tec-expo-voting.firebaseapp.com",
+  projectId: "tec-expo-voting",
+  storageBucket: "tec-expo-voting.firebasestorage.app",
+  messagingSenderId: "481340074318",
+  appId: "1:481340074318:web:5248e7eb360c4f5eed161f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+/* ── STARS ── */
+(function() {
+  const canvas = document.getElementById('stars-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    stars = Array.from({ length: 130 }, () => ({
+      x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+      r: Math.random() * 1.2 + .2, a: Math.random(), speed: Math.random() * .008 + .002
+    }));
+  }
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.a += s.speed;
+      const alpha = (Math.sin(s.a)+1)/2 * .7 + .1;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(200,180,255,${alpha})`; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  resize(); draw();
+  window.addEventListener('resize', resize);
+})();
+
+/* ── STATE ── */
+let currentStep  = 1;
+let memberCount  = 2;
+const TOTAL_STEPS = 4;
+
+/* ── INIT MEMBERS ── */
+function renderMembers() {
+  const grid = document.getElementById('membersGrid');
+  const existing = grid.querySelectorAll('.member-card');
+  const currentCount = existing.length;
+
+  // add cards if needed
+  for (let i = currentCount; i < memberCount; i++) {
+    const card = document.createElement('div');
+    card.className = 'member-card';
+    card.dataset.idx = i;
+    const isLeader = i === 0;
+    card.innerHTML = `
+      <div class="member-card-header">
+        <span class="member-tag ${isLeader ? 'member-leader' : ''}">
+          ${isLeader ? '👑 قائد الفريق' : `عضو ${i + 1}`}
+        </span>
+        ${!isLeader ? `<button class="btn-remove" onclick="removeMember(${i})">✕ حذف</button>` : ''}
+      </div>
+      <div class="field-row">
+        <div>
+          <label>الاسم الكامل <span class="required">*</span></label>
+          <input type="text" class="member-name" placeholder="الاسم الرباعي">
+        </div>
+        <div>
+          <label>الرقم الجامعي <span class="required">*</span></label>
+          <input type="text" class="member-id" placeholder="مثال: 202012345" style="direction:ltr;text-align:right">
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  }
+
+  // remove extra cards
+  for (let i = currentCount - 1; i >= memberCount; i--) {
+    const cards = grid.querySelectorAll('.member-card');
+    if (cards[i]) cards[i].remove();
+  }
+
+  document.getElementById('addMemberBtn').style.display = memberCount >= 8 ? 'none' : 'flex';
+  document.getElementById('memberCountVal').textContent = memberCount;
+}
+
+window.changeCount = function(delta) {
+  memberCount = Math.max(1, Math.min(8, memberCount + delta));
+  renderMembers();
+};
+
+window.addMember = function() {
+  memberCount = Math.min(8, memberCount + 1);
+  renderMembers();
+};
+
+window.removeMember = function(idx) {
+  memberCount = Math.max(1, memberCount - 1);
+  renderMembers();
+};
+
+/* ── NAVIGATION ── */
+window.goTo = function(step) {
+  if (step > currentStep && !validateStep(currentStep)) return;
+
+  document.getElementById(`section-${currentStep}`).classList.remove('active');
+  document.getElementById(`step-dot-${currentStep}`).classList.remove('active');
+  document.getElementById(`step-dot-${currentStep}`).classList.add('done');
+  document.getElementById(`step-dot-${currentStep}`).textContent = '✓';
+
+  if (step < currentStep) {
+    // going back — restore dot
+    document.getElementById(`step-dot-${currentStep}`).classList.remove('done');
+    document.getElementById(`step-dot-${currentStep}`).textContent = currentStep;
+  }
+
+  currentStep = step;
+  document.getElementById(`section-${step}`).classList.add('active');
+  document.getElementById(`step-dot-${step}`).classList.remove('done');
+  document.getElementById(`step-dot-${step}`).classList.add('active');
+  document.getElementById(`step-dot-${step}`).textContent = step;
+
+  document.getElementById('progressFill').style.width = ((step-1) / TOTAL_STEPS * 100) + '%';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (step === 3) renderMembers();
+  if (step === 4) renderSummary();
+};
+
+/* ── VALIDATION ── */
+function validateStep(step) {
+  let ok = true;
+
+  function check(id, condition) {
+    const el  = document.getElementById(id);
+    const err = document.getElementById('err-' + id);
+    if (!err) return;
+    if (!condition) {
+      el.classList.add('error');
+      err.style.display = 'block';
+      ok = false;
+    } else {
+      el.classList.remove('error');
+      err.style.display = 'none';
+    }
+  }
+
+  if (step === 1) {
+    check('projectName',     v('projectName').length > 1);
+    check('projectCategory', v('projectCategory') !== '');
+    check('projectDesc',     v('projectDesc').length > 20);
+  }
+
+  if (step === 2) {
+    check('teamName',   v('teamName').length > 1);
+    check('college',    v('college') !== '');
+    check('major',      v('major').length > 1);
+    check('studyYear',  v('studyYear') !== '');
+  }
+
+  if (step === 3) {
+    const cards = document.querySelectorAll('.member-card');
+    cards.forEach(card => {
+      const nameI = card.querySelector('.member-name');
+      const idI   = card.querySelector('.member-id');
+      if (!nameI.value.trim()) { nameI.classList.add('error'); ok = false; }
+      else nameI.classList.remove('error');
+      if (!idI.value.trim()) { idI.classList.add('error'); ok = false; }
+      else idI.classList.remove('error');
+    });
+    if (!ok) alert('الرجاء إكمال بيانات جميع الأعضاء');
+  }
+
+  return ok;
+}
+
+function v(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+/* ── SUMMARY ── */
+function renderSummary() {
+  const members = [...document.querySelectorAll('.member-card')].map(c => ({
+    name: c.querySelector('.member-name').value,
+    id:   c.querySelector('.member-id').value
+  }));
+
+  document.getElementById('summaryContent').innerHTML = `
+    <div>📌 <strong>المشروع:</strong> ${v('projectName')} — ${v('projectCategory')}</div>
+    <div>👥 <strong>الفريق:</strong> ${v('teamName')} | ${v('college')}</div>
+    <div>🎓 <strong>التخصص:</strong> ${v('major')} — ${v('studyYear')}</div>
+    <div>🧑‍💻 <strong>الأعضاء (${members.length}):</strong> ${members.map(m => m.name || '—').join(' / ')}</div>
+  `;
+}
+
+/* ── SUBMIT ── */
+window.submitForm = async function() {
+  // validate contact
+  const emailEl = document.getElementById('email');
+  const phoneEl = document.getElementById('leaderPhone');
+  const emailErr = document.getElementById('err-email');
+  const phoneErr = document.getElementById('err-leaderPhone');
+  let ok = true;
+
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email'));
+  emailEl.classList.toggle('error', !emailOk);
+  emailErr.style.display = emailOk ? 'none' : 'block';
+  if (!emailOk) ok = false;
+
+  const phoneOk = /^05\d{8}$/.test(v('leaderPhone'));
+  phoneEl.classList.toggle('error', !phoneOk);
+  phoneErr.style.display = phoneOk ? 'none' : 'block';
+  if (!phoneOk) ok = false;
+
+  if (!ok) return;
+
+  const members = [...document.querySelectorAll('.member-card')].map((c, i) => ({
+    name: c.querySelector('.member-name').value,
+    studentId: c.querySelector('.member-id').value,
+    role: i === 0 ? 'leader' : 'member'
+  }));
+
+  const data = {
+    project: {
+      name:     v('projectName'),
+      category: v('projectCategory'),
+      description: v('projectDesc')
+    },
+    team: {
+      name:       v('teamName'),
+      college:    v('college'),
+      major:      v('major'),
+      studyYear:  v('studyYear'),
+      memberCount: memberCount
+    },
+    members,
+    contact: {
+      email:       v('email'),
+      leaderPhone: v('leaderPhone')
+    },
+    submittedAt: serverTimestamp(),
+    status: 'pending'
+  };
+
+  try {
+    const btn = document.querySelector('.btn-success');
+    btn.textContent = ' جارٍ الإرسال...';
+    btn.disabled = true;
+
+    const ref = await addDoc(collection(db, 'registrations'), data);
+    const refId = ref.id.slice(0, 8).toUpperCase();
+
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('formWrap').style.display  = 'none';
+    document.querySelector('.hero').style.display      = 'none';
+    document.getElementById('successPage').style.display = 'block';
+    document.getElementById('refNumber').textContent  = 'TV-' + refId;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (e) {
+    console.error(e);
+    alert('حدث خطأ أثناء الإرسال، حاول مجدداً.');
+    const btn = document.querySelector('.btn-success');
+    btn.textContent = ' إرسال التسجيل';
+    btn.disabled = false;
+  }
+};
+
+// init
+renderMembers();
+</script>
+</body>
+</html>
