@@ -418,7 +418,7 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 <header>
   <a class="logo" href="index.html">
     <img class="logo-icon" src="tecClub.jpg" alt="logo">
-    <div class="logo-text">TechnoVenture</div>
+    <img src="purple 1.png" alt="TechnoVenture" style="height:28px;object-fit:contain">
   </a>
   <div class="reg-badge"><span class="reg-dot"></span>التسجيل مفتوح</div>
 </header>
@@ -426,7 +426,7 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 <!-- HERO -->
 <div class="hero">
   <div class="hero-orb"></div>
-  <div class="section-label">معرض المشاريع التقنية ٢٠٢٥</div>
+  <div class="section-label">معرض المشاريع التقنية 2026</div>
   <h1 class="hero-title">سجّل <span>فريقك ومشروعك</span></h1>
   <p class="hero-sub">أكمل النموذج التالي لتسجيل مشاركتك الرسمية في المعرض. يستغرق التسجيل أقل من ٣ دقائق.</p>
 
@@ -631,7 +631,7 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 
     <div class="form-nav">
       <button class="btn btn-ghost" onclick="goTo(3)">← السابق</button>
-      <button class="btn btn-success" onclick="submitForm()">🚀 إرسال التسجيل</button>
+      <button class="btn btn-success" onclick="submitForm()"> إرسال التسجيل</button>
     </div>
   </div>
 
@@ -640,7 +640,7 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 <!-- SUCCESS PAGE -->
 <div id="successPage">
   <div class="success-card">
-    <div class="success-icon">🎉</div>
+    <div class="success-icon"></div>
     <h2>تم التسجيل بنجاح!</h2>
     <p>شكراً لتسجيل مشاركتكم في TechnoVenture.<br>سيتم التواصل معكم قريباً على البريد والجوال المسجّل.</p>
     <div class="success-ref">
@@ -649,7 +649,7 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
     </div>
     <a href="index.html" style="text-decoration:none">
       <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:15px">
-        🏠 العودة للمعرض
+         العودة للمعرض
       </button>
     </a>
   </div>
@@ -719,7 +719,7 @@ function renderMembers() {
     card.innerHTML = `
       <div class="member-card-header">
         <span class="member-tag ${isLeader ? 'member-leader' : ''}">
-          ${isLeader ? '👑 قائد الفريق' : `عضو ${i + 1}`}
+          ${isLeader ? ' قائد الفريق' : `عضو ${i + 1}`}
         </span>
         ${!isLeader ? `<button class="btn-remove" onclick="removeMember(${i})">✕ حذف</button>` : ''}
       </div>
@@ -811,8 +811,8 @@ function validateStep(step) {
   if (step === 1) {
     check('projectName',     v('projectName').length > 1);
     check('projectCategory', v('projectCategory') !== '');
-    check('projectDesc',     v('projectDesc').length > 20);
-    check('revenueModel',    v('revenueModel').length > 10);
+    check('projectDesc',     v('projectDesc').length > 5);
+    check('revenueModel',    v('revenueModel').length > 5);
   }
 
   if (step === 2) {
@@ -849,7 +849,7 @@ function renderSummary() {
 
   document.getElementById('summaryContent').innerHTML = `
     <div> <strong>المشروع:</strong> ${v('projectName')} — ${v('projectCategory')}</div>
-    <div>👥 <strong>الفريق:</strong> ${v('teamName')} | ${v('college')}</div>
+    <div> <strong>الفريق:</strong> ${v('teamName')} | ${v('college')}</div>
     <div> <strong>التخصص:</strong> ${v('major')} — ${v('studyYear')}</div>
     <div> <strong>الأعضاء (${members.length}):</strong> ${members.map(m => m.name || '—').join(' / ')}</div>
   `;
@@ -907,7 +907,7 @@ window.submitForm = async function() {
 
   try {
     const btn = document.querySelector('.btn-success');
-    btn.textContent = ' جارٍ الإرسال...';
+    btn.textContent = '⏳ جارٍ الإرسال...';
     btn.disabled = true;
 
     const ref = await addDoc(collection(db, 'registrations'), data);
