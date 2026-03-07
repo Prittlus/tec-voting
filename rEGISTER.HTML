@@ -94,7 +94,7 @@ header {
 }
 
 .section-label {
-  font-family: 'Space Mono', monospace; font-size: 11px;
+  font-family: 'Agrandir Tight', monospace; font-size: 11px;
   letter-spacing: 3px; color: var(--accent2);
   text-transform: uppercase; margin-bottom: 12px;
   animation: fadeUp .5s ease both;
@@ -124,9 +124,7 @@ header {
   flex-wrap: wrap;
 }
 
-.step-item {
-  display: flex; align-items: center; gap: 0;
-}
+.step-item { display: flex; align-items: center; gap: 0; }
 
 .step-dot {
   width: 32px; height: 32px; border-radius: 50%;
@@ -147,15 +145,8 @@ header {
   color: var(--green);
 }
 
-.step-label {
-  font-size: 11px; color: var(--muted); margin: 0 8px;
-  white-space: nowrap;
-}
-
-.step-line {
-  width: 40px; height: 1px; background: var(--border);
-  margin: 0 4px; flex-shrink: 0;
-}
+.step-label { font-size: 11px; color: var(--muted); margin: 0 8px; white-space: nowrap; }
+.step-line { width: 40px; height: 1px; background: var(--border); margin: 0 4px; flex-shrink: 0; }
 
 /* ── FORM WRAPPER ── */
 .form-wrap {
@@ -196,7 +187,6 @@ header {
 
 /* ── FIELDS ── */
 .field { margin-bottom: 20px; }
-
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
 
 label {
@@ -211,6 +201,7 @@ input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="number"],
+input[type="url"],
 select,
 textarea {
   width: 100%; padding: 12px 16px;
@@ -228,10 +219,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 input::placeholder, textarea::placeholder { color: rgba(139,122,184,.5); }
-
 textarea { resize: vertical; min-height: 100px; line-height: 1.7; }
-
 select option { background: #1a0d38; }
+
 
 /* member cards */
 .members-grid { display: flex; flex-direction: column; gap: 14px; }
@@ -263,7 +253,6 @@ select option { background: #1a0d38; }
   cursor: pointer; font-size: 12px; font-family: 'IBM Plex Sans Arabic', sans-serif;
   transition: all .2s;
 }
-
 .btn-remove:hover { background: rgba(239,68,68,.2); border-color: var(--red); }
 
 .btn-add-member {
@@ -276,16 +265,10 @@ select option { background: #1a0d38; }
   transition: all .2s; display: flex; align-items: center;
   justify-content: center; gap: 8px;
 }
-
-.btn-add-member:hover {
-  background: rgba(124,58,237,.15);
-  border-color: var(--accent);
-}
+.btn-add-member:hover { background: rgba(124,58,237,.15); border-color: var(--accent); }
 
 /* count display */
-.count-display {
-  display: flex; align-items: center; gap: 12px;
-}
+.count-display { display: flex; align-items: center; gap: 12px; }
 
 .count-btn {
   width: 36px; height: 36px; border-radius: 8px;
@@ -294,7 +277,6 @@ select option { background: #1a0d38; }
   display: flex; align-items: center; justify-content: center;
   transition: all .15s; flex-shrink: 0;
 }
-
 .count-btn:hover { background: rgba(124,58,237,.25); border-color: var(--accent); }
 
 .count-val {
@@ -319,21 +301,18 @@ select option { background: #1a0d38; }
   background: linear-gradient(135deg, var(--accent), #6d28d9);
   color: white; box-shadow: 0 4px 15px rgba(124,58,237,.35);
 }
-
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,58,237,.45); }
 
 .btn-ghost {
   background: rgba(255,255,255,.05); border: 1px solid var(--border);
   color: var(--muted);
 }
-
 .btn-ghost:hover { background: rgba(255,255,255,.09); color: white; }
 
 .btn-success {
   background: linear-gradient(135deg, #059669, var(--green));
   color: white; box-shadow: 0 4px 15px rgba(16,185,129,.3);
 }
-
 .btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,.4); }
 
 /* ── SUCCESS ── */
@@ -349,10 +328,7 @@ select option { background: #1a0d38; }
   box-shadow: 0 0 40px rgba(16,185,129,.08);
 }
 
-.success-icon {
-  font-size: 64px; margin-bottom: 20px;
-  animation: bounceIn .6s ease both;
-}
+.success-icon { font-size: 64px; margin-bottom: 20px; animation: bounceIn .6s ease both; }
 
 @keyframes bounceIn {
   0%   { transform: scale(0); opacity: 0; }
@@ -361,14 +337,12 @@ select option { background: #1a0d38; }
 }
 
 .success-card h2 { font-size: 28px; font-weight: 700; margin-bottom: 10px; letter-spacing: -1px; }
-
 .success-card p { color: var(--muted); font-size: 15px; line-height: 1.8; margin-bottom: 28px; }
 
 .success-ref {
   background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.2);
   border-radius: 10px; padding: 14px 20px; margin-bottom: 24px;
 }
-
 .success-ref-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; letter-spacing: .5px; }
 .success-ref-val { font-family: 'Space Mono', monospace; font-size: 18px; color: #34d399; font-weight: 700; }
 
@@ -381,7 +355,6 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
   position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 200;
   background: rgba(255,255,255,.04);
 }
-
 .form-progress-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--accent), var(--accent3));
@@ -416,7 +389,7 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 
 <!-- HEADER -->
 <header>
-  <a class="logo" href="index.html">
+  <a class="logo" href="rEGISTER.HTML">
     <img class="logo-icon" src="tecClub.jpg" alt="logo">
     <img src="purple 1.png" alt="TechnoVenture" style="height:28px;object-fit:contain">
   </a>
@@ -426,11 +399,10 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 <!-- HERO -->
 <div class="hero">
   <div class="hero-orb"></div>
-  <div class="section-label">معرض المشاريع التقنية 2026</div>
+  <div class="section-label">TechnoVenture</div>
   <h1 class="hero-title">سجّل <span>فريقك ومشروعك</span></h1>
   <p class="hero-sub">أكمل النموذج التالي لتسجيل مشاركتك الرسمية في المعرض. يستغرق التسجيل أقل من ٣ دقائق.</p>
 
-  <!-- Steps -->
   <div class="steps-indicator" id="stepsIndicator">
     <div class="step-item">
       <div class="step-dot active" id="step-dot-1">1</div>
@@ -481,25 +453,24 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 
     <div class="field">
       <label>التصنيف <span class="required">*</span></label>
-      <select id="projectCategory">
-        <option value="">— اختر التصنيف —</option>
-        <option>AI & Machine Learning</option>
-        <option>Health Tech</option>
-        <option>Fintech</option>
-        <option>Mobile Apps</option>
-        <option>Education Tech</option>
-        <option>Sustainability</option>
-        <option>IoT & Hardware</option>
-        <option>Cybersecurity</option>
-        <option>Other</option>
-      </select>
-      <div class="field-error" id="err-projectCategory">الرجاء اختيار التصنيف</div>
+      <input type="text" id="projectCategory" placeholder="مثال: AI, Health Tech, Fintech, Mobile Apps...">
+      <div class="field-error" id="err-projectCategory">الرجاء كتابة تصنيف المشروع</div>
     </div>
 
     <div class="field">
       <label>ملخص فكرة المشروع <span class="required">*</span></label>
       <textarea id="projectDesc" placeholder="اشرح فكرة مشروعك باختصار: ما المشكلة التي يحلّها؟ وكيف؟ (١٠٠–٣٠٠ كلمة)"></textarea>
       <div class="field-error" id="err-projectDesc">الرجاء كتابة ملخص المشروع</div>
+    </div>
+
+    <!-- Prototype URL — اختياري -->
+    <div class="field">
+      <label>
+        رابط النموذج الأولي (Prototype)
+        <span style="color:var(--muted);font-size:11px;font-weight:400;text-transform:none;letter-spacing:0;margin-right:6px">— اختياري</span>
+      </label>
+      <input type="url" id="prototypeUrl" placeholder="https://drive.google.com/..." style="direction:ltr;text-align:right">
+      <div style="font-size:11px;color:var(--muted);margin-top:5px">📎 الصق رابط Google Drive أو أي رابط خارجي لملف PDF أو عرض تقديمي</div>
     </div>
 
     <div class="form-nav">
@@ -524,21 +495,16 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
       <div class="field-error" id="err-teamName">هذا الحقل مطلوب</div>
     </div>
 
-    <div class="field-row">
+    <div class="field-row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="field" style="margin-bottom:0">
+        <label>الجامعة <span class="required">*</span></label>
+        <input type="text" id="university" placeholder="مثال: جامعة الملك سعود">
+        <div class="field-error" id="err-university">الرجاء كتابة اسم الجامعة</div>
+      </div>
       <div class="field" style="margin-bottom:0">
         <label>الكلية <span class="required">*</span></label>
-        <select id="college">
-          <option value="">— اختر الكلية —</option>
-          <option>كلية الحاسب وتقنية المعلومات</option>
-          <option>كلية الهندسة</option>
-          <option>كلية العلوم</option>
-          <option>كلية إدارة الأعمال</option>
-          <option>كلية الطب</option>
-          <option>كلية الصيدلة</option>
-          <option>كلية التصميم</option>
-          <option>أخرى</option>
-        </select>
-        <div class="field-error" id="err-college">الرجاء اختيار الكلية</div>
+        <input type="text" id="college" placeholder="مثال: كلية الحاسب وتقنية المعلومات">
+        <div class="field-error" id="err-college">الرجاء كتابة اسم الكلية</div>
       </div>
       <div class="field" style="margin-bottom:0">
         <label>التخصص <span class="required">*</span></label>
@@ -585,7 +551,7 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
       <div class="section-num">03</div>
       <div class="section-head-text">
         <h3>أعضاء الفريق</h3>
-        <p>أدخل بيانات كل عضو والرقم الجامعي</p>
+        <p>أدخل بيانات كل عضو ورقم الهوية</p>
       </div>
     </div>
 
@@ -623,7 +589,6 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
       <div class="field-error" id="err-leaderPhone">الرجاء إدخال رقم جوال صحيح</div>
     </div>
 
-    <!-- Summary preview -->
     <div id="summaryBox" style="background:rgba(124,58,237,.06);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:8px">
       <div style="font-size:12px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px;font-family:'Space Mono',monospace">ملخص التسجيل</div>
       <div id="summaryContent" style="font-size:14px;line-height:2;color:var(--text)"></div>
@@ -631,7 +596,7 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 
     <div class="form-nav">
       <button class="btn btn-ghost" onclick="goTo(3)">← السابق</button>
-      <button class="btn btn-success" onclick="submitForm()"> إرسال التسجيل</button>
+      <button class="btn btn-success" onclick="submitForm()">🚀 إرسال التسجيل</button>
     </div>
   </div>
 
@@ -647,9 +612,9 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
       <div class="success-ref-label">رقم تسجيلك</div>
       <div class="success-ref-val" id="refNumber">—</div>
     </div>
-    <a href="index.html" style="text-decoration:none">
+    <a href="rEGISTER.HTML" style="text-decoration:none">
       <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:15px">
-         العودة للمعرض
+        العودة لصفحة التسجيل
       </button>
     </a>
   </div>
@@ -669,8 +634,8 @@ const firebaseConfig = {
   appId: "1:481340074318:web:5248e7eb360c4f5eed161f"
 };
 
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const app     = initializeApp(firebaseConfig);
+const db      = getFirestore(app);
 
 /* ── STARS ── */
 (function() {
@@ -704,13 +669,13 @@ let currentStep  = 1;
 let memberCount  = 2;
 const TOTAL_STEPS = 4;
 
-/* ── INIT MEMBERS ── */
+/* ── FILE SELECT HANDLER ── */
+/* ── MEMBERS ── */
 function renderMembers() {
   const grid = document.getElementById('membersGrid');
   const existing = grid.querySelectorAll('.member-card');
   const currentCount = existing.length;
 
-  // add cards if needed
   for (let i = currentCount; i < memberCount; i++) {
     const card = document.createElement('div');
     card.className = 'member-card';
@@ -729,14 +694,13 @@ function renderMembers() {
           <input type="text" class="member-name" placeholder="الاسم الرباعي">
         </div>
         <div>
-          <label>الرقم الجامعي <span class="required">*</span></label>
+          <label>رقم الهوية <span class="required">*</span></label>
           <input type="text" class="member-id" placeholder="مثال: 202012345" style="direction:ltr;text-align:right">
         </div>
       </div>`;
     grid.appendChild(card);
   }
 
-  // remove extra cards
   for (let i = currentCount - 1; i >= memberCount; i--) {
     const cards = grid.querySelectorAll('.member-card');
     if (cards[i]) cards[i].remove();
@@ -771,7 +735,6 @@ window.goTo = function(step) {
   document.getElementById(`step-dot-${currentStep}`).textContent = '✓';
 
   if (step < currentStep) {
-    // going back — restore dot
     document.getElementById(`step-dot-${currentStep}`).classList.remove('done');
     document.getElementById(`step-dot-${currentStep}`).textContent = currentStep;
   }
@@ -783,7 +746,6 @@ window.goTo = function(step) {
   document.getElementById(`step-dot-${step}`).textContent = step;
 
   document.getElementById('progressFill').style.width = ((step-1) / TOTAL_STEPS * 100) + '%';
-
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   if (step === 3) renderMembers();
@@ -799,25 +761,24 @@ function validateStep(step) {
     const err = document.getElementById('err-' + id);
     if (!err) return;
     if (!condition) {
-      el.classList.add('error');
-      err.style.display = 'block';
-      ok = false;
+      el.classList.add('error'); err.style.display = 'block'; ok = false;
     } else {
-      el.classList.remove('error');
-      err.style.display = 'none';
+      el.classList.remove('error'); err.style.display = 'none';
     }
   }
 
   if (step === 1) {
     check('projectName',     v('projectName').length > 1);
-    check('projectCategory', v('projectCategory') !== '');
+    check('projectCategory', v('projectCategory').length > 1);
     check('projectDesc',     v('projectDesc').length > 5);
     check('revenueModel',    v('revenueModel').length > 5);
+    // prototypeUrl — اختياري، لا validation
   }
 
   if (step === 2) {
     check('teamName',   v('teamName').length > 1);
-    check('college',    v('college') !== '');
+    check('university', v('university').length > 1);
+    check('college',    v('college').length > 1);
     check('major',      v('major').length > 1);
     check('studyYear',  v('studyYear') !== '');
   }
@@ -849,7 +810,7 @@ function renderSummary() {
 
   document.getElementById('summaryContent').innerHTML = `
     <div> <strong>المشروع:</strong> ${v('projectName')} — ${v('projectCategory')}</div>
-    <div> <strong>الفريق:</strong> ${v('teamName')} | ${v('college')}</div>
+    <div> <strong>الفريق:</strong> ${v('teamName')} | ${v('university')} — ${v('college')}</div>
     <div> <strong>التخصص:</strong> ${v('major')} — ${v('studyYear')}</div>
     <div> <strong>الأعضاء (${members.length}):</strong> ${members.map(m => m.name || '—').join(' / ')}</div>
   `;
@@ -857,9 +818,8 @@ function renderSummary() {
 
 /* ── SUBMIT ── */
 window.submitForm = async function() {
-  // validate contact
-  const emailEl = document.getElementById('email');
-  const phoneEl = document.getElementById('leaderPhone');
+  const emailEl  = document.getElementById('email');
+  const phoneEl  = document.getElementById('leaderPhone');
   const emailErr = document.getElementById('err-email');
   const phoneErr = document.getElementById('err-leaderPhone');
   let ok = true;
@@ -876,60 +836,59 @@ window.submitForm = async function() {
 
   if (!ok) return;
 
-  const members = [...document.querySelectorAll('.member-card')].map((c, i) => ({
-    name: c.querySelector('.member-name').value,
-    studentId: c.querySelector('.member-id').value,
-    role: i === 0 ? 'leader' : 'member'
-  }));
-
-  const data = {
-    project: {
-      name:     v('projectName'),
-      category: v('projectCategory'),
-      description: v('projectDesc'),
-      revenueModel: v('revenueModel')
-    },
-    team: {
-      name:       v('teamName'),
-      college:    v('college'),
-      major:      v('major'),
-      studyYear:  v('studyYear'),
-      memberCount: memberCount
-    },
-    members,
-    contact: {
-      email:       v('email'),
-      leaderPhone: v('leaderPhone')
-    },
-    submittedAt: serverTimestamp(),
-    status: 'pending'
-  };
+  const btn = document.querySelector('.btn-success');
+  btn.textContent = '⏳ جارٍ الإرسال...';
+  btn.disabled = true;
 
   try {
-    const btn = document.querySelector('.btn-success');
-    btn.textContent = '⏳ جارٍ الإرسال...';
-    btn.disabled = true;
+    const members = [...document.querySelectorAll('.member-card')].map((c, i) => ({
+      name: c.querySelector('.member-name').value,
+      studentId: c.querySelector('.member-id').value,
+      role: i === 0 ? 'leader' : 'member'
+    }));
 
-    const ref = await addDoc(collection(db, 'registrations'), data);
-    const refId = ref.id.slice(0, 8).toUpperCase();
+    const docRef = await addDoc(collection(db, 'registrations'), {
+      project: {
+        name:         v('projectName'),
+        category:     v('projectCategory'),
+        description:  v('projectDesc'),
+        revenueModel: v('revenueModel'),
+        prototypeUrl: v('prototypeUrl') || null
+      },
+      team: {
+        name:        v('teamName'),
+        university:  v('university'),
+        college:     v('college'),
+        major:       v('major'),
+        studyYear:   v('studyYear'),
+        memberCount: memberCount
+      },
+      members,
+      contact: {
+        email:       v('email'),
+        leaderPhone: v('leaderPhone')
+      },
+      submittedAt: serverTimestamp(),
+      status: 'pending'
+    });
 
-    document.getElementById('progressFill').style.width = '100%';
-    document.getElementById('formWrap').style.display  = 'none';
-    document.querySelector('.hero').style.display      = 'none';
-    document.getElementById('successPage').style.display = 'block';
-    document.getElementById('refNumber').textContent  = 'TV-' + refId;
+
+    const refId = docRef.id.slice(0, 8).toUpperCase();
+    document.getElementById('progressFill').style.width   = '100%';
+    document.getElementById('formWrap').style.display     = 'none';
+    document.querySelector('.hero').style.display         = 'none';
+    document.getElementById('successPage').style.display  = 'block';
+    document.getElementById('refNumber').textContent      = 'TV-' + refId;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
   } catch (e) {
     console.error(e);
     alert('حدث خطأ أثناء الإرسال، حاول مجدداً.');
-    const btn = document.querySelector('.btn-success');
     btn.textContent = ' إرسال التسجيل';
     btn.disabled = false;
   }
 };
 
-// init
 renderMembers();
 </script>
 </body>

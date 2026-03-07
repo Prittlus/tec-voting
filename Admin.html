@@ -142,10 +142,7 @@ header{
 
 .stat-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
 .stat-icon{font-size:22px}
-.stat-trend{
-  font-size:11px;font-family:'Space Mono',monospace;
-  color:var(--green);
-}
+.stat-trend{font-size:11px;font-family:'Space Mono',monospace;color:var(--green)}
 
 .stat-num{
   font-family:'Space Mono',monospace;font-size:28px;
@@ -394,7 +391,7 @@ tr:hover td{background:rgba(124,58,237,.04)}
 <!-- HEADER -->
 <header>
   <a class="logo" href="index.html">
-    <img src="tecClub.jpg" alt="logo">
+    <img src="purple 1.png" alt="logo">
     <div>
       <div class="logo-text">TechnoVenture</div>
       <div class="logo-sub">ADMIN PANEL</div>
@@ -423,15 +420,15 @@ tr:hover td{background:rgba(124,58,237,.04)}
 
     <div class="sidebar-section">الحالة</div>
     <div class="nav-item" onclick="filterStatus('pending')" id="nav-pending">
-      <span class="nav-icon">⏳</span> بانتظار المراجعة
+      <span class="nav-icon"></span> بانتظار المراجعة
       <span class="nav-badge yellow" id="badge-pending">0</span>
     </div>
     <div class="nav-item" onclick="filterStatus('accepted')" id="nav-accepted">
-      <span class="nav-icon">✅</span> مقبولة
+      <span class="nav-icon"></span> مقبولة
       <span class="nav-badge green" id="badge-accepted">0</span>
     </div>
     <div class="nav-item" onclick="filterStatus('rejected')" id="nav-rejected">
-      <span class="nav-icon">❌</span> مرفوضة
+      <span class="nav-icon"></span> مرفوضة
       <span class="nav-badge" id="badge-rejected">0</span>
     </div>
 
@@ -481,15 +478,9 @@ tr:hover td{background:rgba(124,58,237,.04)}
         <input class="filter-input" type="text" id="searchInput" placeholder="🔍 ابحث باسم المشروع أو الفريق..." oninput="applyFilters()">
         <select class="filter-select" id="catFilter" onchange="applyFilters()">
           <option value="">كل التصنيفات</option>
-          <option>AI & Machine Learning</option>
-          <option>Health Tech</option>
-          <option>Fintech</option>
-          <option>Mobile Apps</option>
-          <option>Education Tech</option>
-          <option>Sustainability</option>
-          <option>IoT & Hardware</option>
-          <option>Cybersecurity</option>
-          <option>Other</option>
+        </select>
+        <select class="filter-select" id="universityFilter" onchange="applyFilters()">
+          <option value="">كل الجامعات</option>
         </select>
         <select class="filter-select" id="collegeFilter" onchange="applyFilters()">
           <option value="">كل الكليات</option>
@@ -503,11 +494,13 @@ tr:hover td{background:rgba(124,58,237,.04)}
               <th>#</th>
               <th>المشروع</th>
               <th>الفريق</th>
+              <th>الجامعة</th>
               <th>الكلية</th>
               <th>التصنيف</th>
               <th>الأعضاء</th>
               <th>الحالة</th>
               <th>التاريخ</th>
+              <th>النموذج الأولي</th>
               <th>إجراء</th>
             </tr>
           </thead>
@@ -518,11 +511,15 @@ tr:hover td{background:rgba(124,58,237,.04)}
 
     <!-- CHARTS VIEW -->
     <div id="chartsView" style="display:none">
-      <div class="section-hdr"><h2> الإحصائيات التفصيلية</h2></div>
+      <div class="section-hdr"><h2>📊 الإحصائيات التفصيلية</h2></div>
       <div class="charts-grid">
         <div class="chart-card">
           <h4>التوزيع حسب التصنيف</h4>
           <div id="catChart"></div>
+        </div>
+        <div class="chart-card">
+          <h4>التوزيع حسب الجامعة</h4>
+          <div id="universityChart"></div>
         </div>
         <div class="chart-card">
           <h4>التوزيع حسب الكلية</h4>
@@ -615,7 +612,7 @@ function init() {
     updateStats();
     applyFilters();
     updateBadges();
-    buildCollegeFilter();
+    buildDynamicFilters();
     if(document.getElementById('chartsView').style.display !== 'none') renderCharts();
   });
 }
@@ -639,17 +636,27 @@ function updateBadges() {
   document.getElementById('badge-rejected').textContent = allRegs.filter(r=>r.status==='rejected').length;
 }
 
-function buildCollegeFilter() {
+function buildDynamicFilters() {
+  const cats = [...new Set(allRegs.map(r=>r.project?.category).filter(Boolean))];
+  const catSel = document.getElementById('catFilter');
+  const curCat = catSel.value;
+  catSel.innerHTML = '<option value="">كل التصنيفات</option>';
+  cats.forEach(c => { const o=document.createElement('option');o.value=c;o.textContent=c;catSel.appendChild(o); });
+  catSel.value = curCat;
+
+  const universities = [...new Set(allRegs.map(r=>r.team?.university).filter(Boolean))];
+  const uniSel = document.getElementById('universityFilter');
+  const curUni = uniSel.value;
+  uniSel.innerHTML = '<option value="">كل الجامعات</option>';
+  universities.forEach(u => { const o=document.createElement('option');o.value=u;o.textContent=u;uniSel.appendChild(o); });
+  uniSel.value = curUni;
+
   const colleges = [...new Set(allRegs.map(r=>r.team?.college).filter(Boolean))];
-  const sel = document.getElementById('collegeFilter');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">كل الكليات</option>';
-  colleges.forEach(c => {
-    const o = document.createElement('option');
-    o.value = c; o.textContent = c;
-    sel.appendChild(o);
-  });
-  sel.value = cur;
+  const colSel = document.getElementById('collegeFilter');
+  const curCol = colSel.value;
+  colSel.innerHTML = '<option value="">كل الكليات</option>';
+  colleges.forEach(c => { const o=document.createElement('option');o.value=c;o.textContent=c;colSel.appendChild(o); });
+  colSel.value = curCol;
 }
 
 /* ── FILTER ── */
@@ -668,14 +675,16 @@ window.filterStatus = function(status) {
 window.applyFilters = function() {
   const q    = document.getElementById('searchInput').value.toLowerCase();
   const cat  = document.getElementById('catFilter').value;
+  const uni  = document.getElementById('universityFilter').value;
   const col  = document.getElementById('collegeFilter').value;
 
   filtered = allRegs.filter(r => {
-    const matchStatus  = !currentStatus || r.status === currentStatus;
-    const matchSearch  = !q || r.project?.name?.toLowerCase().includes(q) || r.team?.name?.toLowerCase().includes(q);
-    const matchCat     = !cat || r.project?.category === cat;
-    const matchCollege = !col || r.team?.college === col;
-    return matchStatus && matchSearch && matchCat && matchCollege;
+    const matchStatus     = !currentStatus || r.status === currentStatus;
+    const matchSearch     = !q || r.project?.name?.toLowerCase().includes(q) || r.team?.name?.toLowerCase().includes(q);
+    const matchCat        = !cat || r.project?.category === cat;
+    const matchUniversity = !uni || r.team?.university === uni;
+    const matchCollege    = !col || r.team?.college === col;
+    return matchStatus && matchSearch && matchCat && matchUniversity && matchCollege;
   });
 
   renderTable();
@@ -685,7 +694,7 @@ window.applyFilters = function() {
 function renderTable() {
   const tbody = document.getElementById('tableBody');
   if (!filtered.length) {
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="9"><div class="empty-icon">📭</div><div>لا توجد نتائج</div></td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="10"><div class="empty-icon">📭</div><div>لا توجد نتائج</div></td></tr>`;
     return;
   }
 
@@ -694,9 +703,9 @@ function renderTable() {
       ? new Date(r.submittedAt.seconds*1000).toLocaleDateString('ar-SA')
       : '—';
     const statusMap = {
-      pending:  ['status-pending',  '⏳ انتظار'],
-      accepted: ['status-accepted', '✅ مقبول'],
-      rejected: ['status-danger',   '❌ مرفوض']
+      pending:  ['status-pending',  ' انتظار'],
+      accepted: ['status-accepted', ' مقبول'],
+      rejected: ['status-rejected', ' مرفوض']
     };
     const [cls, label] = statusMap[r.status] || statusMap.pending;
 
@@ -704,11 +713,13 @@ function renderTable() {
       <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">${i+1}</td>
       <td><div class="td-project" title="${r.project?.name||''}">${r.project?.name||'—'}</div></td>
       <td class="td-team">${r.team?.name||'—'}</td>
+      <td style="font-size:12px;color:var(--muted);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.team?.university||'—'}</td>
       <td style="font-size:12px;color:var(--muted);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.team?.college||'—'}</td>
       <td><span class="td-cat">${r.project?.category||'—'}</span></td>
       <td style="font-family:'Space Mono',monospace;text-align:center">${r.team?.memberCount||'—'}</td>
       <td><span class="status ${cls}"><span class="status-dot"></span>${label}</span></td>
       <td class="td-date">${date}</td>
+      <td style="text-align:center">${r.project?.prototypeUrl ? `<a href="${r.project.prototypeUrl}" target="_blank" style="color:var(--accent2);font-size:18px;text-decoration:none" title="فتح الرابط">🔗</a>` : '<span style="color:var(--muted);font-size:11px">—</span>'}</td>
       <td>
         <button class="btn btn-ghost btn-sm" onclick="openDrawer('${r.id}')">عرض</button>
       </td>
@@ -734,28 +745,34 @@ window.openDrawer = function(id) {
     </span>`
   ).join('');
 
+  const prototypeHTML = r.project?.prototypeUrl
+    ? `<a href="${r.project.prototypeUrl}" target="_blank" style="color:var(--accent2);text-decoration:none;font-size:12px;direction:ltr;display:inline-flex;align-items:center;gap:4px">🔗 فتح الرابط</a>`
+    : `<span style="color:var(--muted)">—</span>`;
+
   document.getElementById('drawerBody').innerHTML = `
     <div class="d-section">
-      <div class="d-section-title">📌 المشروع</div>
+      <div class="d-section-title"> المشروع</div>
       <div class="d-row"><span class="d-key">اسم المشروع</span><span class="d-val">${r.project?.name||'—'}</span></div>
       <div class="d-row"><span class="d-key">التصنيف</span><span class="d-val">${r.project?.category||'—'}</span></div>
       <div class="d-row"><span class="d-key">الملخص</span><span class="d-val" style="font-size:12px;line-height:1.7">${r.project?.description||'—'}</span></div>
       <div class="d-row"><span class="d-key">نموذج الربح</span><span class="d-val" style="font-size:12px;line-height:1.7;color:#34d399">${r.project?.revenueModel||'—'}</span></div>
+      <div class="d-row"><span class="d-key">النموذج الأولي</span><span class="d-val">${prototypeHTML}</span></div>
     </div>
     <div class="d-section">
       <div class="d-section-title">👥 الفريق</div>
       <div class="d-row"><span class="d-key">اسم الفريق</span><span class="d-val">${r.team?.name||'—'}</span></div>
+      <div class="d-row"><span class="d-key">الجامعة</span><span class="d-val">${r.team?.university||'—'}</span></div>
       <div class="d-row"><span class="d-key">الكلية</span><span class="d-val">${r.team?.college||'—'}</span></div>
       <div class="d-row"><span class="d-key">التخصص</span><span class="d-val">${r.team?.major||'—'}</span></div>
       <div class="d-row"><span class="d-key">السنة</span><span class="d-val">${r.team?.studyYear||'—'}</span></div>
       <div class="d-row"><span class="d-key">عدد الأعضاء</span><span class="d-val">${r.team?.memberCount||'—'}</span></div>
     </div>
     <div class="d-section">
-      <div class="d-section-title">🧑‍💻 الأعضاء</div>
+      <div class="d-section-title"> الأعضاء</div>
       <div style="margin-top:4px">${membersHTML || '—'}</div>
     </div>
     <div class="d-section">
-      <div class="d-section-title">📞 التواصل</div>
+      <div class="d-section-title"> التواصل</div>
       <div class="d-row"><span class="d-key">البريد</span><span class="d-val" style="direction:ltr">${r.contact?.email||'—'}</span></div>
       <div class="d-row"><span class="d-key">الجوال</span><span class="d-val" style="direction:ltr">${r.contact?.leaderPhone||'—'}</span></div>
     </div>
@@ -767,9 +784,9 @@ window.openDrawer = function(id) {
 
   const status = r.status || 'pending';
   document.getElementById('drawerActions').innerHTML = `
-    ${status!=='accepted' ? `<button class="btn btn-success" style="flex:1;justify-content:center" onclick="setStatus('${r.id}','accepted')">✅ قبول</button>` : ''}
-    ${status!=='rejected' ? `<button class="btn btn-danger"  style="flex:1;justify-content:center" onclick="setStatus('${r.id}','rejected')">❌ رفض</button>` : ''}
-    ${status!=='pending'  ? `<button class="btn btn-warn"    style="flex:1;justify-content:center" onclick="setStatus('${r.id}','pending')">⏳ إعادة للانتظار</button>` : ''}`;
+    ${status!=='accepted' ? `<button class="btn btn-success" style="flex:1;justify-content:center" onclick="setStatus('${r.id}','accepted')"> قبول</button>` : ''}
+    ${status!=='rejected' ? `<button class="btn btn-danger"  style="flex:1;justify-content:center" onclick="setStatus('${r.id}','rejected')"> رفض</button>` : ''}
+    ${status!=='pending'  ? `<button class="btn btn-warn"    style="flex:1;justify-content:center" onclick="setStatus('${r.id}','pending')"> إعادة للانتظار</button>` : ''}`;
 
   document.getElementById('drawer').classList.add('open');
   document.getElementById('overlay').style.display = 'block';
@@ -799,9 +816,10 @@ window.showView = function(view) {
 
 /* ── CHARTS ── */
 function renderCharts() {
-  renderBarChart('catChart',    groupBy(allRegs, r=>r.project?.category));
-  renderBarChart('collegeChart',groupBy(allRegs, r=>r.team?.college));
-  renderBarChart('yearChart',   groupBy(allRegs, r=>r.team?.studyYear));
+  renderBarChart('catChart',        groupBy(allRegs, r=>r.project?.category));
+  renderBarChart('universityChart', groupBy(allRegs, r=>r.team?.university));
+  renderBarChart('collegeChart',    groupBy(allRegs, r=>r.team?.college));
+  renderBarChart('yearChart',       groupBy(allRegs, r=>r.team?.studyYear));
   renderBarChart('statusChart', {
     'انتظار': allRegs.filter(r=>r.status==='pending').length,
     'مقبول':  allRegs.filter(r=>r.status==='accepted').length,
@@ -830,17 +848,18 @@ window.exportExcel = function() {
   if(!allRegs.length){showToast('لا توجد بيانات للتصدير','error');return;}
 
   const rows = [
-    ['#','اسم المشروع','التصنيف','نموذج الربح','اسم الفريق','الكلية','التخصص','السنة','عدد الأعضاء',
+    ['#','اسم المشروع','التصنيف','نموذج الربح','النموذج الأولي','اسم الفريق','الجامعة','الكلية','التخصص','السنة','عدد الأعضاء',
      'أسماء الأعضاء','البريد الإلكتروني','رقم الجوال','الحالة','تاريخ التسجيل']
   ];
 
   allRegs.forEach((r,i) => {
-    const members = (r.members||[]).map(m=>`${m.name}(${m.studentId})`).join(' | ');
-    const date    = r.submittedAt?.seconds ? new Date(r.submittedAt.seconds*1000).toLocaleDateString('ar-SA') : '—';
+    const members  = (r.members||[]).map(m=>`${m.name}(${m.studentId})`).join(' | ');
+    const date     = r.submittedAt?.seconds ? new Date(r.submittedAt.seconds*1000).toLocaleDateString('ar-SA') : '—';
     const statusAr = {pending:'انتظار',accepted:'مقبول',rejected:'مرفوض'}[r.status]||'—';
     rows.push([
       i+1, r.project?.name, r.project?.category, r.project?.revenueModel,
-      r.team?.name, r.team?.college, r.team?.major, r.team?.studyYear, r.team?.memberCount,
+      r.project?.prototypeUrl||'—',
+      r.team?.name, r.team?.university, r.team?.college, r.team?.major, r.team?.studyYear, r.team?.memberCount,
       members, r.contact?.email, r.contact?.leaderPhone, statusAr, date
     ]);
   });
