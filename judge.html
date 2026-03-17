@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقييم الحكام — TechnoVenture</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #04010f;
+  --card: #0f0728;
+  --border: rgba(120,60,240,.18);
+  --accent: #7c3aed;
+  --accent2: #a855f7;
+  --accent3: #06b6d4;
+  --green: #10b981;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+  --text: #e2d9ff;
+  --muted: #8b7ab8;
+  --glow: rgba(124,58,237,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+#stars-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35}
+
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:48px 40px;width:380px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);position:relative;z-index:1}
+.login-box .icon{font-size:52px;margin-bottom:20px}
+.login-box h2{font-size:22px;font-weight:700;margin-bottom:4px}
+.login-box .sub{font-size:11px;color:var(--accent2);font-family:'Space Mono',monospace;letter-spacing:2px;margin-bottom:28px}
+.login-input{width:100%;padding:13px 16px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:white;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:15px;outline:none;text-align:center;letter-spacing:4px;margin-bottom:14px;transition:border-color .2s}
+.login-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+.login-err{font-size:13px;color:#f87171;margin-bottom:12px;display:none}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:14px 32px;background:rgba(4,1,15,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo img{width:34px;height:34px;object-fit:contain;border-radius:7px}
+.logo-text{font-size:16px;font-weight:700;background:linear-gradient(90deg,#fff,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-sub{font-size:10px;color:var(--accent2);font-family:'Space Mono',monospace;letter-spacing:1.5px}
+.judge-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);color:var(--accent2);padding:6px 14px;border-radius:8px;font-size:12px;font-family:'Space Mono',monospace}
+
+/* ── LAYOUT ── */
+.page{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:28px 32px 80px}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:24px}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.progress-top h3{font-size:15px;font-weight:700}
+.progress-num{font-family:'Space Mono',monospace;font-size:13px;color:var(--accent2)}
+.progress-track{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:4px;transition:width .5s ease}
+
+/* ── PROJECTS LIST ── */
+.projects-list{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+
+.project-row{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:16px;cursor:pointer;transition:all .2s;
+}
+.project-row:hover{border-color:rgba(124,58,237,.4);transform:translateY(-1px)}
+.project-row.evaluated{border-right:3px solid var(--green)}
+.project-row.active{border-color:var(--accent);background:rgba(124,58,237,.06)}
+
+.proj-info{}
+.proj-name{font-size:15px;font-weight:700;color:white;margin-bottom:4px}
+.proj-team{font-size:13px;color:var(--accent2)}
+.proj-cat{font-size:11px;font-family:'Space Mono',monospace;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:var(--accent2);padding:2px 8px;border-radius:4px;margin-top:6px;display:inline-block}
+
+.proj-score-badge{
+  text-align:center;flex-shrink:0;
+  width:64px;height:64px;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+}
+.proj-score-badge.done{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.3)}
+.proj-score-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:white;line-height:1}
+.proj-score-label{font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:.5px}
+.proj-status-icon{font-size:24px}
+
+/* ── EVAL PANEL ── */
+#evalPanel{display:none}
+
+.eval-header{
+  background:var(--card);border:1px solid var(--accent);
+  border-radius:16px;padding:22px 26px;margin-bottom:20px;
+}
+.eval-header h2{font-size:20px;font-weight:700;margin-bottom:4px}
+.eval-header-sub{font-size:13px;color:var(--muted);margin-bottom:12px}
+.eval-header-meta{display:flex;gap:10px;flex-wrap:wrap}
+.meta-chip{font-size:11px;background:rgba(255,255,255,.05);border:1px solid var(--border);padding:4px 10px;border-radius:6px;color:var(--muted)}
+
+/* ── CRITERIA CARDS ── */
+.criteria-section{margin-bottom:20px}
+
+.criteria-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;margin-bottom:12px;
+}
+
+.criteria-header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  background:rgba(124,58,237,.05);
+}
+.criteria-title{font-size:15px;font-weight:700}
+.criteria-max{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)}
+.criteria-total-score{
+  font-family:'Space Mono',monospace;font-size:18px;font-weight:700;
+  color:var(--accent2);
+}
+
+.criteria-body{padding:20px}
+
+.sub-criterion{margin-bottom:22px}
+.sub-criterion:last-child{margin-bottom:0}
+
+.sub-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.sub-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.sub-max{font-size:11px;font-family:'Space Mono',monospace;color:var(--accent2)}
+
+/* SCORE SLIDER */
+.score-input-wrap{display:flex;align-items:center;gap:14px;margin-top:8px}
+
+.score-slider{
+  flex:1;-webkit-appearance:none;appearance:none;
+  height:6px;border-radius:3px;outline:none;cursor:pointer;
+  background:rgba(255,255,255,.08);
+}
+.score-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--accent2);cursor:pointer;
+  box-shadow:0 0 8px rgba(168,85,247,.5);
+  border:2px solid white;
+}
+.score-slider::-moz-range-thumb{
+  width:18px;height:18px;border-radius:50%;
+  background:var(--accent2);cursor:pointer;border:2px solid white;
+}
+
+.score-val{
+  font-family:'Space Mono',monospace;font-size:18px;font-weight:700;
+  color:white;min-width:40px;text-align:center;
+  background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);
+  border-radius:8px;padding:6px 10px;
+}
+
+.score-ticks{display:flex;justify-content:space-between;margin-top:4px;padding:0 2px}
+.score-tick{font-size:10px;font-family:'Space Mono',monospace;color:rgba(139,122,184,.4)}
+
+/* NOTES */
+.eval-notes{margin-top:20px}
+.eval-notes textarea{
+  width:100%;padding:12px 14px;border-radius:10px;
+  border:1px solid var(--border);background:rgba(255,255,255,.04);
+  color:white;font-family:'IBM Plex Sans Arabic',sans-serif;
+  font-size:13px;outline:none;resize:vertical;min-height:80px;
+  line-height:1.7;transition:border-color .2s;
+}
+.eval-notes textarea:focus{border-color:var(--accent);background:rgba(124,58,237,.04)}
+.eval-notes textarea::placeholder{color:rgba(139,122,184,.4)}
+
+/* TOTAL SCORE BOX */
+.total-score-box{
+  background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(6,182,212,.08));
+  border:1px solid rgba(124,58,237,.3);
+  border-radius:16px;padding:24px;text-align:center;margin-bottom:20px;
+}
+.total-label{font-size:12px;font-family:'Space Mono',monospace;color:var(--muted);letter-spacing:2px;margin-bottom:8px}
+.total-num{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:white;line-height:1;margin-bottom:4px}
+.total-breakdown{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:12px}
+.breakdown-chip{font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--border);padding:4px 10px;border-radius:6px}
+
+/* EVAL ACTIONS */
+.eval-actions{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:9px;border:none;cursor:pointer;font-family:'IBM Plex Sans Arabic',sans-serif;font-weight:600;font-size:14px;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#6d28d9);color:white;box-shadow:0 3px 12px rgba(124,58,237,.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.4)}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--muted)}
+.btn-ghost:hover{background:rgba(255,255,255,.09);color:white}
+.btn-success{background:linear-gradient(135deg,#059669,var(--green));color:white;box-shadow:0 3px 12px rgba(16,185,129,.3)}
+.btn-success:hover{transform:translateY(-1px)}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:60px;color:var(--muted)}
+.empty-icon{font-size:44px;margin-bottom:14px}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 22px;font-size:13px;z-index:9999;transition:transform .3s;box-shadow:0 8px 30px rgba(0,0,0,.4);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--green);color:#34d399}
+.toast.error{border-color:var(--red);color:#f87171}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PROJECT DESCRIPTION BLOCK ── */
+.proj-desc-block{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:10px;padding:14px 16px;margin-top:14px;
+}
+.proj-desc-label{
+  font-size:10px;font-family:'Space Mono',monospace;
+  letter-spacing:2px;color:var(--accent2);text-transform:uppercase;
+  margin-bottom:8px;
+}
+.proj-desc-text{font-size:13px;color:var(--text);line-height:1.8}
+.proj-revenue-text{font-size:13px;color:#34d399;line-height:1.8}
+
+@media(max-width:700px){
+  header{padding:12px 16px}
+  .logo-text{font-size:14px}
+  .judge-tag{font-size:11px;padding:5px 10px}
+  .page{padding:14px 14px 60px}
+
+  /* progress */
+  .progress-bar{padding:16px 16px}
+
+  /* list */
+  .project-row{flex-direction:column;align-items:flex-start;gap:12px;padding:16px}
+  .proj-score-badge{width:100%;height:44px;flex-direction:row;gap:8px;border-radius:8px}
+  .proj-score-num{font-size:16px}
+
+  /* eval panel header */
+  .eval-header{padding:16px}
+  .eval-header h2{font-size:17px}
+  .eval-header-meta{gap:6px}
+  .meta-chip{font-size:10px;padding:3px 8px}
+
+  /* criteria cards */
+  .criteria-header{flex-direction:column;align-items:flex-start;gap:6px;padding:14px 16px}
+  .criteria-total-score{font-size:15px}
+  .criteria-body{padding:14px}
+  .sub-title{font-size:13px}
+  .sub-desc{font-size:11px}
+
+  /* sliders — bigger touch targets */
+  .score-slider{height:8px}
+  .score-slider::-webkit-slider-thumb{width:24px;height:24px}
+  .score-slider::-moz-range-thumb{width:24px;height:24px}
+  .score-val{font-size:16px;padding:8px 12px;min-width:48px}
+
+  /* total */
+  .total-score-box{padding:20px 16px}
+  .total-num{font-size:42px}
+  .total-breakdown{gap:8px}
+  .breakdown-chip{font-size:10px}
+
+  /* actions */
+  .eval-actions{flex-direction:column-reverse}
+  .btn{width:100%;justify-content:center;padding:13px}
+
+  /* desc block */
+  .proj-desc-block{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="icon">⚖️</div>
+    <h2>لوحة الحكام</h2>
+    <div class="sub">JUDGES PANEL — TECHNOVENTURE</div>
+    <input class="login-input" type="password" id="passInput" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-err" id="loginErr">كلمة المرور غير صحيحة</div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px" onclick="doLogin()">دخول</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="index.html">
+    <img src="tecClub.jpg" alt="logo">
+    <div>
+      <div class="logo-text">TechnoVenture</div>
+      <div class="logo-sub">JUDGES PANEL</div>
+    </div>
+  </a>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="judge-tag" id="judgeTag">⚖️ —</div>
+    <button class="btn btn-ghost" style="font-size:12px;padding:7px 14px;color:#f87171" onclick="doLogout()">خروج</button>
+  </div>
+</header>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- PROGRESS -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-top">
+      <h3>تقدم التقييم</h3>
+      <span class="progress-num" id="progressNum">0 / 0</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- PROJECTS LIST -->
+  <div id="projectsListView">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="font-size:18px;font-weight:700">المشاريع المقبولة</h2>
+      <span style="font-size:12px;color:var(--muted);font-family:'Space Mono',monospace" id="listCount"></span>
+    </div>
+    <div class="projects-list" id="projectsList"></div>
+  </div>
+
+  <!-- EVAL PANEL -->
+  <div id="evalPanel">
+    <div class="eval-header" id="evalHeader"></div>
+
+    <!-- CRITERION 1: الابتكار والتميز (20) -->
+    <div class="criteria-card">
+      <div class="criteria-header">
+        <div>
+          <div class="criteria-title">١. الابتكار والتميز</div>
+          <div class="criteria-max">Innovation & Uniqueness</div>
+        </div>
+        <div class="criteria-total-score" id="c1-total">0 / 20</div>
+      </div>
+      <div class="criteria-body">
+        <div class="sub-criterion">
+          <div class="sub-title">الأصالة والجدة <span class="sub-max">/ 10</span></div>
+          <div class="sub-desc">1-3: تقليدية أو موجودة مع تغييرات طفيفة — 4-7: تحتوي عناصر جديدة غير فريدة تماماً — 8-10: مبتكرة جداً وتقدم مفهوماً فريداً</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-1-1" min="1" max="10" value="5" oninput="updateScore()">
+            <div class="score-val" id="v-1-1">5</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">5</span><span class="score-tick">10</span></div>
+        </div>
+        <div class="sub-criterion">
+          <div class="sub-title">التميز عن الحلول الموجودة <span class="sub-max">/ 10</span></div>
+          <div class="sub-desc">1-3: لا تميز واضح عن المنافسين — 4-7: ميزة تنافسية محدودة — 8-10: ميزة تنافسية قوية وواضحة</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-1-2" min="1" max="10" value="5" oninput="updateScore()">
+            <div class="score-val" id="v-1-2">5</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">5</span><span class="score-tick">10</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITERION 2: الجدوى التجارية (40) -->
+    <div class="criteria-card">
+      <div class="criteria-header">
+        <div>
+          <div class="criteria-title">٢. الجدوى التجارية وإمكانات السوق والنموذج الربحي</div>
+          <div class="criteria-max">Commercial Viability & Revenue Model</div>
+        </div>
+        <div class="criteria-total-score" id="c2-total">0 / 40</div>
+      </div>
+      <div class="criteria-body">
+        <div class="sub-criterion">
+          <div class="sub-title">تحديد المشكلة وحجمها <span class="sub-max">/ 10</span></div>
+          <div class="sub-desc">1-3: المشكلة غير واضحة أو لا تمثل حاجة ملحة — 4-7: محددة لكن حجم السوق محدود — 8-10: واضحة وتمثل حاجة حقيقية لسوق كبير</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-2-1" min="1" max="10" value="5" oninput="updateScore()">
+            <div class="score-val" id="v-2-1">5</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">5</span><span class="score-tick">10</span></div>
+        </div>
+        <div class="sub-criterion">
+          <div class="sub-title">مصادر الدخل والنموذج الربحي <span class="sub-max">/ 15</span></div>
+          <div class="sub-desc">1-5: لا نموذج ربحي واضح — 6-10: نموذج مبدئي يحتاج توضيحاً — 11-15: نموذج واضح ومحدد مع مصادر متنوعة ومستدامة</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-2-2" min="1" max="15" value="8" oninput="updateScore()">
+            <div class="score-val" id="v-2-2">8</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">8</span><span class="score-tick">15</span></div>
+        </div>
+        <div class="sub-criterion">
+          <div class="sub-title">حجم السوق المستهدف وإمكانات النمو <span class="sub-max">/ 10</span></div>
+          <div class="sub-desc">1-3: سوق صغير جداً أو لا إمكانات نمو — 4-7: متوسط مع نمو معقول — 8-10: كبير جداً مع إمكانات نمو عالية</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-2-3" min="1" max="10" value="5" oninput="updateScore()">
+            <div class="score-val" id="v-2-3">5</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">5</span><span class="score-tick">10</span></div>
+        </div>
+        <div class="sub-criterion">
+          <div class="sub-title">قابلية التحول لشركة (Scalability) <span class="sub-max">/ 5</span></div>
+          <div class="sub-desc">1-2: لا رؤية واضحة للتحول لشركة — 3-5: رؤية واضحة ومقنعة لشركة ناشئة قابلة للتوسع</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-2-4" min="1" max="5" value="3" oninput="updateScore()">
+            <div class="score-val" id="v-2-4">3</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">3</span><span class="score-tick">5</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITERION 3: الجدوى التقنية (25) -->
+    <div class="criteria-card">
+      <div class="criteria-header">
+        <div>
+          <div class="criteria-title">٣. الجدوى التقنية والتنفيذ</div>
+          <div class="criteria-max">Technical Feasibility & Execution</div>
+        </div>
+        <div class="criteria-total-score" id="c3-total">0 / 25</div>
+      </div>
+      <div class="criteria-body">
+        <div class="sub-criterion">
+          <div class="sub-title">وضوح الفكرة التقنية <span class="sub-max">/ 10</span></div>
+          <div class="sub-desc">1-3: الجوانب التقنية غير واضحة أو غير قابلة للتطبيق — 4-7: مفهومة لكن تحتاج توضيحاً — 8-10: واضحة ومحددة مع فهم عميق للتحديات والحلول</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-3-1" min="1" max="10" value="5" oninput="updateScore()">
+            <div class="score-val" id="v-3-1">5</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">5</span><span class="score-tick">10</span></div>
+        </div>
+        <div class="sub-criterion">
+          <div class="sub-title">المنتج الأولي (MVP) <span class="sub-max">/ 15</span></div>
+          <div class="sub-desc">1-5: MVP غير موجود أو غير وظيفي — 6-10: وظيفي جزئياً أو يفتقر لميزات أساسية — 11-15: وظيفي بالكامل ويوضح الميزات الأساسية بوضوح</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-3-2" min="1" max="15" value="8" oninput="updateScore()">
+            <div class="score-val" id="v-3-2">8</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">8</span><span class="score-tick">15</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITERION 4: العرض والوضوح (15) -->
+    <div class="criteria-card">
+      <div class="criteria-header">
+        <div>
+          <div class="criteria-title">٤. العرض والوضوح</div>
+          <div class="criteria-max">Presentation & Clarity</div>
+        </div>
+        <div class="criteria-total-score" id="c4-total">0 / 15</div>
+      </div>
+      <div class="criteria-body">
+        <div class="sub-criterion">
+          <div class="sub-title">وضوح العرض وتنظيمه <span class="sub-max">/ 10</span></div>
+          <div class="sub-desc">1-5: غير منظم أو غير واضح، يصعب فهم الفكرة — 6-10: منظم وواضح ومترابط، يسهل فهم الفكرة وجوانبها</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-4-1" min="1" max="10" value="5" oninput="updateScore()">
+            <div class="score-val" id="v-4-1">5</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">5</span><span class="score-tick">10</span></div>
+        </div>
+        <div class="sub-criterion">
+          <div class="sub-title">القدرة على الإقناع والإجابة على الأسئلة <span class="sub-max">/ 5</span></div>
+          <div class="sub-desc">1-2: غير قادر على الإقناع أو الإجابة بفعالية — 3-5: مقنع جداً ويجيب بثقة ووضوح ويُظهر فهماً عميقاً</div>
+          <div class="score-input-wrap">
+            <input type="range" class="score-slider" id="s-4-2" min="1" max="5" value="3" oninput="updateScore()">
+            <div class="score-val" id="v-4-2">3</div>
+          </div>
+          <div class="score-ticks"><span class="score-tick">1</span><span class="score-tick">3</span><span class="score-tick">5</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOTAL + NOTES -->
+    <div class="total-score-box">
+      <div class="total-label">TOTAL SCORE</div>
+      <div class="total-num" id="totalScore">—</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">من أصل 100 نقطة</div>
+      <div class="total-breakdown" id="totalBreakdown"></div>
+    </div>
+
+    <div class="eval-notes">
+      <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:7px;letter-spacing:.5px;text-transform:uppercase">ملاحظات الحكم (اختياري)</label>
+      <textarea id="judgeNotes" placeholder="أضف ملاحظات أو تغذية راجعة بناءة للفريق..."></textarea>
+    </div>
+
+    <div class="eval-actions" style="margin-top:20px">
+      <button class="btn btn-ghost" onclick="backToList()">← العودة للقائمة</button>
+      <button class="btn btn-success" onclick="submitEval()">💾 حفظ التقييم</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import {
+  getFirestore, collection, query, where,
+  onSnapshot, doc, setDoc, getDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBPeJPWUdM0gb5502Ty8_Cfq4CwcufJOHQ",
+  authDomain: "tec-expo-voting.firebaseapp.com",
+  projectId: "tec-expo-voting",
+  storageBucket: "tec-expo-voting.firebasestorage.app",
+  messagingSenderId: "481340074318",
+  appId: "1:481340074318:web:5248e7eb360c4f5eed161f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+/* ── STARS ── */
+(function(){
+  const c=document.getElementById('stars-canvas'),ctx=c.getContext('2d');let s=[];
+  function r(){c.width=innerWidth;c.height=innerHeight;s=Array.from({length:100},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1+.2,a:Math.random(),sp:Math.random()*.007+.002}))}
+  function d(){ctx.clearRect(0,0,c.width,c.height);s.forEach(p=>{p.a+=p.sp;const al=(Math.sin(p.a)+1)/2*.6+.1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(200,180,255,${al})`;ctx.fill()});requestAnimationFrame(d)}
+  r();d();window.addEventListener('resize',r);
+})();
+
+/* ── JUDGES CONFIG ── */
+const JUDGES = {
+  'judge1': { name: 'الحكم الأول',  label: '⚖️ الحكم ١' },
+  'judge2': { name: 'الحكم الثاني', label: '⚖️ الحكم ٢' },
+  'judge3': { name: 'الحكم الثالث', label: '⚖️ الحكم ٣' },
+  'judge4': { name: 'الحكم الرابع', label: '⚖️ الحكم ٤' },
+};
+
+/* ── STATE ── */
+let currentJudge  = null;
+let projects      = [];
+let myEvals       = {};   // projectId → scores
+let currentProjId = null;
+
+/* ── LOGIN ── */
+window.doLogin = function() {
+  const pass = document.getElementById('passInput').value;
+  if (JUDGES[pass]) {
+    currentJudge = pass;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('judgeTag').textContent = JUDGES[pass].label;
+    init();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('passInput').value = '';
+  }
+};
+
+window.doLogout = function() {
+  currentJudge = null;
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('passInput').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+};
+
+/* ── INIT ── */
+async function init() {
+  // load accepted projects
+  const q = query(collection(db,'registrations'), where('status','==','accepted'));
+  onSnapshot(q, snap => {
+    projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    loadMyEvals();
+  });
+}
+
+async function loadMyEvals() {
+  // load this judge's existing evaluations
+  const evSnap = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js")
+    .then(m => m.getDocs(m.query(
+      collection(db,'evaluations'),
+      m.where('judgeId','==',currentJudge)
+    )));
+  myEvals = {};
+  evSnap.forEach(d => { myEvals[d.data().projectId] = d.data(); });
+  renderList();
+}
+
+/* ── RENDER LIST ── */
+function renderList() {
+  const container = document.getElementById('projectsList');
+  const done = projects.filter(p => myEvals[p.id]).length;
+
+  document.getElementById('progressNum').textContent = `${done} / ${projects.length}`;
+  document.getElementById('progressFill').style.width = projects.length ? (done/projects.length*100)+'%' : '0%';
+  document.getElementById('listCount').textContent = `${projects.length} مشروع مقبول`;
+
+  if (!projects.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div>لا توجد مشاريع مقبولة بعد</div></div>`;
+    return;
+  }
+
+  container.innerHTML = projects.map(p => {
+    const ev = myEvals[p.id];
+    const scored = ev ? calcTotal(ev.scores) : null;
+    return `
+    <div class="project-row ${ev ? 'evaluated' : ''}" onclick="openEval('${p.id}')">
+      <div class="proj-info">
+        <div class="proj-name">${p.project?.name || '—'}</div>
+        <div class="proj-team">${p.team?.name || '—'}</div>
+        <span class="proj-cat">${p.project?.category || '—'}</span>
+        ${p.project?.description ? `<div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6;max-width:560px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${p.project.description}</div>` : ''}
+      </div>
+      <div class="proj-score-badge ${ev ? 'done' : ''}">
+        ${ev
+          ? `<div class="proj-score-num">${scored}</div><div class="proj-score-label">SCORE</div>`
+          : `<div class="proj-status-icon">📝</div>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── OPEN EVAL ── */
+window.openEval = function(projId) {
+  currentProjId = projId;
+  const p = projects.find(x => x.id === projId);
+  if (!p) return;
+
+  // fill header
+  document.getElementById('evalHeader').innerHTML = `
+    <h2>${p.project?.name || '—'}</h2>
+    <div class="eval-header-sub">${p.team?.name || '—'} · ${p.project?.category || '—'}</div>
+    <div class="eval-header-meta">
+      <span class="meta-chip">🎓 ${p.team?.university || '—'}</span>
+      <span class="meta-chip">👥 ${p.team?.memberCount || '—'} أعضاء</span>
+      ${p.project?.prototypeUrl ? `<span class="meta-chip"><a href="${p.project.prototypeUrl}" target="_blank" style="color:var(--accent3);text-decoration:none">🔗 النموذج الأولي</a></span>` : ''}
+    </div>
+    ${p.project?.description ? `
+    <div class="proj-desc-block" style="margin-top:14px">
+      <div class="proj-desc-label">ملخص المشروع</div>
+      <div class="proj-desc-text">${p.project.description}</div>
+    </div>` : ''}
+    ${p.project?.revenueModel ? `
+    <div class="proj-desc-block" style="margin-top:10px;border-color:rgba(16,185,129,.15)">
+      <div class="proj-desc-label" style="color:#34d399">نموذج الربح</div>
+      <div class="proj-revenue-text">${p.project.revenueModel}</div>
+    </div>` : ''}`;
+
+  // restore saved scores if exists
+  const ev = myEvals[projId];
+  if (ev?.scores) {
+    const sc = ev.scores;
+    setSlider('s-1-1', sc['1-1'] ?? 5);
+    setSlider('s-1-2', sc['1-2'] ?? 5);
+    setSlider('s-2-1', sc['2-1'] ?? 5);
+    setSlider('s-2-2', sc['2-2'] ?? 8);
+    setSlider('s-2-3', sc['2-3'] ?? 5);
+    setSlider('s-2-4', sc['2-4'] ?? 3);
+    setSlider('s-3-1', sc['3-1'] ?? 5);
+    setSlider('s-3-2', sc['3-2'] ?? 8);
+    setSlider('s-4-1', sc['4-1'] ?? 5);
+    setSlider('s-4-2', sc['4-2'] ?? 3);
+    document.getElementById('judgeNotes').value = ev.notes || '';
+  } else {
+    // reset to defaults
+    [['s-1-1',5],['s-1-2',5],['s-2-1',5],['s-2-2',8],['s-2-3',5],['s-2-4',3],
+     ['s-3-1',5],['s-3-2',8],['s-4-1',5],['s-4-2',3]].forEach(([id,v]) => setSlider(id,v));
+    document.getElementById('judgeNotes').value = '';
+  }
+
+  updateScore();
+
+  document.getElementById('projectsListView').style.display = 'none';
+  document.getElementById('evalPanel').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+function setSlider(id, val) {
+  const el = document.getElementById(id);
+  if (el) { el.value = val; document.getElementById('v-'+id.slice(2)).textContent = val; }
+}
+
+/* ── UPDATE SCORE ── */
+window.updateScore = function() {
+  const g = id => parseInt(document.getElementById(id).value);
+
+  const c1 = g('s-1-1') + g('s-1-2');
+  const c2 = g('s-2-1') + g('s-2-2') + g('s-2-3') + g('s-2-4');
+  const c3 = g('s-3-1') + g('s-3-2');
+  const c4 = g('s-4-1') + g('s-4-2');
+  const total = c1 + c2 + c3 + c4;
+
+  // update display values
+  ['1-1','1-2','2-1','2-2','2-3','2-4','3-1','3-2','4-1','4-2'].forEach(k => {
+    document.getElementById('v-'+k).textContent = document.getElementById('s-'+k).value;
+  });
+
+  document.getElementById('c1-total').textContent = `${c1} / 20`;
+  document.getElementById('c2-total').textContent = `${c2} / 40`;
+  document.getElementById('c3-total').textContent = `${c3} / 25`;
+  document.getElementById('c4-total').textContent = `${c4} / 15`;
+  document.getElementById('totalScore').textContent = total;
+  document.getElementById('totalBreakdown').innerHTML = `
+    <span class="breakdown-chip">ابتكار: ${c1}</span>
+    <span class="breakdown-chip">تجاري: ${c2}</span>
+    <span class="breakdown-chip">تقني: ${c3}</span>
+    <span class="breakdown-chip">عرض: ${c4}</span>`;
+};
+
+function calcTotal(sc) {
+  if (!sc) return 0;
+  return Object.values(sc).reduce((a,b)=>a+b,0);
+}
+
+/* ── SUBMIT EVAL ── */
+window.submitEval = async function() {
+  const g = id => parseInt(document.getElementById(id).value);
+  const scores = {
+    '1-1': g('s-1-1'), '1-2': g('s-1-2'),
+    '2-1': g('s-2-1'), '2-2': g('s-2-2'), '2-3': g('s-2-3'), '2-4': g('s-2-4'),
+    '3-1': g('s-3-1'), '3-2': g('s-3-2'),
+    '4-1': g('s-4-1'), '4-2': g('s-4-2'),
+  };
+  const total = Object.values(scores).reduce((a,b)=>a+b,0);
+
+  const btn = document.querySelector('.btn-success');
+  btn.textContent = '⏳ جارٍ الحفظ...';
+  btn.disabled = true;
+
+  try {
+    const evalId = `${currentJudge}_${currentProjId}`;
+    await setDoc(doc(db,'evaluations',evalId), {
+      judgeId:    currentJudge,
+      judgeName:  JUDGES[currentJudge].name,
+      projectId:  currentProjId,
+      projectName: projects.find(p=>p.id===currentProjId)?.project?.name || '—',
+      scores,
+      totalScore: total,
+      notes:      document.getElementById('judgeNotes').value.trim(),
+      savedAt:    serverTimestamp(),
+    });
+
+    myEvals[currentProjId] = { scores, notes: document.getElementById('judgeNotes').value, totalScore: total };
+    showToast(`✅ تم حفظ التقييم (${total}/100)`,'success');
+    backToList();
+  } catch(e) {
+    console.error(e);
+    showToast('حدث خطأ، حاول مجدداً','error');
+  } finally {
+    btn.textContent = '💾 حفظ التقييم';
+    btn.disabled = false;
+  }
+};
+
+/* ── BACK ── */
+window.backToList = function() {
+  document.getElementById('evalPanel').style.display = 'none';
+  document.getElementById('projectsListView').style.display = 'block';
+  currentProjId = null;
+  renderList();
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+/* ── TOAST ── */
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>
