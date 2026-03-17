@@ -211,7 +211,7 @@ header{
   border-radius:16px;overflow:hidden;
 }
 
-table{width:100%;border-collapse:collapse}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
 
 thead tr{
   background:rgba(124,58,237,.08);
@@ -233,12 +233,12 @@ td{
 tr:last-child td{border-bottom:none}
 tr:hover td{background:rgba(124,58,237,.04)}
 
-.td-project{font-weight:600;color:white;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.td-team{color:var(--accent2)}
+.td-project{font-weight:600;color:white;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-team{color:var(--accent2);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
 .td-cat{
   font-size:11px;font-family:'Space Mono',monospace;
   background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);
-  color:var(--accent2);padding:3px 8px;border-radius:5px;white-space:nowrap;
+  color:var(--accent2);padding:3px 8px;border-radius:5px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;
 }
 
 .td-date{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)}
@@ -326,7 +326,8 @@ tr:hover td{background:rgba(124,58,237,.04)}
 .empty-row td{text-align:center;padding:60px;color:var(--muted)}
 .empty-icon{font-size:36px;margin-bottom:10px}
 
-/* ── TOAST ── */
+
+/* ── SCORES ── *//* ── TOAST ── */
 .toast{
   position:fixed;bottom:28px;left:50%;
   transform:translateX(-50%) translateY(60px);
@@ -352,6 +353,24 @@ tr:hover td{background:rgba(124,58,237,.04)}
 .bar-label span:last-child{font-family:'Space Mono',monospace;color:var(--accent2)}
 .bar-track{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
 .bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .8s ease}
+
+
+/* ── SCORES VIEW ── */
+.scores-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:24px}
+.score-project-name{font-weight:700;color:white;font-size:13px}
+.score-team-name{font-size:11px;color:var(--accent2);margin-top:2px}
+.score-avg{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:white}
+.score-avg.high{color:#34d399}
+.score-avg.mid{color:#fbbf24}
+.score-avg.low{color:#f87171}
+.judge-score-cell{font-family:'Space Mono',monospace;font-size:13px;color:var(--muted);text-align:center}
+.judge-score-cell.done{color:white}
+.score-bar-mini{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:4px;overflow:hidden;width:60px}
+.score-bar-mini-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px}
+.breakdown-mini{font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;margin-top:2px}
+.scores-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
 
 /* ── ANIMATIONS ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -416,6 +435,9 @@ tr:hover td{background:rgba(124,58,237,.04)}
     </div>
     <div class="nav-item" onclick="showView('charts')" id="nav-charts">
       <span class="nav-icon"></span> إحصائيات
+    </div>
+    <div class="nav-item" onclick="showView('scores')" id="nav-scores">
+      <span class="nav-icon">⚖️</span> نتائج التقييم
     </div>
 
     <div class="sidebar-section">الحالة</div>
@@ -491,17 +513,17 @@ tr:hover td{background:rgba(124,58,237,.04)}
         <table>
           <thead>
             <tr>
-              <th>#</th>
-              <th>المشروع</th>
-              <th>الفريق</th>
-              <th>الجامعة</th>
-              <th>الكلية</th>
-              <th>التصنيف</th>
-              <th>الأعضاء</th>
-              <th>الحالة</th>
-              <th>التاريخ</th>
-              <th>النموذج الأولي</th>
-              <th>إجراء</th>
+              <th style="width:36px">#</th>
+              <th style="width:15%">المشروع</th>
+              <th style="width:12%">الفريق</th>
+              <th style="width:14%">الجامعة</th>
+              <th style="width:13%">الكلية</th>
+              <th style="width:16%">التصنيف</th>
+              <th style="width:5%">الأعضاء</th>
+              <th style="width:8%">الحالة</th>
+              <th style="width:9%">التاريخ</th>
+              <th style="width:5%">النموذج الأولي</th>
+              <th style="width:7%">إجراء</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -536,6 +558,38 @@ tr:hover td{background:rgba(124,58,237,.04)}
       </div>
     </div>
 
+    <!-- SCORES VIEW -->
+    <div id="scoresView" style="display:none">
+      <div class="section-hdr">
+        <h2>⚖️ نتائج تقييم الحكام</h2>
+        <div class="hdr-actions">
+          <button class="btn btn-ghost" onclick="exportScores()">📊 تصدير النتائج</button>
+        </div>
+      </div>
+      <div class="scores-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>80+ ممتاز</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fbbf24"></div>60-79 جيد</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f87171"></div>أقل من 60 يحتاج تطوير</div>
+      </div>
+      <div class="scores-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>المشروع</th>
+              <th style="text-align:center">الحكم ١</th>
+              <th style="text-align:center">الحكم ٢</th>
+              <th style="text-align:center">الحكم ٣</th>
+              <th style="text-align:center">الحكم ٤</th>
+              <th style="text-align:center">المتوسط</th>
+              <th style="text-align:center">التفاصيل</th>
+            </tr>
+          </thead>
+          <tbody id="scoresBody"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -555,7 +609,7 @@ tr:hover td{background:rgba(124,58,237,.04)}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc }
+import { getFirestore, collection, onSnapshot, doc, updateDoc, getDocs, query, where }
   from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -582,6 +636,7 @@ const db  = getFirestore(app);
 const PASS = "2090";
 let allRegs = [];
 let filtered = [];
+let allEvals = [];
 let currentStatus = '';
 let currentReg = null;
 
@@ -614,6 +669,7 @@ function init() {
     updateBadges();
     buildDynamicFilters();
     if(document.getElementById('chartsView').style.display !== 'none') renderCharts();
+    if(document.getElementById('scoresView').style.display !== 'none') loadAndRenderScores();
   });
 }
 
@@ -713,8 +769,8 @@ function renderTable() {
       <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">${i+1}</td>
       <td><div class="td-project" title="${r.project?.name||''}">${r.project?.name||'—'}</div></td>
       <td class="td-team">${r.team?.name||'—'}</td>
-      <td style="font-size:12px;color:var(--muted);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.team?.university||'—'}</td>
-      <td style="font-size:12px;color:var(--muted);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.team?.college||'—'}</td>
+      <td style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.team?.university||'—'}</td>
+      <td style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.team?.college||'—'}</td>
       <td><span class="td-cat">${r.project?.category||'—'}</span></td>
       <td style="font-family:'Space Mono',monospace;text-align:center">${r.team?.memberCount||'—'}</td>
       <td><span class="status ${cls}"><span class="status-dot"></span>${label}</span></td>
@@ -809,9 +865,11 @@ window.setStatus = async function(id, status) {
 window.showView = function(view) {
   document.getElementById('tableView').style.display  = view==='table'  ? 'block' : 'none';
   document.getElementById('chartsView').style.display = view==='charts' ? 'block' : 'none';
-  ['table','charts'].forEach(v => document.getElementById('nav-'+v)?.classList.remove('active'));
+  document.getElementById('scoresView').style.display = view==='scores' ? 'block' : 'none';
+  ['table','charts','scores'].forEach(v => document.getElementById('nav-'+v)?.classList.remove('active'));
   document.getElementById('nav-'+view)?.classList.add('active');
   if(view==='charts') renderCharts();
+  if(view==='scores') loadAndRenderScores();
 };
 
 /* ── CHARTS ── */
@@ -873,6 +931,181 @@ window.exportExcel = function() {
   a.click();
   URL.revokeObjectURL(url);
   showToast(' تم تصدير البيانات بنجاح','success');
+};
+
+
+/* ── SCORES ── */
+async function loadAndRenderScores() {
+  const snap = await getDocs(collection(db, 'evaluations'));
+  allEvals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  renderScores();
+}
+
+function renderScores() {
+  const accepted = allRegs.filter(r => r.status === 'accepted');
+  const tbody = document.getElementById('scoresBody');
+
+  if (!accepted.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="8"><div class="empty-icon">📭</div><div>لا توجد مشاريع مقبولة بعد</div></td></tr>`;
+    return;
+  }
+
+  const JUDGES = ['judge1','judge2','judge3','judge4'];
+  const judgeLabels = ['الحكم ١','الحكم ٢','الحكم ٣','الحكم ٤'];
+
+  // compute per-project scores
+  const rows = accepted.map((r, i) => {
+    const scores = JUDGES.map(jId => {
+      const ev = allEvals.find(e => e.projectId === r.id && e.judgeId === jId);
+      return ev ? ev.totalScore : null;
+    });
+    const done = scores.filter(s => s !== null);
+    const avg  = done.length ? Math.round(done.reduce((a,b)=>a+b,0) / done.length) : null;
+    return { reg: r, scores, avg, done: done.length };
+  });
+
+  // sort by avg desc
+  rows.sort((a,b) => (b.avg||0) - (a.avg||0));
+
+  tbody.innerHTML = rows.map((row, i) => {
+    const avgClass = row.avg === null ? '' : row.avg >= 80 ? 'high' : row.avg >= 60 ? 'mid' : 'low';
+    const judgeCells = row.scores.map((s, ji) =>
+      s !== null
+        ? `<td class="judge-score-cell done">
+            <div>${s}</div>
+            <div class="score-bar-mini"><div class="score-bar-mini-fill" style="width:${s}%"></div></div>
+           </td>`
+        : `<td class="judge-score-cell"><span style="font-size:18px">—</span></td>`
+    ).join('');
+
+    return `<tr>
+      <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)">${i+1}</td>
+      <td>
+        <div class="score-project-name">${row.reg.project?.name||'—'}</div>
+        <div class="score-team-name">${row.reg.team?.name||'—'}</div>
+      </td>
+      ${judgeCells}
+      <td style="text-align:center">
+        ${row.avg !== null
+          ? `<div class="score-avg ${avgClass}">${row.avg}</div>
+             <div class="breakdown-mini">${row.done}/4 حكام</div>`
+          : `<span style="color:var(--muted);font-size:12px">لم يُقيَّم</span>`
+        }
+      </td>
+      <td style="text-align:center">
+        <button class="btn btn-ghost btn-sm" onclick="openScoreDetail('${row.reg.id}')">تفاصيل</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+window.openScoreDetail = function(projectId) {
+  const r = allRegs.find(x => x.id === projectId);
+  if (!r) return;
+
+  const JUDGES = ['judge1','judge2','judge3','judge4'];
+  const judgeNames = ['الحكم الأول','الحكم الثاني','الحكم الثالث','الحكم الرابع'];
+  const CRITERIA = [
+    {key:'c1', label:'الابتكار والتميز', max:20, subs:[['1-1','الأصالة والجدة',10],['1-2','التميز عن الحلول',10]]},
+    {key:'c2', label:'الجدوى التجارية', max:40, subs:[['2-1','تحديد المشكلة',10],['2-2','نموذج الربح',15],['2-3','حجم السوق',10],['2-4','Scalability',5]]},
+    {key:'c3', label:'الجدوى التقنية', max:25, subs:[['3-1','وضوح الفكرة',10],['3-2','MVP',15]]},
+    {key:'c4', label:'العرض والوضوح', max:15, subs:[['4-1','تنظيم العرض',10],['4-2','الإقناع',5]]},
+  ];
+
+  const evals = JUDGES.map(jId => allEvals.find(e => e.projectId === projectId && e.judgeId === jId) || null);
+
+  let detailHTML = `
+    <div class="d-section">
+      <div class="d-section-title">🏆 المشروع</div>
+      <div class="d-row"><span class="d-key">الاسم</span><span class="d-val">${r.project?.name||'—'}</span></div>
+      <div class="d-row"><span class="d-key">الفريق</span><span class="d-val">${r.team?.name||'—'}</span></div>
+    </div>`;
+
+  // per-criterion breakdown
+  CRITERIA.forEach(cr => {
+    const judgeVals = evals.map(ev => {
+      if (!ev) return null;
+      return cr.subs.reduce((sum, [k]) => sum + (ev.scores?.[k] || 0), 0);
+    });
+    const done = judgeVals.filter(v => v !== null);
+    const avg  = done.length ? (done.reduce((a,b)=>a+b,0)/done.length).toFixed(1) : '—';
+
+    const judgeRow = judgeNames.map((name, i) =>
+      judgeVals[i] !== null
+        ? `<span style="font-size:12px;color:white;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);padding:3px 8px;border-radius:5px;margin:2px;display:inline-block">${name}: ${judgeVals[i]}/${cr.max}</span>`
+        : `<span style="font-size:12px;color:var(--muted);margin:2px;display:inline-block">${name}: —</span>`
+    ).join('');
+
+    detailHTML += `
+    <div class="d-section">
+      <div class="d-section-title">${cr.label} (/${cr.max})</div>
+      <div style="margin-bottom:8px;flex-wrap:wrap">${judgeRow}</div>
+      <div class="d-row"><span class="d-key">المتوسط</span><span class="d-val" style="font-family:'Space Mono',monospace;font-weight:700;color:var(--accent2)">${avg} / ${cr.max}</span></div>`;
+
+    cr.subs.forEach(([k, label, max]) => {
+      const subVals = evals.map(ev => ev ? (ev.scores?.[k]||0) : null).filter(v=>v!==null);
+      const subAvg  = subVals.length ? (subVals.reduce((a,b)=>a+b,0)/subVals.length).toFixed(1) : '—';
+      detailHTML += `<div class="d-row"><span class="d-key" style="font-size:11px">${label}</span><span class="d-val" style="font-size:12px;color:var(--muted)">${subAvg} / ${max}</span></div>`;
+    });
+
+    detailHTML += `</div>`;
+  });
+
+  // notes
+  const notesHTML = evals.map((ev, i) => ev?.notes
+    ? `<div class="d-row"><span class="d-key">${judgeNames[i]}</span><span class="d-val" style="font-size:12px;line-height:1.6;color:var(--muted)">${ev.notes}</span></div>`
+    : ''
+  ).filter(Boolean).join('');
+
+  if (notesHTML) {
+    detailHTML += `<div class="d-section"><div class="d-section-title">💬 ملاحظات الحكام</div>${notesHTML}</div>`;
+  }
+
+  // total
+  const totals = evals.map(ev => ev?.totalScore ?? null).filter(v=>v!==null);
+  const finalAvg = totals.length ? Math.round(totals.reduce((a,b)=>a+b,0)/totals.length) : null;
+  detailHTML += `
+    <div class="d-section" style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);border-radius:12px;padding:16px;text-align:center">
+      <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);letter-spacing:2px;margin-bottom:8px">FINAL AVERAGE</div>
+      <div style="font-family:'Space Mono',monospace;font-size:44px;font-weight:700;color:${finalAvg>=80?'#34d399':finalAvg>=60?'#fbbf24':'#f87171'}">${finalAvg ?? '—'}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">من أصل 100 نقطة · ${totals.length} من 4 حكام قيّموا</div>
+    </div>`;
+
+  document.getElementById('drawerTitle').textContent = `نتائج: ${r.project?.name||'—'}`;
+  document.getElementById('drawerBody').innerHTML = detailHTML;
+  document.getElementById('drawerActions').innerHTML = '';
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').style.display = 'block';
+};
+
+window.exportScores = async function() {
+  if (!allEvals.length) { showToast('لا توجد تقييمات بعد','error'); return; }
+  const accepted = allRegs.filter(r => r.status === 'accepted');
+  const JUDGES   = ['judge1','judge2','judge3','judge4'];
+  const judgeNames = ['الحكم الأول','الحكم الثاني','الحكم الثالث','الحكم الرابع'];
+
+  const rows = [['#','اسم المشروع','الفريق',...judgeNames,'المتوسط','ملاحظات الحكام']];
+  accepted.forEach((r, i) => {
+    const scores = JUDGES.map(jId => {
+      const ev = allEvals.find(e => e.projectId === r.id && e.judgeId === jId);
+      return ev ? ev.totalScore : '—';
+    });
+    const numScores = scores.filter(s => s !== '—');
+    const avg = numScores.length ? Math.round(numScores.reduce((a,b)=>a+b,0)/numScores.length) : '—';
+    const notes = JUDGES.map((jId, ji) => {
+      const ev = allEvals.find(e => e.projectId === r.id && e.judgeId === jId);
+      return ev?.notes ? `${judgeNames[ji]}: ${ev.notes}` : '';
+    }).filter(Boolean).join(' | ');
+    rows.push([i+1, r.project?.name||'—', r.team?.name||'—', ...scores, avg, notes]);
+  });
+
+  const csv = '\uFEFF' + rows.map(r=>r.map(c=>`"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download=`TechnoVenture_Scores.csv`; a.click();
+  URL.revokeObjectURL(url);
+  showToast('✅ تم تصدير النتائج','success');
 };
 
 /* ── TOAST ── */
