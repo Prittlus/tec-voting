@@ -1269,6 +1269,20 @@ function downloadCSV(rows, filename) {
   a.click();
   URL.revokeObjectURL(url);
 }
+async function logLogin(status) {
+  try {
+    await addDoc(collection(db, 'admin_logs'), {
+      action:    'login_attempt',
+      status,                           // 'success' | 'failed'
+      page:      'admin-dashboard',
+      userAgent: navigator.userAgent,
+      language:  navigator.language,
+      platform:  navigator.platform,
+      timestamp: serverTimestamp(),
+      localTime: new Date().toLocaleString('ar-SA'),
+    });
+  } catch(e) { console.warn('log error', e); }
+}
 
 /* ── TOAST ── */
 function showToast(msg, type='') {
