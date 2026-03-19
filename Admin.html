@@ -327,7 +327,12 @@ tr:hover td{background:rgba(124,58,237,.04)}
 .empty-icon{font-size:36px;margin-bottom:10px}
 
 
-/* ── SCORES ── *//* ── TOAST ── */
+});
+
+/* ── EXPORT PROJECTS ── */
+}
+
+/* ── TOAST ── */
 .toast{
   position:fixed;bottom:28px;left:50%;
   transform:translateX(-50%) translateY(60px);
@@ -354,6 +359,27 @@ tr:hover td{background:rgba(124,58,237,.04)}
 .bar-track{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
 .bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .8s ease}
 
+
+
+/* ── EXPORT MENU ── */
+.export-menu{
+  position:fixed;
+  background:#0c0620;border:1px solid var(--border);
+  border-radius:12px;padding:6px;min-width:240px;
+  box-shadow:0 12px 40px rgba(0,0,0,.6);
+  z-index:9999;display:none;
+}
+.export-menu.open{display:block;animation:fadeUp .15s ease both}
+.export-menu-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:8px;cursor:pointer;
+  font-size:13px;color:var(--text);transition:background .15s;
+  white-space:nowrap;
+}
+.export-menu-item:hover{background:rgba(124,58,237,.1)}
+.export-menu-item .item-icon{font-size:16px;width:20px;text-align:center}
+.export-menu-item .item-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.export-wrap{position:relative}
 
 /* ── SCORES VIEW ── */
 .scores-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:24px}
@@ -418,7 +444,27 @@ tr:hover td{background:rgba(124,58,237,.04)}
   </a>
   <div class="header-right">
     <span id="liveCount" style="font-family:'Space Mono',monospace;font-size:12px;color:var(--muted)"></span>
-    <button class="btn btn-ghost" onclick="exportExcel()"> تصدير Excel</button>
+    <div class="export-wrap" id="exportWrap">
+      <button class="btn btn-ghost" onclick="showExportMenu()" id="exportMenuBtn"> تصدير ▾</button>
+      <div class="export-menu" id="exportMenu">
+        <div class="export-menu-item" onclick="exportExcel();closeExportMenu()">
+          <span class="item-icon"></span>
+          <div><div>بيانات التسجيلات</div><div class="item-sub">الأسماء، الفريق، التواصل</div></div>
+        </div>
+        <div class="export-menu-item" onclick="exportProjects();closeExportMenu()">
+          <span class="item-icon"></span>
+          <div><div>بيانات المشاريع</div><div class="item-sub">الملخص، نموذج الربح، الروابط</div></div>
+        </div>
+        <div class="export-menu-item" onclick="exportScores();closeExportMenu()">
+          <span class="item-icon"></span>
+          <div><div>نتائج التقييم</div><div class="item-sub">درجات الحكام والمتوسطات</div></div>
+        </div>
+        <div class="export-menu-item" onclick="exportAll();closeExportMenu()">
+          <span class="item-icon"></span>
+          <div><div>تصدير كامل</div><div class="item-sub">جميع البيانات في ملف واحد</div></div>
+        </div>
+      </div>
+    </div>
     <button class="btn btn-ghost" style="color:#f87171" onclick="doLogout()">خروج</button>
   </div>
 </header>
@@ -456,7 +502,13 @@ tr:hover td{background:rgba(124,58,237,.04)}
 
     <div class="sidebar-section">أدوات</div>
     <div class="nav-item" onclick="exportExcel()">
-      <span class="nav-icon"></span> تصدير Excel
+      <span class="nav-icon"></span> تصدير التسجيلات
+    </div>
+    <div class="nav-item" onclick="exportProjects()">
+      <span class="nav-icon"></span> تصدير المشاريع
+    </div>
+    <div class="nav-item" onclick="exportAll()">
+      <span class="nav-icon"></span> تصدير الكل
     </div>
   </div>
 
@@ -561,9 +613,9 @@ tr:hover td{background:rgba(124,58,237,.04)}
     <!-- SCORES VIEW -->
     <div id="scoresView" style="display:none">
       <div class="section-hdr">
-        <h2>⚖️ نتائج تقييم الحكام</h2>
+        <h2> نتائج تقييم الحكام</h2>
         <div class="hdr-actions">
-          <button class="btn btn-ghost" onclick="exportScores()">📊 تصدير النتائج</button>
+          <button class="btn btn-ghost" onclick="exportScores()"> تصدير النتائج</button>
         </div>
       </div>
       <div class="scores-legend">
@@ -922,15 +974,8 @@ window.exportExcel = function() {
     ]);
   });
 
-  const csv = '\uFEFF' + rows.map(r=>r.map(c=>`"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url;
-  a.download = `TechnoVenture_Registrations_${new Date().toLocaleDateString('ar-SA').replace(/\//g,'-')}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast(' تم تصدير البيانات بنجاح','success');
+  downloadCSV(rows, 'TechnoVenture_Registrations');
+  showToast(' تم تصدير بيانات التسجيلات','success');
 };
 
 
@@ -1105,8 +1150,125 @@ window.exportScores = async function() {
   const a    = document.createElement('a');
   a.href=url; a.download=`TechnoVenture_Scores.csv`; a.click();
   URL.revokeObjectURL(url);
-  showToast('✅ تم تصدير النتائج','success');
+  showToast(' تم تصدير النتائج','success');
 };
+
+
+/* ── EXPORT MENU ── */
+window.showExportMenu = function() {
+  const menu = document.getElementById('exportMenu');
+  const btn  = document.getElementById('exportMenuBtn');
+  const rect = btn.getBoundingClientRect();
+  menu.style.top  = (rect.bottom + 8) + 'px';
+  menu.style.right = (window.innerWidth - rect.right) + 'px';
+  menu.classList.toggle('open');
+};
+window.closeExportMenu = function() {
+  document.getElementById('exportMenu').classList.remove('open');
+};
+document.addEventListener('click', e => {
+  if (!document.getElementById('exportWrap')?.contains(e.target)) closeExportMenu();
+});
+
+/* ── EXPORT PROJECTS ── */
+window.exportProjects = function() {
+  if (!allRegs.length) { showToast('لا توجد بيانات','error'); return; }
+
+  const rows = [[
+    '#', 'اسم المشروع', 'التصنيف', 'ملخص المشروع',
+    'نموذج الربح', 'رابط النموذج الأولي',
+    'اسم الفريق', 'الجامعة', 'الكلية', 'التخصص',
+    'السنة', 'عدد الأعضاء', 'الحالة'
+  ]];
+
+  allRegs.forEach((r, i) => {
+    const statusAr = {pending:'انتظار', accepted:'مقبول', rejected:'مرفوض'}[r.status] || '—';
+    rows.push([
+      i+1,
+      r.project?.name        || '—',
+      r.project?.category    || '—',
+      r.project?.description || '—',
+      r.project?.revenueModel|| '—',
+      r.project?.prototypeUrl|| '—',
+      r.team?.name           || '—',
+      r.team?.university     || '—',
+      r.team?.college        || '—',
+      r.team?.major          || '—',
+      r.team?.studyYear      || '—',
+      r.team?.memberCount    || '—',
+      statusAr
+    ]);
+  });
+
+  downloadCSV(rows, 'TechnoVenture_Projects');
+  showToast(' تم تصدير بيانات المشاريع', 'success');
+};
+
+/* ── EXPORT ALL ── */
+window.exportAll = async function() {
+  if (!allRegs.length) { showToast('لا توجد بيانات','error'); return; }
+
+  // ensure evals loaded
+  if (!allEvals.length) {
+    const snap = await getDocs(collection(db,'evaluations'));
+    allEvals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  }
+
+  const JUDGES     = ['judge1','judge2','judge3','judge4'];
+  const judgeNames = ['الحكم الأول','الحكم الثاني','الحكم الثالث','الحكم الرابع'];
+
+  const rows = [[
+    '#', 'اسم المشروع', 'التصنيف', 'ملخص المشروع', 'نموذج الربح', 'رابط النموذج الأولي',
+    'اسم الفريق', 'الجامعة', 'الكلية', 'التخصص', 'السنة', 'عدد الأعضاء',
+    'أسماء الأعضاء', 'البريد', 'الجوال', 'الحالة', 'تاريخ التسجيل',
+    ...judgeNames, 'متوسط التقييم'
+  ]];
+
+  allRegs.forEach((r, i) => {
+    const members  = (r.members||[]).map(m=>`${m.name}(${m.studentId})`).join(' | ');
+    const date     = r.submittedAt?.seconds ? new Date(r.submittedAt.seconds*1000).toLocaleDateString('ar-SA') : '—';
+    const statusAr = {pending:'انتظار', accepted:'مقبول', rejected:'مرفوض'}[r.status] || '—';
+    const scores   = JUDGES.map(jId => {
+      const ev = allEvals.find(e => e.projectId === r.id && e.judgeId === jId);
+      return ev ? ev.totalScore : '—';
+    });
+    const numScores = scores.filter(s => s !== '—');
+    const avg = numScores.length ? Math.round(numScores.reduce((a,b)=>a+b,0)/numScores.length) : '—';
+
+    rows.push([
+      i+1,
+      r.project?.name        || '—',
+      r.project?.category    || '—',
+      r.project?.description || '—',
+      r.project?.revenueModel|| '—',
+      r.project?.prototypeUrl|| '—',
+      r.team?.name           || '—',
+      r.team?.university     || '—',
+      r.team?.college        || '—',
+      r.team?.major          || '—',
+      r.team?.studyYear      || '—',
+      r.team?.memberCount    || '—',
+      members, r.contact?.email||'—', r.contact?.leaderPhone||'—',
+      statusAr, date,
+      ...scores, avg
+    ]);
+  });
+
+  downloadCSV(rows, 'TechnoVenture_Full');
+  showToast(' تم تصدير جميع البيانات', 'success');
+};
+
+/* ── HELPER ── */
+function downloadCSV(rows, filename) {
+  const csv  = '\uFEFF' + rows.map(r => r.map(c => `"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = filename + '_' + new Date().toLocaleDateString('ar-SA').replace(/\//g,'-') + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 /* ── TOAST ── */
 function showToast(msg, type='') {
