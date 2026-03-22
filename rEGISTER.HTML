@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تسجيل الفرق — TechnoVenture</title>
+<title>التسجيل مغلق — TechnoVenture</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -389,242 +389,52 @@ input.error, textarea.error, select.error { border-color: var(--red) !important;
 
 <!-- HEADER -->
 <header>
-  <a class="logo" href="rEGISTER.HTML">
+  <a class="logo" href="index.html">
     <img class="logo-icon" src="tecClub.jpg" alt="logo">
     <img src="purple 1.png" alt="TechnoVenture" style="height:28px;object-fit:contain">
   </a>
-  <div class="reg-badge"><span class="reg-dot"></span>التسجيل مفتوح</div>
+  <div class="reg-badge" style="background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#f87171"><span class="reg-dot" style="background:#ef4444;box-shadow:0 0 6px #ef4444"></span>التسجيل مغلق</div>
 </header>
 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-orb"></div>
-  <div class="section-label">TechnoVenture</div>
-  <h1 class="hero-title">سجّل <span>فريقك ومشروعك</span></h1>
-  <p class="hero-sub">أكمل النموذج التالي لتسجيل مشاركتك الرسمية في المعرض. يستغرق التسجيل أقل من ٣ دقائق.</p>
-
-  <div class="steps-indicator" id="stepsIndicator">
-    <div class="step-item">
-      <div class="step-dot active" id="step-dot-1">1</div>
-      <span class="step-label">المشروع</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step-item">
-      <div class="step-dot" id="step-dot-2">2</div>
-      <span class="step-label">الفريق</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step-item">
-      <div class="step-dot" id="step-dot-3">3</div>
-      <span class="step-label">الأعضاء</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step-item">
-      <div class="step-dot" id="step-dot-4">4</div>
-      <span class="step-label">التواصل</span>
-    </div>
-  </div>
+  <div class="section-label">TechnoVenture 2026</div>
+  <h1 class="hero-title">انتهى <span>التسجيل</span></h1>
+  <p class="hero-sub">شكراً لاهتمامكم بـ TechnoVenture. لقد أُغلق باب التسجيل الرسمي، وسيتم التواصل مع الفرق المسجّلة قريباً.</p>
 </div>
 
-<!-- FORM -->
-<div class="form-wrap" id="formWrap">
-
-  <!-- STEP 1: Project Info -->
-  <div class="form-section active" id="section-1">
-    <div class="section-head">
-      <div class="section-num">01</div>
-      <div class="section-head-text">
-        <h3>معلومات المشروع</h3>
-        <p>أخبرنا عن فكرتك التقنية</p>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>اسم المشروع <span class="required">*</span></label>
-      <input type="text" id="projectName" placeholder="مثال: منصة ذكاء اصطناعي للتعليم">
-      <div class="field-error" id="err-projectName">هذا الحقل مطلوب</div>
-    </div>
-
-    <div class="field">
-      <label>كيف ستحقق الربح من المشروع؟ <span class="required">*</span></label>
-      <textarea id="revenueModel" placeholder="اشرح نموذج الربح: كيف سيولّد مشروعك الإيرادات؟ (مثال: اشتراكات، عمولات، إعلانات، مبيعات مباشرة...)"></textarea>
-      <div class="field-error" id="err-revenueModel">الرجاء شرح نموذج الربح</div>
-    </div>
-
-    <div class="field">
-      <label>التصنيف <span class="required">*</span></label>
-      <input type="text" id="projectCategory" placeholder="مثال: AI, Health Tech, Fintech, Mobile Apps...">
-      <div class="field-error" id="err-projectCategory">الرجاء كتابة تصنيف المشروع</div>
-    </div>
-
-    <div class="field">
-      <label>ملخص فكرة المشروع <span class="required">*</span></label>
-      <textarea id="projectDesc" placeholder="اشرح فكرة مشروعك باختصار: ما المشكلة التي يحلّها؟ وكيف؟ (١٠٠–٣٠٠ كلمة)"></textarea>
-      <div class="field-error" id="err-projectDesc">الرجاء كتابة ملخص المشروع</div>
-    </div>
-
-    <!-- Prototype URL — اختياري -->
-    <div class="field">
-      <label>
-        رابط النموذج الأولي (Prototype)
-        <span style="color:var(--muted);font-size:11px;font-weight:400;text-transform:none;letter-spacing:0;margin-right:6px">— اختياري</span>
-      </label>
-      <input type="url" id="prototypeUrl" placeholder="https://drive.google.com/..." style="direction:ltr;text-align:right">
-      <div style="font-size:11px;color:var(--muted);margin-top:5px">📎 الصق رابط Google Drive أو أي رابط خارجي لملف PDF أو عرض تقديمي</div>
-    </div>
-
-    <div class="form-nav">
-      <div></div>
-      <button class="btn btn-primary" onclick="goTo(2)">التالي — معلومات الفريق ←</button>
-    </div>
-  </div>
-
-  <!-- STEP 2: Team Info -->
-  <div class="form-section" id="section-2">
-    <div class="section-head">
-      <div class="section-num">02</div>
-      <div class="section-head-text">
-        <h3>معلومات الفريق</h3>
-        <p>بيانات فريقكم الأكاديمية</p>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>اسم الفريق <span class="required">*</span></label>
-      <input type="text" id="teamName" placeholder="مثال: فريق نبراس">
-      <div class="field-error" id="err-teamName">هذا الحقل مطلوب</div>
-    </div>
-
-    <div class="field-row" style="grid-template-columns:1fr 1fr 1fr">
-      <div class="field" style="margin-bottom:0">
-        <label>الجامعة <span class="required">*</span></label>
-        <input type="text" id="university" placeholder="مثال: جامعة الملك سعود">
-        <div class="field-error" id="err-university">الرجاء كتابة اسم الجامعة</div>
-      </div>
-      <div class="field" style="margin-bottom:0">
-        <label>الكلية <span class="required">*</span></label>
-        <input type="text" id="college" placeholder="مثال: كلية الحاسب وتقنية المعلومات">
-        <div class="field-error" id="err-college">الرجاء كتابة اسم الكلية</div>
-      </div>
-      <div class="field" style="margin-bottom:0">
-        <label>التخصص <span class="required">*</span></label>
-        <input type="text" id="major" placeholder="مثال: هندسة البرمجيات">
-        <div class="field-error" id="err-major">هذا الحقل مطلوب</div>
-      </div>
-    </div>
-
-    <div style="margin-bottom:20px"></div>
-
-    <div class="field-row">
-      <div class="field" style="margin-bottom:0">
-        <label>السنة الدراسية <span class="required">*</span></label>
-        <select id="studyYear">
-          <option value="">— السنة —</option>
-          <option>السنة الأولى</option>
-          <option>السنة الثانية</option>
-          <option>السنة الثالثة</option>
-          <option>السنة الرابعة</option>
-          <option>السنة الخامسة</option>
-          <option>خريج</option>
-        </select>
-        <div class="field-error" id="err-studyYear">الرجاء تحديد السنة</div>
-      </div>
-      <div class="field" style="margin-bottom:0">
-        <label>عدد أعضاء الفريق <span class="required">*</span></label>
-        <div class="count-display">
-          <button class="count-btn" onclick="changeCount(-1)">−</button>
-          <div class="count-val" id="memberCountVal">2</div>
-          <button class="count-btn" onclick="changeCount(1)">+</button>
+<!-- CLOSED CARD -->
+<div class="form-wrap" id="formWrap" style="max-width:560px">
+  <div class="form-section active" style="text-align:center;padding:48px 36px">
+    <div style="font-size:64px;margin-bottom:20px">🔒</div>
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:12px;letter-spacing:-1px">التسجيل مغلق</h2>
+    <p style="color:var(--muted);font-size:15px;line-height:1.9;margin-bottom:32px">
+      انتهت فترة استقبال التسجيلات في <strong style="color:white">20 مارس 2026</strong>.<br>
+      سيتم الإعلان عن الفرق المتأهلة في <strong style="color:white">20 مارس 2026</strong>،<br>
+      ويوم الحدث <strong style="color:#fbbf24">31 مارس 2026</strong>.
+    </p>
+    <div style="background:rgba(124,58,237,.08);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:28px">
+      <div style="font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);letter-spacing:2px;margin-bottom:16px">المراحل القادمة</div>
+      <div style="display:flex;flex-direction:column;gap:12px;text-align:right">
+        <div style="display:flex;align-items:center;gap:12px;justify-content:center">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--accent2);background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);padding:3px 10px;border-radius:5px;white-space:nowrap">20 مارس</span>
+          <span style="font-size:14px;color:var(--text)"> إعلان الفرق المتأهلة</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;justify-content:center">
+          <span style="font-family:'Space Mono',monospace;font-size:12px;color:#fbbf24;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);padding:3px 10px;border-radius:5px;white-space:nowrap">31 مارس</span>
+          <span style="font-size:14px;color:var(--text)"> يوم الحدث</span>
         </div>
       </div>
     </div>
-
-    <div class="form-nav">
-      <button class="btn btn-ghost" onclick="goTo(1)">← السابق</button>
-      <button class="btn btn-primary" onclick="goTo(3)">التالي — الأعضاء ←</button>
-    </div>
-  </div>
-
-  <!-- STEP 3: Members -->
-  <div class="form-section" id="section-3">
-    <div class="section-head">
-      <div class="section-num">03</div>
-      <div class="section-head-text">
-        <h3>أعضاء الفريق</h3>
-        <p>أدخل بيانات كل عضو ورقم الجوال</p>
-      </div>
-    </div>
-
-    <div class="members-grid" id="membersGrid"></div>
-
-    <button class="btn-add-member" onclick="addMember()" id="addMemberBtn">
-      + إضافة عضو آخر
-    </button>
-
-    <div class="form-nav">
-      <button class="btn btn-ghost" onclick="goTo(2)">← السابق</button>
-      <button class="btn btn-primary" onclick="goTo(4)">التالي — التواصل ←</button>
-    </div>
-  </div>
-
-  <!-- STEP 4: Contact -->
-  <div class="form-section" id="section-4">
-    <div class="section-head">
-      <div class="section-num">04</div>
-      <div class="section-head-text">
-        <h3>بيانات التواصل</h3>
-        <p>معلومات التواصل مع قائد الفريق</p>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>البريد الإلكتروني <span class="required">*</span></label>
-      <input type="email" id="email" placeholder="example@university.edu.sa" style="direction:ltr;text-align:right">
-      <div class="field-error" id="err-email">الرجاء إدخال بريد إلكتروني صحيح</div>
-    </div>
-
-    <div class="field">
-      <label>رقم التواصل مع قائد الفريق <span class="required">*</span></label>
-      <input type="tel" id="leaderPhone" placeholder="05XXXXXXXX" maxlength="10" style="direction:ltr;text-align:right">
-      <div class="field-error" id="err-leaderPhone">الرجاء إدخال رقم جوال صحيح</div>
-    </div>
-
-    <div id="summaryBox" style="background:rgba(124,58,237,.06);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:8px">
-      <div style="font-size:12px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px;font-family:'Space Mono',monospace">ملخص التسجيل</div>
-      <div id="summaryContent" style="font-size:14px;line-height:2;color:var(--text)"></div>
-    </div>
-
-    <div class="form-nav">
-      <button class="btn btn-ghost" onclick="goTo(3)">← السابق</button>
-      <button class="btn btn-success" onclick="submitForm()">🚀 إرسال التسجيل</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- SUCCESS PAGE -->
-<div id="successPage">
-  <div class="success-card">
-    <div class="success-icon"></div>
-    <h2>تم التسجيل بنجاح!</h2>
-    <p>شكراً لتسجيل مشاركتكم في TechnoVenture.<br>سيتم التواصل معكم قريباً على البريد والجوال المسجّل.</p>
-    <div class="success-ref">
-      <div class="success-ref-label">رقم تسجيلك</div>
-      <div class="success-ref-val" id="refNumber">—</div>
-    </div>
-    <a href="rEGISTER.HTML" style="text-decoration:none">
-      <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:15px">
-        العودة لصفحة التسجيل
-      </button>
+    <a href="mailto:tecccsit@gmail.com" style="text-decoration:none;display:block">
+      <button class="btn btn-ghost" style="width:100%;justify-content:center;font-size:14px">✉️ تواصل مع النادي</button>
     </a>
   </div>
-</div>
+
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
 const firebaseConfig = {
   apiKey: "AIzaSyBPeJPWUdM0gb5502Ty8_Cfq4CwcufJOHQ",
   authDomain: "tec-expo-voting.firebaseapp.com",
@@ -633,9 +443,7 @@ const firebaseConfig = {
   messagingSenderId: "481340074318",
   appId: "1:481340074318:web:5248e7eb360c4f5eed161f"
 };
-
-const app     = initializeApp(firebaseConfig);
-const db      = getFirestore(app);
+initializeApp(firebaseConfig);
 
 /* ── STARS ── */
 (function() {
@@ -663,233 +471,6 @@ const db      = getFirestore(app);
   resize(); draw();
   window.addEventListener('resize', resize);
 })();
-
-/* ── STATE ── */
-let currentStep  = 1;
-let memberCount  = 2;
-const TOTAL_STEPS = 4;
-
-/* ── FILE SELECT HANDLER ── */
-/* ── MEMBERS ── */
-function renderMembers() {
-  const grid = document.getElementById('membersGrid');
-  const existing = grid.querySelectorAll('.member-card');
-  const currentCount = existing.length;
-
-  for (let i = currentCount; i < memberCount; i++) {
-    const card = document.createElement('div');
-    card.className = 'member-card';
-    card.dataset.idx = i;
-    const isLeader = i === 0;
-    card.innerHTML = `
-      <div class="member-card-header">
-        <span class="member-tag ${isLeader ? 'member-leader' : ''}">
-          ${isLeader ? ' قائد الفريق' : `عضو ${i + 1}`}
-        </span>
-        ${!isLeader ? `<button class="btn-remove" onclick="removeMember(${i})">✕ حذف</button>` : ''}
-      </div>
-      <div class="field-row">
-        <div>
-          <label>الاسم الكامل <span class="required">*</span></label>
-          <input type="text" class="member-name" placeholder="الاسم الرباعي">
-        </div>
-        <div>
-          <label>رقم الجوال <span class="required">*</span></label>
-          <input type="text" class="member-id" placeholder="مثال: 202012345" style="direction:ltr;text-align:right">
-        </div>
-      </div>`;
-    grid.appendChild(card);
-  }
-
-  for (let i = currentCount - 1; i >= memberCount; i--) {
-    const cards = grid.querySelectorAll('.member-card');
-    if (cards[i]) cards[i].remove();
-  }
-
-  document.getElementById('addMemberBtn').style.display = memberCount >= 8 ? 'none' : 'flex';
-  document.getElementById('memberCountVal').textContent = memberCount;
-}
-
-window.changeCount = function(delta) {
-  memberCount = Math.max(1, Math.min(8, memberCount + delta));
-  renderMembers();
-};
-
-window.addMember = function() {
-  memberCount = Math.min(8, memberCount + 1);
-  renderMembers();
-};
-
-window.removeMember = function(idx) {
-  memberCount = Math.max(1, memberCount - 1);
-  renderMembers();
-};
-
-/* ── NAVIGATION ── */
-window.goTo = function(step) {
-  if (step > currentStep && !validateStep(currentStep)) return;
-
-  document.getElementById(`section-${currentStep}`).classList.remove('active');
-  document.getElementById(`step-dot-${currentStep}`).classList.remove('active');
-  document.getElementById(`step-dot-${currentStep}`).classList.add('done');
-  document.getElementById(`step-dot-${currentStep}`).textContent = '✓';
-
-  if (step < currentStep) {
-    document.getElementById(`step-dot-${currentStep}`).classList.remove('done');
-    document.getElementById(`step-dot-${currentStep}`).textContent = currentStep;
-  }
-
-  currentStep = step;
-  document.getElementById(`section-${step}`).classList.add('active');
-  document.getElementById(`step-dot-${step}`).classList.remove('done');
-  document.getElementById(`step-dot-${step}`).classList.add('active');
-  document.getElementById(`step-dot-${step}`).textContent = step;
-
-  document.getElementById('progressFill').style.width = ((step-1) / TOTAL_STEPS * 100) + '%';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  if (step === 3) renderMembers();
-  if (step === 4) renderSummary();
-};
-
-/* ── VALIDATION ── */
-function validateStep(step) {
-  let ok = true;
-
-  function check(id, condition) {
-    const el  = document.getElementById(id);
-    const err = document.getElementById('err-' + id);
-    if (!err) return;
-    if (!condition) {
-      el.classList.add('error'); err.style.display = 'block'; ok = false;
-    } else {
-      el.classList.remove('error'); err.style.display = 'none';
-    }
-  }
-
-  if (step === 1) {
-    check('projectName',     v('projectName').length > 1);
-    check('projectCategory', v('projectCategory').length > 1);
-    check('projectDesc',     v('projectDesc').length > 5);
-    check('revenueModel',    v('revenueModel').length > 5);
-    // prototypeUrl — اختياري، لا validation
-  }
-
-  if (step === 2) {
-    check('teamName',   v('teamName').length > 1);
-    check('university', v('university').length > 1);
-    check('college',    v('college').length > 1);
-    check('major',      v('major').length > 1);
-    check('studyYear',  v('studyYear') !== '');
-  }
-
-  if (step === 3) {
-    const cards = document.querySelectorAll('.member-card');
-    cards.forEach(card => {
-      const nameI = card.querySelector('.member-name');
-      const idI   = card.querySelector('.member-id');
-      if (!nameI.value.trim()) { nameI.classList.add('error'); ok = false; }
-      else nameI.classList.remove('error');
-      if (!idI.value.trim()) { idI.classList.add('error'); ok = false; }
-      else idI.classList.remove('error');
-    });
-    if (!ok) alert('الرجاء إكمال بيانات جميع الأعضاء');
-  }
-
-  return ok;
-}
-
-function v(id) { return (document.getElementById(id)?.value || '').trim(); }
-
-/* ── SUMMARY ── */
-function renderSummary() {
-  const members = [...document.querySelectorAll('.member-card')].map(c => ({
-    name: c.querySelector('.member-name').value,
-    id:   c.querySelector('.member-id').value
-  }));
-
-  document.getElementById('summaryContent').innerHTML = `
-    <div> <strong>المشروع:</strong> ${v('projectName')} — ${v('projectCategory')}</div>
-    <div> <strong>الفريق:</strong> ${v('teamName')} | ${v('university')} — ${v('college')}</div>
-    <div> <strong>التخصص:</strong> ${v('major')} — ${v('studyYear')}</div>
-    <div> <strong>الأعضاء (${members.length}):</strong> ${members.map(m => m.name || '—').join(' / ')}</div>
-  `;
-}
-
-/* ── SUBMIT ── */
-window.submitForm = async function() {
-  const emailEl  = document.getElementById('email');
-  const phoneEl  = document.getElementById('leaderPhone');
-  const emailErr = document.getElementById('err-email');
-  const phoneErr = document.getElementById('err-leaderPhone');
-  let ok = true;
-
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email'));
-  emailEl.classList.toggle('error', !emailOk);
-  emailErr.style.display = emailOk ? 'none' : 'block';
-  if (!emailOk) ok = false;
-
-  const phoneOk = /^05\d{8}$/.test(v('leaderPhone'));
-  phoneEl.classList.toggle('error', !phoneOk);
-  phoneErr.style.display = phoneOk ? 'none' : 'block';
-  if (!phoneOk) ok = false;
-
-  if (!ok) return;
-
-  const btn = document.querySelector('.btn-success');
-  btn.textContent = '⏳ جارٍ الإرسال...';
-  btn.disabled = true;
-
-  try {
-    const members = [...document.querySelectorAll('.member-card')].map((c, i) => ({
-      name: c.querySelector('.member-name').value,
-      studentId: c.querySelector('.member-id').value,
-      role: i === 0 ? 'leader' : 'member'
-    }));
-
-    const docRef = await addDoc(collection(db, 'registrations'), {
-      project: {
-        name:         v('projectName'),
-        category:     v('projectCategory'),
-        description:  v('projectDesc'),
-        revenueModel: v('revenueModel'),
-        prototypeUrl: v('prototypeUrl') || null
-      },
-      team: {
-        name:        v('teamName'),
-        university:  v('university'),
-        college:     v('college'),
-        major:       v('major'),
-        studyYear:   v('studyYear'),
-        memberCount: memberCount
-      },
-      members,
-      contact: {
-        email:       v('email'),
-        leaderPhone: v('leaderPhone')
-      },
-      submittedAt: serverTimestamp(),
-      status: 'pending'
-    });
-
-
-    const refId = docRef.id.slice(0, 8).toUpperCase();
-    document.getElementById('progressFill').style.width   = '100%';
-    document.getElementById('formWrap').style.display     = 'none';
-    document.querySelector('.hero').style.display         = 'none';
-    document.getElementById('successPage').style.display  = 'block';
-    document.getElementById('refNumber').textContent      = 'TV-' + refId;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  } catch (e) {
-    console.error(e);
-    alert('حدث خطأ أثناء الإرسال، حاول مجدداً.');
-    btn.textContent = ' إرسال التسجيل';
-    btn.disabled = false;
-  }
-};
-
-renderMembers();
 </script>
 </body>
 </html>
